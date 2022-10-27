@@ -6,3 +6,4 @@ export * from './reviews.repository';
 export * from './links.repository';
 export * from './rates.repository';
 export * from './categories.repository';
+export * from './movie-actor.repository';
