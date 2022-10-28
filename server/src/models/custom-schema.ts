@@ -14,3 +14,13 @@ export const registerSchema: SchemaObject = {
     role: {type: 'string',default: 'user'},
   },
 };
+
+export const loginSchema: SchemaObject = {
+  type: 'object',
+  title: 'Login',
+  required: ['email', 'password'],
+  properties: {
+    email: {type: 'string', format: 'email'},
+    password: {type: 'string'},
+  },
+};
