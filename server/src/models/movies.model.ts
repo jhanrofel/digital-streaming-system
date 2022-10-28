@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasOne} from '@loopback/repository';
+import {Links} from './links.model';
 
 @model()
 export class Movies extends Entity {
@@ -51,10 +52,12 @@ export class Movies extends Entity {
 
   @property({
     type: 'date',
-    required: true,
+    default: () => new Date(),
   })
-  postDate: string;
+  created?: string;
 
+  @hasOne(() => Links)
+  movieLink: Links;
 
   constructor(data?: Partial<Movies>) {
     super(data);

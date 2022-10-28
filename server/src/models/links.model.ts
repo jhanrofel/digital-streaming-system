@@ -50,8 +50,12 @@ export class Links extends Entity {
   @property({
     type: 'string',
   })
-  clip?: string;
+  clip?: string[];
 
+  @property({
+    type: 'string',
+  })
+  moviesId?: string;
 
   constructor(data?: Partial<Links>) {
     super(data);

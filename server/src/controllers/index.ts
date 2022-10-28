@@ -5,3 +5,4 @@ export * from './reviews.controller';
 export * from './links.controller';
 export * from './rates.controller';
 export * from './categories.controller';
+export * from './movies-links.controller';

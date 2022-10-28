@@ -6,7 +6,7 @@
 import {UserService} from '@loopback/authentication';
 import {repository} from '@loopback/repository';
 import {HttpErrors} from '@loopback/rest';
-import {securityId, UserProfile} from '@loopback/security';
+import {securityId} from '@loopback/security';
 import {compare} from 'bcryptjs';
 import {Users, UsersWithRelations} from '../models';
 import {UsersRepository} from '../repositories';
