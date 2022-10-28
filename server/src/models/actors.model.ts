@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasOne} from '@loopback/repository';
+import {Links} from './links.model';
 
 @model()
 export class Actors extends Entity {
@@ -33,18 +34,8 @@ export class Actors extends Entity {
   })
   birthday: string;
 
-  @property({
-    type: 'array',
-    itemType: 'string',
-  })
-  category?: string[];
-
-  @property({
-    type: 'array',
-    itemType: 'string',
-  })
-  hashTag?: string[];
-
+  @hasOne(() => Links)
+  actorLink: Links;
 
   constructor(data?: Partial<Actors>) {
     super(data);

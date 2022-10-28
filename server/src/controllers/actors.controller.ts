@@ -12,39 +12,67 @@ import {
   get,
   getModelSchemaRef,
   patch,
-  put,
   del,
   requestBody,
   response,
 } from '@loopback/rest';
 import {Actors} from '../models';
-import {ActorsRepository} from '../repositories';
+import {ActorsRepository, LinksRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
+import _ from 'lodash';
+import {postSchema} from '../schemas/actors.schema';
+
+class ActorClass {
+  firstName: string;
+  lastName: string;
+  gender: string;
+  birthday: string;
+  link: LinkClass;
+}
+
+class LinkClass {
+  banner: string;
+  catalogue: string;
+  picture?: string[];
+  facebook?: string;
+  instagram?: string;
+  youtube?: string;
+  trailer?: string;
+  clip?: string[];
+}
 
 export class ActorsController {
   constructor(
     @repository(ActorsRepository)
-    public actorsRepository : ActorsRepository,
+    public actorsRepository: ActorsRepository,
+    @repository(LinksRepository)
+    public linksRepository: LinksRepository,
   ) {}
 
+  // @authenticate('jwt')
+  // @authorize({allowedRoles: ['ADMIN']})
   @post('/actors')
   @response(200, {
     description: 'Actors model instance',
-    content: {'application/json': {schema: getModelSchemaRef(Actors)}},
+    content: {'application/json': {schema: postSchema}},
   })
   async create(
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Actors, {
-            title: 'NewActors',
-            exclude: ['id'],
-          }),
+          schema: postSchema,
         },
       },
     })
-    actors: Omit<Actors, 'id'>,
-  ): Promise<Actors> {
-    return this.actorsRepository.create(actors);
+    actors: ActorClass,
+  ): Promise<any> {
+    const link = actors.link;
+    await this.actorsRepository.create(_.omit(actors, ['link'])).then(actor => {
+      this.linksRepository.create({...link, actorsId: actor.id});
+    });
+
+    return actors;
   }
 
   @get('/actors/count')
@@ -52,9 +80,7 @@ export class ActorsController {
     description: 'Actors model count',
     content: {'application/json': {schema: CountSchema}},
   })
-  async count(
-    @param.where(Actors) where?: Where<Actors>,
-  ): Promise<Count> {
+  async count(@param.where(Actors) where?: Where<Actors>): Promise<Count> {
     return this.actorsRepository.count(where);
   }
 
@@ -70,29 +96,8 @@ export class ActorsController {
       },
     },
   })
-  async find(
-    @param.filter(Actors) filter?: Filter<Actors>,
-  ): Promise<Actors[]> {
+  async find(@param.filter(Actors) filter?: Filter<Actors>): Promise<Actors[]> {
     return this.actorsRepository.find(filter);
-  }
-
-  @patch('/actors')
-  @response(200, {
-    description: 'Actors PATCH success count',
-    content: {'application/json': {schema: CountSchema}},
-  })
-  async updateAll(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(Actors, {partial: true}),
-        },
-      },
-    })
-    actors: Actors,
-    @param.where(Actors) where?: Where<Actors>,
-  ): Promise<Count> {
-    return this.actorsRepository.updateAll(actors, where);
   }
 
   @get('/actors/{id}')
@@ -106,11 +111,14 @@ export class ActorsController {
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.filter(Actors, {exclude: 'where'}) filter?: FilterExcludingWhere<Actors>
+    @param.filter(Actors, {exclude: 'where'})
+    filter?: FilterExcludingWhere<Actors>,
   ): Promise<Actors> {
     return this.actorsRepository.findById(id, filter);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @patch('/actors/{id}')
   @response(204, {
     description: 'Actors PATCH success',
@@ -129,17 +137,8 @@ export class ActorsController {
     await this.actorsRepository.updateById(id, actors);
   }
 
-  @put('/actors/{id}')
-  @response(204, {
-    description: 'Actors PUT success',
-  })
-  async replaceById(
-    @param.path.string('id') id: string,
-    @requestBody() actors: Actors,
-  ): Promise<void> {
-    await this.actorsRepository.replaceById(id, actors);
-  }
-
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @del('/actors/{id}')
   @response(204, {
     description: 'Actors DELETE success',

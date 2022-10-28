@@ -12,7 +12,7 @@ export const countSchema: SchemaObject = {
 
 export const postSchema: SchemaObject = {
   type: 'object',
-  title: 'Update Movie',
+  title: 'Post Movie',
   required: ['title', 'cost', 'yearReleased'],
   properties: {
     title: {type: 'string'},
