@@ -28,7 +28,7 @@ class ActorClass {
   lastName: string;
   gender: string;
   birthday: string;
-  link: LinkClass;
+  actorLink: LinkClass;
 }
 
 class LinkClass {
@@ -50,8 +50,8 @@ export class ActorsController {
     public linksRepository: LinksRepository,
   ) {}
 
-  // @authenticate('jwt')
-  // @authorize({allowedRoles: ['ADMIN']})
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @post('/actors')
   @response(200, {
     description: 'Actors model instance',
@@ -67,10 +67,12 @@ export class ActorsController {
     })
     actors: ActorClass,
   ): Promise<any> {
-    const link = actors.link;
-    await this.actorsRepository.create(_.omit(actors, ['link'])).then(actor => {
-      this.linksRepository.create({...link, actorsId: actor.id});
-    });
+    const actorLink = actors.actorLink;
+    await this.actorsRepository
+      .create(_.omit(actors, ['actorLink']))
+      .then(actor => {
+        this.linksRepository.create({...actorLink, actorsId: actor.id});
+      });
 
     return actors;
   }
@@ -80,8 +82,8 @@ export class ActorsController {
     description: 'Actors model count',
     content: {'application/json': {schema: CountSchema}},
   })
-  async count(@param.where(Actors) where?: Where<Actors>): Promise<Count> {
-    return this.actorsRepository.count(where);
+  async count(): Promise<Count> {
+    return this.actorsRepository.count();
   }
 
   @get('/actors')
@@ -96,8 +98,8 @@ export class ActorsController {
       },
     },
   })
-  async find(@param.filter(Actors) filter?: Filter<Actors>): Promise<Actors[]> {
-    return this.actorsRepository.find(filter);
+  async find(): Promise<Actors[]> {
+    return this.actorsRepository.find({include: ['actorLink']});
   }
 
   @get('/actors/{id}')
@@ -109,12 +111,8 @@ export class ActorsController {
       },
     },
   })
-  async findById(
-    @param.path.string('id') id: string,
-    @param.filter(Actors, {exclude: 'where'})
-    filter?: FilterExcludingWhere<Actors>,
-  ): Promise<Actors> {
-    return this.actorsRepository.findById(id, filter);
+  async findById(@param.path.string('id') id: string): Promise<Actors> {
+    return this.actorsRepository.findById(id, {include: ['actorLink']});
   }
 
   @authenticate('jwt')
@@ -127,14 +125,16 @@ export class ActorsController {
     @param.path.string('id') id: string,
     @requestBody({
       content: {
-        'application/json': {
-          schema: getModelSchemaRef(Actors, {partial: true}),
-        },
+        'application/json': {schema: postSchema},
       },
     })
-    actors: Actors,
-  ): Promise<void> {
-    await this.actorsRepository.updateById(id, actors);
+    actors: ActorClass,
+  ): Promise<ActorClass> {
+    const actorLink = actors.actorLink;
+    await this.actorsRepository.updateById(id, _.omit(actors, ['actorLink']));
+    await this.actorsRepository.actorLink(id).patch(actorLink);
+
+    return actors;
   }
 
   @authenticate('jwt')
@@ -144,6 +144,8 @@ export class ActorsController {
     description: 'Actors DELETE success',
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
+    //add condition if not belongsTo a movie
     await this.actorsRepository.deleteById(id);
+    this.actorsRepository.actorLink(id).delete();
   }
 }
