@@ -20,8 +20,8 @@ import {
 import {Categories} from '../models';
 import {CategoriesRepository} from '../repositories';
 import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 
-@authenticate('jwt')
 export class CategoriesController {
   constructor(
     @repository(CategoriesRepository)
@@ -49,6 +49,8 @@ export class CategoriesController {
     return this.categoriesRepository.create(categories);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @get('/categories/count')
   @response(200, {
     description: 'Categories model count',
@@ -60,6 +62,7 @@ export class CategoriesController {
     return this.categoriesRepository.count(where);
   }
 
+  @authenticate('jwt')
   @get('/categories')
   @response(200, {
     description: 'Array of Categories model instances',

@@ -12,12 +12,18 @@ import {MySequence} from './sequence';
 import {AuthenticationComponent} from '@loopback/authentication';
 import {
   JWTAuthenticationComponent,
-  SECURITY_SCHEME_SPEC,
   UserServiceBindings,
 } from '@loopback/authentication-jwt';
 import {MongoDbDataSource} from './datasources/mongo-db.datasource';
 import {CustomUserService} from './services/user.service';
 import {UsersRepository, UserCredentialsRepository} from './repositories';
+import {
+  AuthorizationOptions,
+  AuthorizationDecision,
+  AuthorizationComponent,
+  AuthorizationTags,
+} from '@loopback/authorization';
+import {MyAuthorizationProvider} from './authorization';
 
 export {ApplicationConfig};
 
@@ -56,16 +62,25 @@ export class DigitalStreamingSystemApplication extends BootMixin(
     this.component(JWTAuthenticationComponent);
     // Bind datasource
     this.dataSource(MongoDbDataSource, UserServiceBindings.DATASOURCE_NAME);
-    
 
     // Bind user service
     this.bind(UserServiceBindings.USER_SERVICE).toClass(CustomUserService),
-    // Bind user and credentials repository
-    this.bind(UserServiceBindings.USER_REPOSITORY).toClass(
-      UsersRepository,
-    ),
-    this.bind(UserServiceBindings.USER_CREDENTIALS_REPOSITORY).toClass(
-      UserCredentialsRepository,
-    )
+      // Bind user and credentials repository
+      this.bind(UserServiceBindings.USER_REPOSITORY).toClass(UsersRepository),
+      this.bind(UserServiceBindings.USER_CREDENTIALS_REPOSITORY).toClass(
+        UserCredentialsRepository,
+      );
+
+    const optionsAuth: AuthorizationOptions = {
+      precedence: AuthorizationDecision.DENY,
+      defaultDecision: AuthorizationDecision.DENY,
+    };
+
+    const binding = this.component(AuthorizationComponent);
+    this.configure(binding.key).to(optionsAuth);
+
+    this.bind('authorizationProviders.my-authorizer-provider')
+      .toProvider(MyAuthorizationProvider)
+      .tag(AuthorizationTags.AUTHORIZER);
   }
 }

@@ -54,12 +54,12 @@ export class CustomUserService implements UserService<Users, Credentials> {
     return foundUser;
   }
 
-  convertToUserProfile(user: Users): UserProfile {
+  convertToUserProfile(user: Users): any {
     return {
       [securityId]: user.id.toString(),
-      role: user.role,
       id: user.id,
       email: user.email,
+      name: user.role,
     };
   }
 
