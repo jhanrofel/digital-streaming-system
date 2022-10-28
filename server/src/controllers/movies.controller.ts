@@ -1,31 +1,28 @@
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where,
-} from '@loopback/repository';
+import {Count, CountSchema, repository} from '@loopback/repository';
 import {
   post,
   param,
   get,
   getModelSchemaRef,
   patch,
-  put,
   del,
   requestBody,
   response,
 } from '@loopback/rest';
 import {Movies} from '../models';
 import {MoviesRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
+import {patchSchema} from '../schemas/movies.schema';
 
 export class MoviesController {
   constructor(
     @repository(MoviesRepository)
-    public moviesRepository : MoviesRepository,
+    public moviesRepository: MoviesRepository,
   ) {}
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @post('/movies')
   @response(200, {
     description: 'Movies model instance',
@@ -37,7 +34,7 @@ export class MoviesController {
         'application/json': {
           schema: getModelSchemaRef(Movies, {
             title: 'NewMovies',
-            exclude: ['id'],
+            exclude: ['id', 'postDate'],
           }),
         },
       },
@@ -47,15 +44,15 @@ export class MoviesController {
     return this.moviesRepository.create(movies);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @get('/movies/count')
   @response(200, {
     description: 'Movies model count',
     content: {'application/json': {schema: CountSchema}},
   })
-  async count(
-    @param.where(Movies) where?: Where<Movies>,
-  ): Promise<Count> {
-    return this.moviesRepository.count(where);
+  async count(): Promise<Count> {
+    return this.moviesRepository.count();
   }
 
   @get('/movies')
@@ -70,29 +67,8 @@ export class MoviesController {
       },
     },
   })
-  async find(
-    @param.filter(Movies) filter?: Filter<Movies>,
-  ): Promise<Movies[]> {
-    return this.moviesRepository.find(filter);
-  }
-
-  @patch('/movies')
-  @response(200, {
-    description: 'Movies PATCH success count',
-    content: {'application/json': {schema: CountSchema}},
-  })
-  async updateAll(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(Movies, {partial: true}),
-        },
-      },
-    })
-    movies: Movies,
-    @param.where(Movies) where?: Where<Movies>,
-  ): Promise<Count> {
-    return this.moviesRepository.updateAll(movies, where);
+  async find(): Promise<Movies[]> {
+    return this.moviesRepository.find();
   }
 
   @get('/movies/{id}')
@@ -104,13 +80,12 @@ export class MoviesController {
       },
     },
   })
-  async findById(
-    @param.path.string('id') id: string,
-    @param.filter(Movies, {exclude: 'where'}) filter?: FilterExcludingWhere<Movies>
-  ): Promise<Movies> {
-    return this.moviesRepository.findById(id, filter);
+  async findById(@param.path.string('id') id: string): Promise<Movies> {
+    return this.moviesRepository.findById(id);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @patch('/movies/{id}')
   @response(204, {
     description: 'Movies PATCH success',
@@ -120,7 +95,7 @@ export class MoviesController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Movies, {partial: true}),
+          schema: patchSchema,
         },
       },
     })
@@ -129,17 +104,8 @@ export class MoviesController {
     await this.moviesRepository.updateById(id, movies);
   }
 
-  @put('/movies/{id}')
-  @response(204, {
-    description: 'Movies PUT success',
-  })
-  async replaceById(
-    @param.path.string('id') id: string,
-    @requestBody() movies: Movies,
-  ): Promise<void> {
-    await this.moviesRepository.replaceById(id, movies);
-  }
-
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @del('/movies/{id}')
   @response(204, {
     description: 'Movies DELETE success',

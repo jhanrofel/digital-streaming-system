@@ -19,7 +19,11 @@ import {
 } from '@loopback/rest';
 import {Rates} from '../models';
 import {RatesRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 
+@authenticate('jwt')
+@authorize({allowedRoles: ['ADMIN']})
 export class RatesController {
   constructor(
     @repository(RatesRepository)

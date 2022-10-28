@@ -31,7 +31,7 @@ import {authenticate,TokenService} from '@loopback/authentication';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import {genSalt, hash} from 'bcryptjs';
 import _ from 'lodash';
-import {loginSchema, registerSchema} from '../models/custom-schema';
+import {loginSchema, registerSchema} from '../schemas/users.schema';
 
 class RegistrationClass {
   firstName: string;

@@ -22,10 +22,10 @@ export class Movies extends Entity {
   cost: number;
 
   @property({
-    type: 'date',
+    type: 'number',
     required: true,
   })
-  yearReleased: string;
+  yearReleased: number;
 
   @property({
     type: 'array',
