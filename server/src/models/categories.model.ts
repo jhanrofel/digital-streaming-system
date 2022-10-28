@@ -12,9 +12,9 @@ export class Categories extends Entity {
   @property({
     type: 'string',
     required: true,
+    index: {unique: true},
   })
   name: string;
-
 
   constructor(data?: Partial<Categories>) {
     super(data);

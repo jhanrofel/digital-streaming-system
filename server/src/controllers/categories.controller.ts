@@ -1,18 +1,10 @@
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where,
-} from '@loopback/repository';
+import {repository} from '@loopback/repository';
 import {
   post,
   param,
   get,
   getModelSchemaRef,
   patch,
-  put,
   del,
   requestBody,
   response,
@@ -22,10 +14,19 @@ import {CategoriesRepository} from '../repositories';
 import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 
+interface apiResponse {
+  status: number;
+  message?: string;
+  categories?: Categories[] | void[];
+  error?: string;
+}
+
+@authenticate('jwt')
+@authorize({allowedRoles: ['ADMIN']})
 export class CategoriesController {
   constructor(
     @repository(CategoriesRepository)
-    public categoriesRepository : CategoriesRepository,
+    public categoriesRepository: CategoriesRepository,
   ) {}
 
   @post('/categories')
@@ -45,59 +46,30 @@ export class CategoriesController {
       },
     })
     categories: Omit<Categories, 'id'>,
-  ): Promise<Categories> {
-    return this.categoriesRepository.create(categories);
+  ): Promise<apiResponse> {
+    return this.categoriesRepository
+      .create(categories)
+      .then(res => {
+        return {status: 200, categories: [res]};
+      })
+      .catch(err => {
+        if (err.code === 11000) {
+          return {
+            status: 500,
+            error: `${err.keyValue.name} category already exist.`,
+          };
+        } else {
+          return {status: 500, error: err.message};
+        }
+      });
   }
 
-  @authenticate('jwt')
-  @authorize({allowedRoles: ['ADMIN']})
-  @get('/categories/count')
-  @response(200, {
-    description: 'Categories model count',
-    content: {'application/json': {schema: CountSchema}},
-  })
-  async count(
-    @param.where(Categories) where?: Where<Categories>,
-  ): Promise<Count> {
-    return this.categoriesRepository.count(where);
-  }
-
-  @authenticate('jwt')
   @get('/categories')
   @response(200, {
     description: 'Array of Categories model instances',
-    content: {
-      'application/json': {
-        schema: {
-          type: 'array',
-          items: getModelSchemaRef(Categories, {includeRelations: true}),
-        },
-      },
-    },
   })
-  async find(
-    @param.filter(Categories) filter?: Filter<Categories>,
-  ): Promise<Categories[]> {
-    return this.categoriesRepository.find(filter);
-  }
-
-  @patch('/categories')
-  @response(200, {
-    description: 'Categories PATCH success count',
-    content: {'application/json': {schema: CountSchema}},
-  })
-  async updateAll(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(Categories, {partial: true}),
-        },
-      },
-    })
-    categories: Categories,
-    @param.where(Categories) where?: Where<Categories>,
-  ): Promise<Count> {
-    return this.categoriesRepository.updateAll(categories, where);
+  async find(): Promise<Categories[]> {
+    return this.categoriesRepository.find();
   }
 
   @get('/categories/{id}')
@@ -109,11 +81,8 @@ export class CategoriesController {
       },
     },
   })
-  async findById(
-    @param.path.string('id') id: string,
-    @param.filter(Categories, {exclude: 'where'}) filter?: FilterExcludingWhere<Categories>
-  ): Promise<Categories> {
-    return this.categoriesRepository.findById(id, filter);
+  async findById(@param.path.string('id') id: string): Promise<Categories> {
+    return this.categoriesRepository.findById(id);
   }
 
   @patch('/categories/{id}')
@@ -125,24 +94,27 @@ export class CategoriesController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Categories, {partial: true}),
+          schema: getModelSchemaRef(Categories, {exclude: ['id']}),
         },
       },
     })
     categories: Categories,
-  ): Promise<void> {
-    await this.categoriesRepository.updateById(id, categories);
-  }
-
-  @put('/categories/{id}')
-  @response(204, {
-    description: 'Categories PUT success',
-  })
-  async replaceById(
-    @param.path.string('id') id: string,
-    @requestBody() categories: Categories,
-  ): Promise<void> {
-    await this.categoriesRepository.replaceById(id, categories);
+  ): Promise<apiResponse> {
+    return this.categoriesRepository
+      .updateById(id, categories)
+      .then(res => {
+        return {status: 200, categories: [categories]};
+      })
+      .catch(err => {
+        if (err.code === 11000) {
+          return {
+            status: 500,
+            error: `${err.keyValue.name} category already exist.`,
+          };
+        } else {
+          return {status: 500, error: err.message};
+        }
+      });
   }
 
   @del('/categories/{id}')
