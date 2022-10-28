@@ -7,7 +7,7 @@ export class UserCredentials extends Entity {
     id: true,
     generated: true,
   })
-  id?: string;
+  id: string;
 
   @property({
     type: 'string',
@@ -15,6 +15,10 @@ export class UserCredentials extends Entity {
   })
   password: string;
 
+  @property({
+    type: 'string',
+  })
+  userId: string;
 
   constructor(data?: Partial<UserCredentials>) {
     super(data);
