@@ -16,7 +16,7 @@ import {
   requestBody,
   response,
 } from '@loopback/rest';
-import {Actors} from '../models';
+import {Actors, Links} from '../models';
 import {ActorsRepository, LinksRepository} from '../repositories';
 import {ActorsPostSchema} from '../schemas';
 import {authenticate} from '@loopback/authentication';
@@ -29,6 +29,7 @@ class ActorClass {
   gender: string;
   birthday: string;
   actorLink: LinkClass;
+  link?: string;
 }
 
 class LinkClass {
@@ -66,13 +67,12 @@ export class ActorsController {
       },
     })
     actors: ActorClass,
-  ): Promise<any> {
-    const actorLink = actors.actorLink;
-    await this.actorsRepository
-      .create(_.omit(actors, ['actorLink']))
-      .then(actor => {
-        this.linksRepository.create({...actorLink, actorsId: actor.id});
-      });
+  ): Promise<ActorClass> {
+    const link = actors.actorLink;
+    await this.linksRepository.create(link).then(newLink => {
+      actors.link = newLink.id;
+      this.actorsRepository.create(_.omit(actors, ['actorLink']));
+    });
 
     return actors;
   }
@@ -99,7 +99,9 @@ export class ActorsController {
     },
   })
   async find(): Promise<Actors[]> {
-    return this.actorsRepository.find({include: ['actorLink']});
+    return this.actorsRepository.find({
+      include: [{relation: 'actorLink', scope: {fields: {id: false}}}],
+    });
   }
 
   @get('/actors/{id}')
@@ -112,7 +114,9 @@ export class ActorsController {
     },
   })
   async findById(@param.path.string('id') id: string): Promise<Actors> {
-    return this.actorsRepository.findById(id, {include: ['actorLink']});
+    return this.actorsRepository.findById(id, {
+      include: [{relation: 'actorLink', scope: {fields: {id: false}}}],
+    });
   }
 
   @authenticate('jwt')
@@ -130,9 +134,9 @@ export class ActorsController {
     })
     actors: ActorClass,
   ): Promise<ActorClass> {
-    const actorLink = actors.actorLink;
-    await this.actorsRepository.updateById(id, _.omit(actors, ['actorLink']));
-    await this.actorsRepository.actorLink(id).patch(actorLink);
+    // const actorLink = actors.actorLink;
+    // await this.actorsRepository.updateById(id, _.omit(actors, ['actorLink']));
+    // await this.actorsRepository.actorLink(id).patch(actorLink);
 
     return actors;
   }
@@ -146,6 +150,6 @@ export class ActorsController {
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     //add condition if not belongsTo a movie
     await this.actorsRepository.deleteById(id);
-    this.actorsRepository.actorLink(id).delete();
+    // this.actorsRepository.actorLink(id).delete();
   }
 }

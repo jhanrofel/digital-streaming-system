@@ -1,4 +1,4 @@
-import {Entity, model, property, hasOne} from '@loopback/repository';
+import {Entity, model, property, hasOne, belongsTo} from '@loopback/repository';
 import {Links} from './links.model';
 
 @model()
@@ -34,8 +34,8 @@ export class Actors extends Entity {
   })
   birthday: string;
 
-  @hasOne(() => Links)
-  actorLink: Links;
+  @belongsTo(() => Links, {name: 'actorLink'})
+  link: string;
 
   constructor(data?: Partial<Actors>) {
     super(data);
