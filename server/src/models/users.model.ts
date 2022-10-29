@@ -13,6 +13,7 @@ export class Users extends Entity {
   @property({
     type: 'string',
     required: true,
+    default: 'USER',
   })
   role: string;
 
@@ -36,9 +37,10 @@ export class Users extends Entity {
   lastName: string;
 
   @property({
-    type: 'boolean',
+    type: 'string',
+    default: 'pending',
   })
-  approved?: boolean;
+  approval: string;
 
   @hasOne(() => UserCredentials, {keyTo: 'userId'})
   userCredentials: UserCredentials;

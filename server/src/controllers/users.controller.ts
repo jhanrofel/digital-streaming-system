@@ -1,25 +1,23 @@
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where,
-} from '@loopback/repository';
+import {repository} from '@loopback/repository';
 import {
   post,
   param,
   get,
   getModelSchemaRef,
   patch,
-  put,
   del,
   requestBody,
   response,
 } from '@loopback/rest';
 import {Users} from '../models';
-import {UsersRepository} from '../repositories';
-import {UsersLoginSchema, UsersRegisterSchema} from '../schemas';
+import {UsersRepository, UserCredentialsRepository} from '../repositories';
+import {
+  UsersChangePasswordSchema,
+  UsersLoginSchema,
+  UsersPatchSchema,
+  UsersRegisterSchema,
+  UsersRegisterApprovalSchema,
+} from '../schemas';
 import {inject} from '@loopback/core';
 import {
   Credentials,
@@ -28,7 +26,8 @@ import {
   UserServiceBindings,
   UserRepository,
 } from '@loopback/authentication-jwt';
-import {authenticate,TokenService} from '@loopback/authentication';
+import {authenticate, TokenService} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import {genSalt, hash} from 'bcryptjs';
 import _ from 'lodash';
@@ -40,11 +39,27 @@ class RegistrationClass {
   password: string;
 }
 
+class ChangePassword {
+  email: string;
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+interface ApiResponse {
+  status: number;
+  message?: string;
+  users?: Users[] | void[];
+  error?: string;
+}
+
 export class UsersController {
   constructor(
     @repository(UsersRepository)
     public usersRepository: UsersRepository,
     @repository(UserRepository) protected userRepository: UserRepository,
+    @repository(UserCredentialsRepository)
+    public userCredentialsRepository: UserCredentialsRepository,
 
     @inject(TokenServiceBindings.TOKEN_SERVICE)
     public jwtService: TokenService,
@@ -53,27 +68,6 @@ export class UsersController {
     @inject(SecurityBindings.USER, {optional: true})
     public user: UserProfile,
   ) {}
-
-  @post('/users')
-  @response(200, {
-    description: 'Users model instance',
-    content: {'application/json': {schema: getModelSchemaRef(Users)}},
-  })
-  async create(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(Users, {
-            title: 'NewUsers',
-            exclude: ['id'],
-          }),
-        },
-      },
-    })
-    users: Omit<Users, 'id'>,
-  ): Promise<Users> {
-    return this.usersRepository.create(users);
-  }
 
   @post('/users/register')
   @response(200, {
@@ -99,6 +93,26 @@ export class UsersController {
     return savedUser;
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
+  @post('/users/register-approval')
+  @response(200, {
+    description: 'Users Registration Approval',
+    content: {'application/json': {schema: getModelSchemaRef(Users)}},
+  })
+  async registerApproved(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: UsersRegisterApprovalSchema,
+        },
+      },
+    })
+    approval: Users,
+  ): Promise<void> {
+    await this.usersRepository.updateById(approval.id, approval);
+  }
+
   @post('/users/login')
   @response(200, {
     description: 'Users Login',
@@ -115,11 +129,46 @@ export class UsersController {
     credentials: Credentials,
   ): Promise<{token: string}> {
     const user = await this.userService.verifyCredentials(credentials);
-    // convert a User object into a UserProfile object (reduced set of properties)
     const userProfile = this.userService.convertToUserProfile(user);
-    // create a JSON Web Token based on the user profile
     const token = await this.jwtService.generateToken(userProfile);
     return {token};
+  }
+
+  @post('/users/change-password')
+  @response(200, {
+    description: 'Users Change Password',
+    content: {'application/json': {schema: getModelSchemaRef(Users)}},
+  })
+  async changePassword(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: UsersChangePasswordSchema,
+        },
+      },
+    })
+    newCredentials: ChangePassword,
+  ): Promise<ApiResponse> {
+    const credentials = {
+      email: newCredentials.email,
+      password: newCredentials.oldPassword,
+    };
+    const user = await this.userService.verifyCredentials(credentials);
+
+    if (newCredentials.newPassword === newCredentials.confirmPassword) {
+      const password = await hash(newCredentials.newPassword, await genSalt());
+      this.userCredentialsRepository.updateAll(
+        {password: password},
+        {userId: user.id},
+      );
+
+      return {status: 200, message: 'Password changed.'};
+    } else {
+      return {
+        status: 500,
+        error: 'Invalid inputs.',
+      };
+    }
   }
 
   @authenticate('jwt')
@@ -144,15 +193,6 @@ export class UsersController {
     return currentUserProfile[securityId];
   }
 
-  @get('/users/count')
-  @response(200, {
-    description: 'Users model count',
-    content: {'application/json': {schema: CountSchema}},
-  })
-  async count(@param.where(Users) where?: Where<Users>): Promise<Count> {
-    return this.usersRepository.count(where);
-  }
-
   @get('/users')
   @response(200, {
     description: 'Array of Users model instances',
@@ -165,29 +205,12 @@ export class UsersController {
       },
     },
   })
-  async find(@param.filter(Users) filter?: Filter<Users>): Promise<Users[]> {
-    return this.usersRepository.find(filter);
+  async find(): Promise<Users[]> {
+    return this.usersRepository.find();
   }
 
-  @patch('/users')
-  @response(200, {
-    description: 'Users PATCH success count',
-    content: {'application/json': {schema: CountSchema}},
-  })
-  async updateAll(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(Users, {partial: true}),
-        },
-      },
-    })
-    users: Users,
-    @param.where(Users) where?: Where<Users>,
-  ): Promise<Count> {
-    return this.usersRepository.updateAll(users, where);
-  }
-
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @get('/users/{id}')
   @response(200, {
     description: 'Users model instance',
@@ -197,14 +220,12 @@ export class UsersController {
       },
     },
   })
-  async findById(
-    @param.path.string('id') id: string,
-    @param.filter(Users, {exclude: 'where'})
-    filter?: FilterExcludingWhere<Users>,
-  ): Promise<Users> {
-    return this.usersRepository.findById(id, filter);
+  async findById(@param.path.string('id') id: string): Promise<Users> {
+    return this.usersRepository.findById(id);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @patch('/users/{id}')
   @response(204, {
     description: 'Users PATCH success',
@@ -214,7 +235,7 @@ export class UsersController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Users, {partial: true}),
+          schema: UsersPatchSchema,
         },
       },
     })
@@ -223,22 +244,14 @@ export class UsersController {
     await this.usersRepository.updateById(id, users);
   }
 
-  @put('/users/{id}')
-  @response(204, {
-    description: 'Users PUT success',
-  })
-  async replaceById(
-    @param.path.string('id') id: string,
-    @requestBody() users: Users,
-  ): Promise<void> {
-    await this.usersRepository.replaceById(id, users);
-  }
-
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @del('/users/{id}')
   @response(204, {
     description: 'Users DELETE success',
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.usersRepository.deleteById(id);
+    await this.userCredentialsRepository.deleteAll({userId:id});
   }
 }

@@ -1,15 +1,14 @@
 import {SchemaObject} from '@loopback/rest';
 
-export const UsersRegisterSchema: SchemaObject = {
+export const UsersChangePasswordSchema: SchemaObject = {
   type: 'object',
-  title: 'Registration',
-  required: ['firstName', 'lastName', 'email', 'password','role'],
+  title: 'Change Password',
+  required: ['email', 'oldPassword', 'newPassword', 'confirmPassword'],
   properties: {
-    firstName: {type: 'string'},
-    lastName: {type: 'string'},
     email: {type: 'string', format: 'email'},
-    password: {type: 'string'},
-    role: {type: 'string',default: 'user'},
+    oldPassword: {type: 'string'},
+    newPassword: {type: 'string'},
+    confirmPassword: {type: 'string'},
   },
 };
 
@@ -20,5 +19,37 @@ export const UsersLoginSchema: SchemaObject = {
   properties: {
     email: {type: 'string', format: 'email'},
     password: {type: 'string'},
+  },
+};
+
+export const UsersPatchSchema: SchemaObject = {
+  type: 'object',
+  title: 'Update Role',
+  required: ['role'],
+  properties: {
+    role: {type: 'string', enum: ['USER', 'ADMIN']},
+  },
+};
+
+export const UsersRegisterSchema: SchemaObject = {
+  type: 'object',
+  title: 'Registration',
+  required: ['firstName', 'lastName', 'email', 'password'],
+  properties: {
+    firstName: {type: 'string'},
+    lastName: {type: 'string'},
+    email: {type: 'string', format: 'email'},
+    password: {type: 'string'},
+  },
+};
+
+export const UsersRegisterApprovalSchema: SchemaObject = {
+  type: 'object',
+  title: 'Registration Approval',
+  required: ['id', 'approval', 'rofel'],
+  properties: {
+    id: {type: 'string'},
+    approval: {type: 'string', enum: ['approved', 'disapproved']},
+    role: {type: 'string', enum: ['USER', 'ADMIN']},
   },
 };

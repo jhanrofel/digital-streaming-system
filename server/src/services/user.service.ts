@@ -31,6 +31,19 @@ export class CustomUserService implements UserService<Users, Credentials> {
     const foundUser = await this.usersRepository.findOne({
       where: {email: credentials.email},
     });
+
+    if (foundUser?.approval === 'pending') {
+      throw new HttpErrors.Unauthorized(
+        'Account registration is pending for approval.',
+      );
+    }
+
+    if (foundUser?.approval === 'disapproved' || foundUser?.approval !== 'approved') {
+      throw new HttpErrors.Unauthorized(
+        'Account registration is disapproved. Try to register new account.',
+      );
+    }
+
     if (!foundUser) {
       throw new HttpErrors.Unauthorized(invalidCredentialsError);
     }
