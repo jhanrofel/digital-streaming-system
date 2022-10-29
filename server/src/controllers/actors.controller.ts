@@ -67,14 +67,16 @@ export class ActorsController {
       },
     })
     actors: ActorClass,
-  ): Promise<ActorClass> {
+  ): Promise<Actors> {
     const link = actors.actorLink;
-    await this.linksRepository.create(link).then(newLink => {
+    const actor = await this.linksRepository.create(link).then(newLink => {
       actors.link = newLink.id;
-      this.actorsRepository.create(_.omit(actors, ['actorLink']));
+      return this.actorsRepository.create(_.omit(actors, ['actorLink']));
     });
 
-    return actors;
+    return this.actorsRepository.findById(actor.id, {
+      include: [{relation: 'actorLink', scope: {fields: {id: false}}}],
+    }); 
   }
 
   @get('/actors/count')
@@ -133,12 +135,14 @@ export class ActorsController {
       },
     })
     actors: ActorClass,
-  ): Promise<ActorClass> {
-    // const actorLink = actors.actorLink;
-    // await this.actorsRepository.updateById(id, _.omit(actors, ['actorLink']));
-    // await this.actorsRepository.actorLink(id).patch(actorLink);
+  ): Promise<Actors> {
+    const actorLink = actors.actorLink;
+    await this.actorsRepository.updateById(id, _.omit(actors, ['actorLink','link']));
+    await this.linksRepository.updateById(actors.link,actorLink);
 
-    return actors;
+    return this.actorsRepository.findById(id, {
+      include: [{relation: 'actorLink', scope: {fields: {id: false}}}],
+    });
   }
 
   @authenticate('jwt')
@@ -147,9 +151,15 @@ export class ActorsController {
   @response(204, {
     description: 'Actors DELETE success',
   })
-  async deleteById(@param.path.string('id') id: string): Promise<void> {
+  async deleteById(@param.path.string('id') id: string): Promise<Actors> {
+    const actor = await this.actorsRepository.findById(id, {
+      include: [{relation: 'actorLink', scope: {fields: {id: false}}}],
+    });
     //add condition if not belongsTo a movie
+    
     await this.actorsRepository.deleteById(id);
-    // this.actorsRepository.actorLink(id).delete();
+    await this.linksRepository.deleteById(actor.link);
+
+    return actor; 
   }
 }
