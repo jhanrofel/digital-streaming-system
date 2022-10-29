@@ -9,6 +9,15 @@ export class MovieActor extends Entity {
   })
   id?: string;
 
+  @property({
+    type: 'string',
+  })
+  movieId?: string;
+
+  @property({
+    type: 'string',
+  })
+  actorId?: string;
 
   constructor(data?: Partial<MovieActor>) {
     super(data);

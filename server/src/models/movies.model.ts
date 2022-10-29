@@ -1,5 +1,7 @@
-import {Entity, model, property, hasOne} from '@loopback/repository';
+import {Entity, model, property, hasMany, belongsTo} from '@loopback/repository';
 import {Links} from './links.model';
+import {Actors} from './actors.model';
+import {MovieActor} from './movie-actor.model';
 
 @model()
 export class Movies extends Entity {
@@ -56,8 +58,11 @@ export class Movies extends Entity {
   })
   created?: string;
 
-  @hasOne(() => Links)
-  movieLink: Links;
+  @belongsTo(() => Links, {name: 'movieLink'})
+  link: string;
+
+  @hasMany(() => Actors, {through: {model: () => MovieActor, keyFrom: 'movieId', keyTo: 'actorId'}})
+  movieActors: Actors[];
 
   constructor(data?: Partial<Movies>) {
     super(data);

@@ -10,7 +10,7 @@ import {
   response,
 } from '@loopback/rest';
 import {Movies} from '../models';
-import {MoviesRepository, LinksRepository} from '../repositories';
+import {MoviesRepository, MovieActorRepository, LinksRepository} from '../repositories';
 import {MoviesPatchSchema, MoviesPostSchema} from '../schemas';
 import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
@@ -24,7 +24,8 @@ class MovieClass {
   hashTag?: string[];
   comingSoon: boolean;
   featured: boolean;
-  link: LinkClass;
+  link?: string;
+  movieLink: LinkClass;
   actors: string[];
 }
 
@@ -45,6 +46,8 @@ export class MoviesController {
     public moviesRepository: MoviesRepository,
     @repository(LinksRepository)
     public linksRepository: LinksRepository,
+    @repository(MovieActorRepository)
+    public movieActorRepository: MovieActorRepository,
   ) {}
 
   @authenticate('jwt')
@@ -63,17 +66,18 @@ export class MoviesController {
       },
     })
     movies: MovieClass,
-  ): Promise<MovieClass> {
-    const link = movies.link;
+  ): Promise<Movies> {
+    const link = await this.linksRepository.create(movies.movieLink);
     const actors = movies.actors;
-    await this.moviesRepository
-      .create(_.omit(movies, ['link', 'actors']))
-      .then(movie => {
-        this.linksRepository.create({...link, moviesId: movie.id});
-        //add movieActor
-      });
+    movies.link = link.id;
+    const movie = await this.moviesRepository.create(_.omit(movies, ['movieLink','actors']));
+    actors.map(async (actor) => {
+      await this.movieActorRepository.create({movieId:movie.id,actorId:actor});
+    });
 
-    return movies;
+    return this.moviesRepository.findById(movie.id, {
+      include: [{relation: 'movieLink', scope: {fields: {id: false}}}],
+    });
   }
 
   @authenticate('jwt')
@@ -100,7 +104,7 @@ export class MoviesController {
     },
   })
   async find(): Promise<Movies[]> {
-    return this.moviesRepository.find({include:['movieLink']});
+    return this.moviesRepository.find({include:['movieLink','movieActors']});
   }
 
   @get('/movies/{id}')
@@ -144,6 +148,6 @@ export class MoviesController {
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.moviesRepository.deleteById(id);
-    await this.moviesRepository.movieLink(id).delete();
+    // await this.moviesRepository.movieLink(id).delete();
   }
 }
