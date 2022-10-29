@@ -29,6 +29,6 @@ export const MoviesPostSchema: SchemaObject = {
     hashTag: {type: 'array'},
     comingSoon: {type: 'boolean',enum:[true,false]},
     featured: {type: 'boolean',enum:[true,false]},
-    actors: {type: 'object',items: {}},
+    actors: {type: 'array'},
   },
 };
