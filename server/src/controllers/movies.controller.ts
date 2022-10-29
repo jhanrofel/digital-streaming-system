@@ -10,7 +10,11 @@ import {
   response,
 } from '@loopback/rest';
 import {Movies} from '../models';
-import {MoviesRepository, MovieActorRepository, LinksRepository} from '../repositories';
+import {
+  MoviesRepository,
+  MovieActorRepository,
+  LinksRepository,
+} from '../repositories';
 import {MoviesPatchSchema, MoviesPostSchema} from '../schemas';
 import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
@@ -38,6 +42,13 @@ class LinkClass {
   youtube?: string;
   trailer?: string;
   clip?: string[];
+}
+
+interface ApiResponse {
+  status: number;
+  message?: string;
+  movies?: Movies[] | void[];
+  error?: string;
 }
 
 export class MoviesController {
@@ -70,9 +81,14 @@ export class MoviesController {
     const link = await this.linksRepository.create(movies.movieLink);
     const actors = movies.actors;
     movies.link = link.id;
-    const movie = await this.moviesRepository.create(_.omit(movies, ['movieLink','actors']));
-    actors.map(async (actor) => {
-      await this.movieActorRepository.create({movieId:movie.id,actorId:actor});
+    const movie = await this.moviesRepository.create(
+      _.omit(movies, ['movieLink', 'actors']),
+    );
+    actors.map(async actor => {
+      await this.movieActorRepository.create({
+        movieId: movie.id,
+        actorId: actor,
+      });
     });
 
     return this.moviesRepository.findById(movie.id, {
@@ -104,7 +120,7 @@ export class MoviesController {
     },
   })
   async find(): Promise<Movies[]> {
-    return this.moviesRepository.find({include:['movieLink','movieActors']});
+    return this.moviesRepository.find({include: ['movieLink', 'movieActors']});
   }
 
   @get('/movies/{id}')
@@ -117,7 +133,9 @@ export class MoviesController {
     },
   })
   async findById(@param.path.string('id') id: string): Promise<Movies> {
-    return this.moviesRepository.findById(id,{include:['movieLink']});
+    return this.moviesRepository.findById(id, {
+      include: ['movieLink', 'movieActors'],
+    });
   }
 
   @authenticate('jwt')
@@ -125,19 +143,33 @@ export class MoviesController {
   @patch('/movies/{id}')
   @response(204, {
     description: 'Movies PATCH success',
+    content: {
+      'application/json': {
+        schema: MoviesPatchSchema,
+      },
+    },
   })
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
       content: {
         'application/json': {
-          schema: MoviesPostSchema,
+          schema: MoviesPatchSchema,
         },
       },
     })
-    movies: Movies,
-  ): Promise<void> {
-    await this.moviesRepository.updateById(id, movies);
+    movies: MovieClass,
+  ): Promise<Movies> {
+    const link = movies.movieLink;
+    await this.linksRepository.updateById(movies.link, link);
+    await this.moviesRepository.updateById(
+      id,
+      _.omit(movies, ['movieLink', 'link']),
+    );
+
+    return this.moviesRepository.findById(id, {
+      include: ['movieLink', 'movieActors'],
+    });
   }
 
   @authenticate('jwt')
@@ -146,8 +178,24 @@ export class MoviesController {
   @response(204, {
     description: 'Movies DELETE success',
   })
-  async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.moviesRepository.deleteById(id);
-    // await this.moviesRepository.movieLink(id).delete();
+  async deleteById(@param.path.string('id') id: string): Promise<ApiResponse> {
+    const movie = await this.moviesRepository.findById(id, {
+      include: ['movieLink', 'movieActors'],
+    });
+
+    const today = new Date();
+    if (today.getFullYear() > movie.yearReleased) {
+      await this.moviesRepository.deleteById(id);
+      await this.linksRepository.deleteById(movie.link);
+      await this.movieActorRepository.deleteAll({movieId: id});
+
+      return {status: 200, message: 'Movie deleted.', movies: [movie]};
+    } else {
+      return {
+        status: 500,
+        error: 'Required 1 year old movie to delete.',
+        movies: [movie],
+      };
+    }
   }
 }

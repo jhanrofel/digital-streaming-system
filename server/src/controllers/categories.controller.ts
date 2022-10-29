@@ -14,7 +14,7 @@ import {CategoriesRepository} from '../repositories';
 import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 
-interface apiResponse {
+interface ApiResponse {
   status: number;
   message?: string;
   categories?: Categories[] | void[];
@@ -46,7 +46,7 @@ export class CategoriesController {
       },
     })
     categories: Omit<Categories, 'id'>,
-  ): Promise<apiResponse> {
+  ): Promise<ApiResponse> {
     return this.categoriesRepository
       .create(categories)
       .then(res => {
@@ -99,7 +99,7 @@ export class CategoriesController {
       },
     })
     categories: Categories,
-  ): Promise<apiResponse> {
+  ): Promise<ApiResponse> {
     return this.categoriesRepository
       .updateById(id, categories)
       .then(res => {
