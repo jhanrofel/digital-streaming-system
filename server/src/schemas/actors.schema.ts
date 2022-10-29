@@ -1,8 +1,6 @@
 import {SchemaObject} from '@loopback/rest';
 
-export const defautSchema: SchemaObject = {};
-
-export const postSchema: SchemaObject = {
+export const ActorsPostSchema: SchemaObject = {
   type: 'object',
   title: 'Post Actor',
   required: ['firstName', 'lastName', 'gender', 'birthday'],

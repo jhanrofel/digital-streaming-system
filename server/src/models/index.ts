@@ -4,6 +4,5 @@ export * from './movies.model';
 export * from './actors.model';
 export * from './reviews.model';
 export * from './links.model';
-export * from './rates.model';
 export * from './categories.model';
 export * from './movie-actor.model';

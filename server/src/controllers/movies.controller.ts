@@ -11,9 +11,9 @@ import {
 } from '@loopback/rest';
 import {Movies} from '../models';
 import {MoviesRepository, LinksRepository} from '../repositories';
+import {MoviesPatchSchema, MoviesPostSchema} from '../schemas';
 import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
-import {patchSchema, postSchema} from '../schemas/movies.schema';
 import _ from 'lodash';
 
 class MovieClass {
@@ -52,13 +52,13 @@ export class MoviesController {
   @post('/movies')
   @response(200, {
     description: 'Movies model instance',
-    content: {'application/json': {schema: postSchema}},
+    content: {'application/json': {schema: MoviesPostSchema}},
   })
   async create(
     @requestBody({
       content: {
         'application/json': {
-          schema: postSchema,
+          schema: MoviesPostSchema,
         },
       },
     })
@@ -127,7 +127,7 @@ export class MoviesController {
     @requestBody({
       content: {
         'application/json': {
-          schema: patchSchema,
+          schema: MoviesPostSchema,
         },
       },
     })

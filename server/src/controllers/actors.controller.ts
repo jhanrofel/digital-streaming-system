@@ -18,10 +18,10 @@ import {
 } from '@loopback/rest';
 import {Actors} from '../models';
 import {ActorsRepository, LinksRepository} from '../repositories';
+import {ActorsPostSchema} from '../schemas';
 import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 import _ from 'lodash';
-import {postSchema} from '../schemas/actors.schema';
 
 class ActorClass {
   firstName: string;
@@ -55,13 +55,13 @@ export class ActorsController {
   @post('/actors')
   @response(200, {
     description: 'Actors model instance',
-    content: {'application/json': {schema: postSchema}},
+    content: {'application/json': {schema: ActorsPostSchema}},
   })
   async create(
     @requestBody({
       content: {
         'application/json': {
-          schema: postSchema,
+          schema: ActorsPostSchema,
         },
       },
     })
@@ -125,7 +125,7 @@ export class ActorsController {
     @param.path.string('id') id: string,
     @requestBody({
       content: {
-        'application/json': {schema: postSchema},
+        'application/json': {schema: ActorsPostSchema},
       },
     })
     actors: ActorClass,

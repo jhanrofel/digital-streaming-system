@@ -1,8 +1,6 @@
 import {SchemaObject} from '@loopback/rest';
 
-export const defautSchema: SchemaObject = {};
-
-export const registerSchema: SchemaObject = {
+export const UsersRegisterSchema: SchemaObject = {
   type: 'object',
   title: 'Registration',
   required: ['firstName', 'lastName', 'email', 'password','role'],
@@ -15,7 +13,7 @@ export const registerSchema: SchemaObject = {
   },
 };
 
-export const loginSchema: SchemaObject = {
+export const UsersLoginSchema: SchemaObject = {
   type: 'object',
   title: 'Login',
   required: ['email', 'password'],
