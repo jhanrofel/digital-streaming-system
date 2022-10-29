@@ -10,7 +10,11 @@ import {
   response,
 } from '@loopback/rest';
 import {Actors} from '../models';
-import {ActorsRepository, LinksRepository} from '../repositories';
+import {
+  ActorsRepository,
+  LinksRepository,
+  MovieActorRepository,
+} from '../repositories';
 import {ActorsPostSchema} from '../schemas';
 import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
@@ -36,12 +40,21 @@ class LinkClass {
   clip?: string[];
 }
 
+interface ApiResponse {
+  status: number;
+  message?: string;
+  actors?: Actors[] | void[];
+  error?: string;
+}
+
 export class ActorsController {
   constructor(
     @repository(ActorsRepository)
     public actorsRepository: ActorsRepository,
     @repository(LinksRepository)
     public linksRepository: LinksRepository,
+    @repository(MovieActorRepository)
+    public movieActorRepository: MovieActorRepository,
   ) {}
 
   @authenticate('jwt')
@@ -95,7 +108,10 @@ export class ActorsController {
   })
   async find(): Promise<Actors[]> {
     return this.actorsRepository.find({
-      include: [{relation: 'actorLink', scope: {fields: {id: false}}}],
+      include: [
+        {relation: 'actorLink', scope: {fields: {id: false}}},
+        {relation: 'actorMovies'},
+      ],
     });
   }
 
@@ -147,15 +163,23 @@ export class ActorsController {
   @response(204, {
     description: 'Actors DELETE success',
   })
-  async deleteById(@param.path.string('id') id: string): Promise<Actors> {
+  async deleteById(@param.path.string('id') id: string): Promise<ApiResponse> {
     const actor = await this.actorsRepository.findById(id, {
-      include: [{relation: 'actorLink', scope: {fields: {id: false}}}],
+      include: [{relation: 'actorLink', scope: {fields: {id: false}}},{relation:'actorMovies'}],
     });
-    //add condition if not belongsTo a movie
 
-    await this.actorsRepository.deleteById(id);
-    await this.linksRepository.deleteById(actor.link);
+    const movieCount = await this.movieActorRepository.count({actorId: id});
+    if (movieCount.count > 0) {
+      return {
+        status: 500,
+        error: `Actor have (${movieCount.count}) existing movie.`,
+        actors: [actor],
+      };
+    } else {
+      await this.actorsRepository.deleteById(id);
+      await this.linksRepository.deleteById(actor.link);
 
-    return actor;
+      return {status: 200, message: 'Actor deleted.', actors: [actor]};
+    }
   }
 }
