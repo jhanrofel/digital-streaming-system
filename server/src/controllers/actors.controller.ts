@@ -1,11 +1,4 @@
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where,
-} from '@loopback/repository';
+import {Count, CountSchema, repository} from '@loopback/repository';
 import {
   post,
   param,
@@ -16,7 +9,7 @@ import {
   requestBody,
   response,
 } from '@loopback/rest';
-import {Actors, Links} from '../models';
+import {Actors} from '../models';
 import {ActorsRepository, LinksRepository} from '../repositories';
 import {ActorsPostSchema} from '../schemas';
 import {authenticate} from '@loopback/authentication';
@@ -76,7 +69,7 @@ export class ActorsController {
 
     return this.actorsRepository.findById(actor.id, {
       include: [{relation: 'actorLink', scope: {fields: {id: false}}}],
-    }); 
+    });
   }
 
   @get('/actors/count')
@@ -137,8 +130,11 @@ export class ActorsController {
     actors: ActorClass,
   ): Promise<Actors> {
     const actorLink = actors.actorLink;
-    await this.actorsRepository.updateById(id, _.omit(actors, ['actorLink','link']));
-    await this.linksRepository.updateById(actors.link,actorLink);
+    await this.actorsRepository.updateById(
+      id,
+      _.omit(actors, ['actorLink', 'link']),
+    );
+    await this.linksRepository.updateById(actors.link, actorLink);
 
     return this.actorsRepository.findById(id, {
       include: [{relation: 'actorLink', scope: {fields: {id: false}}}],
@@ -156,10 +152,10 @@ export class ActorsController {
       include: [{relation: 'actorLink', scope: {fields: {id: false}}}],
     });
     //add condition if not belongsTo a movie
-    
+
     await this.actorsRepository.deleteById(id);
     await this.linksRepository.deleteById(actor.link);
 
-    return actor; 
+    return actor;
   }
 }
