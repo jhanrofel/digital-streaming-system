@@ -2,6 +2,7 @@ import {Entity, model, property, hasMany, belongsTo} from '@loopback/repository'
 import {Links} from './links.model';
 import {Actors} from './actors.model';
 import {MovieActor} from './movie-actor.model';
+import {Reviews} from './reviews.model';
 
 @model()
 export class Movies extends Entity {
@@ -63,6 +64,9 @@ export class Movies extends Entity {
 
   @hasMany(() => Actors, {through: {model: () => MovieActor, keyFrom: 'movieId', keyTo: 'actorId'}})
   movieActors: Actors[];
+
+  @hasMany(() => Reviews, {keyTo: 'movie'})
+  movieReviews: Reviews[];
 
   constructor(data?: Partial<Movies>) {
     super(data);

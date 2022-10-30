@@ -12,20 +12,36 @@ import {
   get,
   getModelSchemaRef,
   patch,
-  put,
   del,
   requestBody,
   response,
 } from '@loopback/rest';
 import {Reviews} from '../models';
 import {ReviewsRepository} from '../repositories';
+import {ReviewsApprovalSchema, ReviewsPostSchema} from '../schemas';
+import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
+import {inject} from '@loopback/core';
+import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
+
+interface ApiResponse {
+  status: number;
+  message?: string;
+  reviews?: Reviews[] | void[];
+  error?: string;
+}
 
 export class ReviewsController {
   constructor(
     @repository(ReviewsRepository)
-    public reviewsRepository : ReviewsRepository,
+    public reviewsRepository: ReviewsRepository,
+
+    @inject(SecurityBindings.USER, {optional: true})
+    public user: UserProfile,
   ) {}
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN', 'USER']})
   @post('/reviews')
   @response(200, {
     description: 'Reviews model instance',
@@ -34,28 +50,37 @@ export class ReviewsController {
   async create(
     @requestBody({
       content: {
-        'application/json': {
-          schema: getModelSchemaRef(Reviews, {
-            title: 'NewReviews',
-            exclude: ['id'],
-          }),
-        },
+        'application/json': {schema: ReviewsPostSchema},
       },
     })
     reviews: Omit<Reviews, 'id'>,
-  ): Promise<Reviews> {
-    return this.reviewsRepository.create(reviews);
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
+  ): Promise<ApiResponse> {
+    const userId = currentUserProfile[securityId];
+    const review = await this.reviewsRepository.count({user: userId,movie: reviews.movie});
+    if (review.count) {
+      return {status: 500, message: 'You already have review on this movie.'};
+    } else {
+      this.reviewsRepository.create({...reviews, user: userId});
+      return {status: 200, message: 'Your review is awaiting for approval.'};
+    }
   }
 
-  @get('/reviews/count')
-  @response(200, {
-    description: 'Reviews model count',
-    content: {'application/json': {schema: CountSchema}},
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
+  @patch('/reviews/{id}/approval')
+  @response(204, {
+    description: 'Reviews Approved',
   })
-  async count(
-    @param.where(Reviews) where?: Where<Reviews>,
-  ): Promise<Count> {
-    return this.reviewsRepository.count(where);
+  async reviewApproval(
+    @param.path.string('id') id: string,
+    @requestBody({
+      content: {'application/json': {schema: ReviewsApprovalSchema}},
+    })
+    reviews: Reviews,
+  ): Promise<void> {
+    await this.reviewsRepository.updateById(id, reviews);
   }
 
   @get('/reviews')
@@ -70,29 +95,8 @@ export class ReviewsController {
       },
     },
   })
-  async find(
-    @param.filter(Reviews) filter?: Filter<Reviews>,
-  ): Promise<Reviews[]> {
-    return this.reviewsRepository.find(filter);
-  }
-
-  @patch('/reviews')
-  @response(200, {
-    description: 'Reviews PATCH success count',
-    content: {'application/json': {schema: CountSchema}},
-  })
-  async updateAll(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(Reviews, {partial: true}),
-        },
-      },
-    })
-    reviews: Reviews,
-    @param.where(Reviews) where?: Where<Reviews>,
-  ): Promise<Count> {
-    return this.reviewsRepository.updateAll(reviews, where);
+  async find(): Promise<Reviews[]> {
+    return this.reviewsRepository.find({include:['reviewUser','reviewMovie']});
   }
 
   @get('/reviews/{id}')
@@ -104,47 +108,7 @@ export class ReviewsController {
       },
     },
   })
-  async findById(
-    @param.path.string('id') id: string,
-    @param.filter(Reviews, {exclude: 'where'}) filter?: FilterExcludingWhere<Reviews>
-  ): Promise<Reviews> {
-    return this.reviewsRepository.findById(id, filter);
-  }
-
-  @patch('/reviews/{id}')
-  @response(204, {
-    description: 'Reviews PATCH success',
-  })
-  async updateById(
-    @param.path.string('id') id: string,
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(Reviews, {partial: true}),
-        },
-      },
-    })
-    reviews: Reviews,
-  ): Promise<void> {
-    await this.reviewsRepository.updateById(id, reviews);
-  }
-
-  @put('/reviews/{id}')
-  @response(204, {
-    description: 'Reviews PUT success',
-  })
-  async replaceById(
-    @param.path.string('id') id: string,
-    @requestBody() reviews: Reviews,
-  ): Promise<void> {
-    await this.reviewsRepository.replaceById(id, reviews);
-  }
-
-  @del('/reviews/{id}')
-  @response(204, {
-    description: 'Reviews DELETE success',
-  })
-  async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.reviewsRepository.deleteById(id);
+  async findById(@param.path.string('id') id: string): Promise<Reviews> {
+    return this.reviewsRepository.findById(id,{include:['reviewUser','reviewMovie']});
   }
 }

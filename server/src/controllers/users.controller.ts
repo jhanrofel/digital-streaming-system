@@ -1,4 +1,4 @@
-import {repository} from '@loopback/repository';
+import {relation, repository} from '@loopback/repository';
 import {
   post,
   param,
@@ -9,7 +9,7 @@ import {
   requestBody,
   response,
 } from '@loopback/rest';
-import {Users} from '../models';
+import {Reviews, Users} from '../models';
 import {UsersRepository, UserCredentialsRepository} from '../repositories';
 import {
   UsersChangePasswordSchema,
@@ -224,6 +224,21 @@ export class UsersController {
     return this.usersRepository.findById(id);
   }
 
+  @get('/users/{id}/reviews')
+  @response(200, {
+    description: 'Users model instance',
+    content: {
+      'application/json': {
+        schema: getModelSchemaRef(Users, {includeRelations: true}),
+      },
+    },
+  })
+  async userReviews(@param.path.string('id') id: string): Promise<Reviews[]> {
+    return this.usersRepository
+      .userReviews(id)
+      .find({include: [{relation: 'reviewMovie',scope:{include:['movieLink']}}]});
+  }
+
   @authenticate('jwt')
   @authorize({allowedRoles: ['ADMIN']})
   @patch('/users/{id}')
@@ -252,6 +267,7 @@ export class UsersController {
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.usersRepository.deleteById(id);
-    await this.userCredentialsRepository.deleteAll({userId:id});
+    await this.usersRepository.userReviews(id).delete();
+    await this.userCredentialsRepository.deleteAll({userId: id});
   }
 }

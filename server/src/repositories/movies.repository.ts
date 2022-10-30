@@ -3,13 +3,13 @@ import {
   DefaultCrudRepository,
   repository,
   HasManyThroughRepositoryFactory,
-  BelongsToAccessor,
-} from '@loopback/repository';
+  BelongsToAccessor, HasManyRepositoryFactory} from '@loopback/repository';
 import {MongoDbDataSource} from '../datasources';
-import {Movies, MoviesRelations, Links, Actors, MovieActor} from '../models';
+import {Movies, MoviesRelations, Links, Actors, MovieActor, Reviews} from '../models';
 import {LinksRepository} from './links.repository';
 import {MovieActorRepository} from './movie-actor.repository';
 import {ActorsRepository} from './actors.repository';
+import {ReviewsRepository} from './reviews.repository';
 
 export class MoviesRepository extends DefaultCrudRepository<
   Movies,
@@ -28,6 +28,8 @@ export class MoviesRepository extends DefaultCrudRepository<
     typeof Movies.prototype.id
   >;
 
+  public readonly movieReviews: HasManyRepositoryFactory<Reviews, typeof Movies.prototype.id>;
+
   constructor(
     @inject('datasources.mongoDb') dataSource: MongoDbDataSource,
     @repository.getter('LinksRepository')
@@ -35,9 +37,12 @@ export class MoviesRepository extends DefaultCrudRepository<
     @repository.getter('MovieActorRepository')
     protected movieActorRepositoryGetter: Getter<MovieActorRepository>,
     @repository.getter('ActorsRepository')
-    protected actorsRepositoryGetter: Getter<ActorsRepository>,
+    protected actorsRepositoryGetter: Getter<ActorsRepository>, 
+    @repository.getter('ReviewsRepository') protected reviewsRepositoryGetter: Getter<ReviewsRepository>,
   ) {
     super(Movies, dataSource);
+    this.movieReviews = this.createHasManyRepositoryFactoryFor('movieReviews', reviewsRepositoryGetter,);
+    this.registerInclusionResolver('movieReviews', this.movieReviews.inclusionResolver);
     this.movieActors = this.createHasManyThroughRepositoryFactoryFor(
       'movieActors',
       actorsRepositoryGetter,

@@ -9,7 +9,7 @@ import {
   requestBody,
   response,
 } from '@loopback/rest';
-import {Movies} from '../models';
+import {Movies, Reviews} from '../models';
 import {
   MoviesRepository,
   MovieActorRepository,
@@ -138,6 +138,21 @@ export class MoviesController {
     });
   }
 
+  @get('/movies/{id}/reviews')
+  @response(200, {
+    description: 'Movies model instance',
+    content: {
+      'application/json': {
+        schema: getModelSchemaRef(Movies, {includeRelations: true}),
+      },
+    },
+  })
+  async movieReviews(@param.path.string('id') id: string): Promise<Reviews[]> {
+    return this.moviesRepository
+      .movieReviews(id)
+      .find({include: ['reviewUser']});
+  }
+
   @authenticate('jwt')
   @authorize({allowedRoles: ['ADMIN']})
   @patch('/movies/{id}')
@@ -188,6 +203,7 @@ export class MoviesController {
       await this.moviesRepository.deleteById(id);
       await this.linksRepository.deleteById(movie.link);
       await this.movieActorRepository.deleteAll({movieId: id});
+      await this.moviesRepository.movieReviews(id).delete();
 
       return {status: 200, message: 'Movie deleted.', movies: [movie]};
     } else {
