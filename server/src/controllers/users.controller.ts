@@ -83,14 +83,26 @@ export class UsersController {
       },
     })
     register: RegistrationClass,
-  ): Promise<Omit<RegistrationClass, 'password'>> {
+  ): Promise<ApiResponse> {
     const password = await hash(register.password, await genSalt());
-    const savedUser = await this.usersRepository.create(
-      _.omit(register, 'password'),
-    );
+    const response = await this.usersRepository
+      .create(_.omit(register, 'password'))
+      .then(res => {
+        this.usersRepository.userCredentials(res.id).create({password});
+        return {status: 200, message: "Account registration is awaiting for approval.", users: [res]};
+      })
+      .catch(err => {
+        if (err.code === 11000) {
+          return {
+            status: 500,
+            error: `${err.keyValue.email} email already exist.`,
+          };
+        } else {
+          return {status: 500, error: err.message};
+        }
+      });
 
-    await this.usersRepository.userCredentials(savedUser.id).create({password});
-    return savedUser;
+    return response;
   }
 
   @authenticate('jwt')
@@ -236,7 +248,9 @@ export class UsersController {
   async userReviews(@param.path.string('id') id: string): Promise<Reviews[]> {
     return this.usersRepository
       .userReviews(id)
-      .find({include: [{relation: 'reviewMovie',scope:{include:['movieLink']}}]});
+      .find({
+        include: [{relation: 'reviewMovie', scope: {include: ['movieLink']}}],
+      });
   }
 
   @authenticate('jwt')
