@@ -124,7 +124,6 @@ const Register = () => {
         };
 
         await dispatch(usersRegister(postUserValue)).then((res) => {
-          console.log(res);
           if (res.type === "users/register/fulfilled") {
             alert(res.payload.message);
             navigate("/");

@@ -2,16 +2,16 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3001";
 
-interface RegisterInput {
-  firstName: string;
-  lastName: string;
+interface PostInput {
+  firstName?: string;
+  lastName?: string;
   email: string;
   password: string;
 }
 
 export const usersRegister = createAsyncThunk(
   "users/register",
-  async (formValues: RegisterInput, { rejectWithValue }) => {
+  async (formValues: PostInput, { rejectWithValue }) => {
     return await axios({
       url: `/users/register`,
       method: "post",
@@ -25,6 +25,21 @@ export const usersRegister = createAsyncThunk(
         }
       })
       .catch((err) => err);
+  }
+);
+
+export const usersLogin = createAsyncThunk(
+  "users/login",
+  async (formValues: PostInput, { rejectWithValue }) => {
+    return await axios({
+      url: `/users/login`,
+      method: "post",
+      data: formValues,
+    })
+      .then((res) => res.data)
+      .catch((err) => {
+        return rejectWithValue(err.response.data.error.message);
+      });
   }
 );
 
