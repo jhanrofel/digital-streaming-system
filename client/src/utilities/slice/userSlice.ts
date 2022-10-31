@@ -9,11 +9,11 @@ interface RegisterInput {
   password: string;
 }
 
-export const postUser = createAsyncThunk(
+export const usersRegister = createAsyncThunk(
   "users/register",
   async (formValues: RegisterInput, { rejectWithValue }) => {
     return await axios({
-      url: `/users`,
+      url: `/users/register`,
       method: "post",
       data: formValues,
     })
@@ -57,6 +57,9 @@ export const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(usersRegister.fulfilled, (state, action) => {
+      state.data = [...state.data, action.payload];
+    });
   },
 });
 
