@@ -25,7 +25,7 @@ export class Links extends Entity {
     type: 'array',
     itemType: 'string',
   })
-  picture?: string[];
+  pictures?: string[];
 
   @property({
     type: 'string',
@@ -50,7 +50,7 @@ export class Links extends Entity {
   @property({
     type: 'string',
   })
-  clip?: string[];
+  clips?: string[];
 
   @property({
     type: 'string',

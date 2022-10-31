@@ -41,7 +41,7 @@ export class Movies extends Entity {
     type: 'array',
     itemType: 'string',
   })
-  hashTag?: string[];
+  hashTags?: string[];
 
   @property({
     type: 'boolean',
@@ -57,7 +57,7 @@ export class Movies extends Entity {
     type: 'date',
     default: () => new Date(),
   })
-  created?: string;
+  createdAt?: string;
 
   @belongsTo(() => Links, {name: 'movieLink'})
   link: string;
