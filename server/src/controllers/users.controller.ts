@@ -1,4 +1,4 @@
-import {relation, repository} from '@loopback/repository';
+import {repository} from '@loopback/repository';
 import {
   post,
   param,

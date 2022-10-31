@@ -84,12 +84,13 @@ export class MoviesController {
     const movie = await this.moviesRepository.create(
       _.omit(movies, ['movieLink', 'actors']),
     );
-    actors.map(async actor => {
+
+    for (const actor of actors) {
       await this.movieActorRepository.create({
         movieId: movie.id,
         actorId: actor,
       });
-    });
+    }
 
     return this.moviesRepository.findById(movie.id, {
       include: [{relation: 'movieLink', scope: {fields: {id: false}}}],

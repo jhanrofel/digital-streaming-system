@@ -2,8 +2,7 @@ import {Authorizer,AuthorizationContext,AuthorizationMetadata,AuthorizationDecis
 import {Provider} from '@loopback/core';
 
 export class MyAuthorizationProvider implements Provider<Authorizer> {
-    constructor() {}
-  
+    
     /**
      * @returns authenticateFn
      */

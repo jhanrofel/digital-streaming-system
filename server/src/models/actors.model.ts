@@ -1,4 +1,4 @@
-import {Entity, model, property, hasOne, belongsTo, hasMany} from '@loopback/repository';
+import {Entity, model, property, belongsTo, hasMany} from '@loopback/repository';
 import {Links} from './links.model';
 import {Movies} from './movies.model';
 import {MovieActor} from './movie-actor.model';

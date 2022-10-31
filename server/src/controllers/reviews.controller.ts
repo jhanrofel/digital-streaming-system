@@ -1,18 +1,10 @@
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where,
-} from '@loopback/repository';
+import {repository} from '@loopback/repository';
 import {
   post,
   param,
   get,
   getModelSchemaRef,
   patch,
-  del,
   requestBody,
   response,
 } from '@loopback/rest';
@@ -58,7 +50,10 @@ export class ReviewsController {
     currentUserProfile: UserProfile,
   ): Promise<ApiResponse> {
     const userId = currentUserProfile[securityId];
-    const review = await this.reviewsRepository.count({user: userId,movie: reviews.movie});
+    const review = await this.reviewsRepository.count({
+      user: userId,
+      movie: reviews.movie,
+    });
     if (review.count) {
       return {status: 500, message: 'You already have review on this movie.'};
     } else {
@@ -96,7 +91,9 @@ export class ReviewsController {
     },
   })
   async find(): Promise<Reviews[]> {
-    return this.reviewsRepository.find({include:['reviewUser','reviewMovie']});
+    return this.reviewsRepository.find({
+      include: ['reviewUser', 'reviewMovie'],
+    });
   }
 
   @get('/reviews/{id}')
@@ -109,6 +106,8 @@ export class ReviewsController {
     },
   })
   async findById(@param.path.string('id') id: string): Promise<Reviews> {
-    return this.reviewsRepository.findById(id,{include:['reviewUser','reviewMovie']});
+    return this.reviewsRepository.findById(id, {
+      include: ['reviewUser', 'reviewMovie'],
+    });
   }
 }
