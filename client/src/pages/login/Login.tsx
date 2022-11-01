@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../utilities/hooks";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import FormButton from "../../components/FormButton";
-import FormText from "../../components/FormText";
 import { usersLogin } from "../../utilities/slice/userSlice";
 import { cookiesCreate } from "../../utilities/cookies";
+import LoginForm from "../../components/login/Login";
 
 interface FormValue {
   email: string;
@@ -80,28 +77,11 @@ const Login = () => {
   };
 
   return (
-    <React.Fragment>
-      <Container maxWidth="sm">
-        <Box sx={{ bgcolor: "#ffffff", display: "flex", flexWrap: "wrap" }}>
-          <div className="form-header">SIGN IN</div>
-          <FormText
-            name="email"
-            label="Email"
-            type="search"
-            error={formErrors.email}
-            onChange={onChangeHandler}
-          />
-          <FormText
-            name="password"
-            label="Password"
-            type="password"
-            error={formErrors.password}
-            onChange={onChangeHandler}
-          />
-          <FormButton label="Login" onClick={onClickSubmitHandler} />
-        </Box>
-      </Container>
-    </React.Fragment>
+    <LoginForm
+    formErrors={formErrors}
+    onChange={onChangeHandler}
+    onClick={onClickSubmitHandler}
+  />
   );
 };
 

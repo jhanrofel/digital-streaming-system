@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../utilities/hooks";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import FormButton from "../../components/FormButton";
-import FormText from "../../components/FormText";
+import RegistrationForm from "../../components/register/Register";
 import { usersRegister } from "../../utilities/slice/userSlice";
 
 interface FormValue {
@@ -65,6 +62,34 @@ const Register = () => {
   };
 
   const onClickSubmitHandler = async (): Promise<void> => {
+    if (formValidation()) {
+      interface PostValue {
+        firstName: string;
+        lastName: string;
+        email: string;
+        password: string;
+      }
+
+      const postUserValue: PostValue = {
+        firstName: formValues.firstName,
+        lastName: formValues.lastName,
+        email: formValues.email,
+        password: formValues.password,
+      };
+
+      await dispatch(usersRegister(postUserValue)).then((res) => {
+        if (res.type === "users/register/fulfilled") {
+          alert(res.payload.message);
+          navigate("/");
+        } else {
+          alert(res.payload);
+        }
+      });
+    }
+  };
+
+  const formValidation = (): boolean => {
+    let valid = false;
     if (formValues.email === "")
       setFormErrors((state) => ({
         ...state,
@@ -103,82 +128,23 @@ const Register = () => {
       const dotpos = formValues.email.lastIndexOf(".");
       if (apos < 1 || dotpos - apos < 2) {
         alert("Invalid email.");
-        return;
       }
       if (formValues.password !== formValues.confirm) {
         alert("Confirm password does not match.");
-        return;
       } else {
-        interface PostValue {
-          firstName: string;
-          lastName: string;
-          email: string;
-          password: string;
-        }
-
-        const postUserValue: PostValue = {
-          firstName: formValues.firstName,
-          lastName: formValues.lastName,
-          email: formValues.email,
-          password: formValues.password,
-        };
-
-        await dispatch(usersRegister(postUserValue)).then((res) => {
-          if (res.type === "users/register/fulfilled") {
-            alert(res.payload.message);
-            navigate("/");
-          } else {
-            alert(res.payload);
-          }
-        });
+        valid = true;
       }
     }
+
+    return valid;
   };
 
   return (
-    <React.Fragment>
-      <Container maxWidth="sm">
-        <Box sx={{ bgcolor: "#ffffff", display: "flex", flexWrap: "wrap" }}>
-          <div className="form-header">REGISTRATION</div>
-          <FormText
-            name="email"
-            label="Email"
-            type="search"
-            error={formErrors.email}
-            onChange={onChangeHandler}
-          />
-          <FormText
-            name="firstName"
-            label="First Name"
-            type="search"
-            error={formErrors.firstName}
-            onChange={onChangeHandler}
-          />
-          <FormText
-            name="lastName"
-            label="Last Name"
-            type="search"
-            error={formErrors.lastName}
-            onChange={onChangeHandler}
-          />
-          <FormText
-            name="password"
-            label="Password"
-            type="password"
-            error={formErrors.password}
-            onChange={onChangeHandler}
-          />
-          <FormText
-            name="confirm"
-            label="Confirm Password"
-            type="password"
-            error={formErrors.confirm}
-            onChange={onChangeHandler}
-          />
-          <FormButton label="Create Account" onClick={onClickSubmitHandler} />
-        </Box>
-      </Container>
-    </React.Fragment>
+    <RegistrationForm
+      formErrors={formErrors}
+      onChange={onChangeHandler}
+      onClick={onClickSubmitHandler}
+    />
   );
 };
 

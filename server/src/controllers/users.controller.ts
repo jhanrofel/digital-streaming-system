@@ -89,7 +89,7 @@ export class UsersController {
       .create(_.omit(register, 'password'))
       .then(res => {
         this.usersRepository.userCredentials(res.id).create({password});
-        return {status: 200, message: "Account registration is awaiting for approval.", users: [res]};
+        return {status: 200, message: "Registration success. Please wait for approval.", users: [res]};
       })
       .catch(err => {
         if (err.code === 11000) {

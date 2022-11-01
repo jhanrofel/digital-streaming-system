@@ -4,24 +4,13 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-
-const customTheme = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#1976d2",
-    },
-  },
-});
 
 const NavigationBar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   return (
     <div>
-      <ThemeProvider theme={customTheme}>
-        <AppBar position="static" color="primary">
+        <AppBar position="static" color="transparent">
           <Toolbar>
             <Box sx={{ flex: 1 }} />
             <div className="nav-title">DIGITAL STREAMING SYSTEM</div>
@@ -48,7 +37,6 @@ const NavigationBar: React.FC = () => {
             )}
           </Toolbar>
         </AppBar>
-      </ThemeProvider>
     </div>
   );
 };
