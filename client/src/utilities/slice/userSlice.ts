@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { authenticationToken } from "../authentication";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3001";
 
@@ -12,7 +13,7 @@ interface PostInput {
 export const usersRegister = createAsyncThunk(
   "users/register",
   async (formValues: PostInput, { rejectWithValue }) => {
-    return await axios({
+    return axios({
       url: `/users/register`,
       method: "post",
       data: formValues,
@@ -31,17 +32,28 @@ export const usersRegister = createAsyncThunk(
 export const usersLogin = createAsyncThunk(
   "users/login",
   async (formValues: PostInput, { rejectWithValue }) => {
-    return await axios({
+    return axios({
       url: `/users/login`,
       method: "post",
       data: formValues,
     })
-      .then((res) => res.data)
+      .then((res) => res.data.token)
       .catch((err) => {
         return rejectWithValue(err.response.data.error.message);
       });
   }
 );
+
+export const usersData = createAsyncThunk("users/me", async () => {
+  return axios({
+    url: `/users/me`,
+    method: "get",
+    headers: { Authorization: authenticationToken() },
+  }).then((res) => {
+    console.log(res);
+    return res.data;
+  });
+});
 
 interface UsersDataOne {
   id: string;

@@ -201,8 +201,8 @@ export class UsersController {
   async whoAmI(
     @inject(SecurityBindings.USER)
     currentUserProfile: UserProfile,
-  ): Promise<any> {
-    return currentUserProfile[securityId];
+  ): Promise<Users> {
+    return this.usersRepository.findById(currentUserProfile[securityId]);
   }
 
   @get('/users')

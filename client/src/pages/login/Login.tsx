@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../utilities/hooks";
-import { usersLogin } from "../../utilities/slice/userSlice";
+import { usersData, usersLogin } from "../../utilities/slice/userSlice";
 import { cookiesCreate } from "../../utilities/cookies";
+import { loggedInCreate } from "../../utilities/loggedIn";
 import LoginForm from "../../components/login/Login";
 
 interface FormValue {
@@ -53,15 +54,27 @@ const Login = () => {
         password: formValues.password,
       };
 
-      await dispatch(usersLogin(postUserValue)).then((res) => {
+      const valid = await dispatch(usersLogin(postUserValue)).then((res) => {
         if (res.type === "users/login/fulfilled") {
-          console.log(res);
-          cookiesCreate(res.payload.token);
-          navigate("/dashboard");
+          cookiesCreate(res.payload);
+          return true;
         } else {
           alert(res.payload);
+          return false;
         }
       });
+
+      if (valid) {
+        await dispatch(usersData()).then((res) => {
+          console.log(res);
+          navigate("/dashboard");
+          if (res.type === "users/me/fulfilled") {
+            loggedInCreate(res.payload);
+          } else {
+            alert(res.payload);
+          }
+        });
+      }
     }
   };
 
