@@ -42,18 +42,7 @@ const Login = () => {
   };
 
   const onClickSubmitHandler = async (): Promise<void> => {
-    if (formValues.email === "")
-      setFormErrors((state) => ({
-        ...state,
-        email: "Email is required.",
-      }));
-    if (formValues.password === "")
-      setFormErrors((state) => ({
-        ...state,
-        password: "Password is required.",
-      }));
-
-    if (formValues.email !== "" && formValues.password !== "") {
+    if (formValidation()) {
       interface PostValue {
         email: string;
         password: string;
@@ -68,7 +57,7 @@ const Login = () => {
         if (res.type === "users/login/fulfilled") {
           console.log(res);
           cookiesCreate(res.payload.token);
-          navigate("/");
+          navigate("/dashboard");
         } else {
           alert(res.payload);
         }
@@ -76,12 +65,32 @@ const Login = () => {
     }
   };
 
+  const formValidation = (): boolean => {
+    let valid = false;
+    if (formValues.email === "")
+      setFormErrors((state) => ({
+        ...state,
+        email: "Email is required.",
+      }));
+    if (formValues.password === "")
+      setFormErrors((state) => ({
+        ...state,
+        password: "Password is required.",
+      }));
+
+    if (formValues.email !== "" && formValues.password !== "") {
+      valid = true;
+    }
+
+    return valid;
+  };
+
   return (
     <LoginForm
-    formErrors={formErrors}
-    onChange={onChangeHandler}
-    onClick={onClickSubmitHandler}
-  />
+      formErrors={formErrors}
+      onChange={onChangeHandler}
+      onClick={onClickSubmitHandler}
+    />
   );
 };
 
