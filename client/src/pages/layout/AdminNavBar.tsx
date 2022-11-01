@@ -49,6 +49,27 @@ const NavigationBar: React.FC = () => {
 
     setAnchorElUser(null);
   };
+
+  const onClickMenu = (event: React.MouseEvent<HTMLElement>) => {
+    switch ((event.target as HTMLInputElement).textContent) {
+      case "Movies":
+        navigate("/movies");
+        break;
+      case "Actors":
+        navigate("/actors");
+        break;
+      case "Users":
+        navigate("/users");
+        break;
+      case "Reviews":
+        navigate("/reviews");
+        break;
+      default:
+        navigate("/dashboard");
+        break;
+    }
+  };
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -75,6 +96,7 @@ const NavigationBar: React.FC = () => {
               <Button
                 key={page}
                 sx={{ my: 2, color: "white", display: "block" }}
+                onClick={onClickMenu}
               >
                 {page}
               </Button>
