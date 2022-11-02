@@ -89,7 +89,11 @@ export class UsersController {
       .create(_.omit(register, 'password'))
       .then(res => {
         this.usersRepository.userCredentials(res.id).create({password});
-        return {status: 200, message: "Registration success. Please wait for approval.", users: [res]};
+        return {
+          status: 200,
+          message: 'Registration success. Please wait for approval.',
+          users: [res],
+        };
       })
       .catch(err => {
         if (err.code === 11000) {
@@ -139,11 +143,26 @@ export class UsersController {
       },
     })
     credentials: Credentials,
-  ): Promise<{token: string}> {
-    const user = await this.userService.verifyCredentials(credentials);
-    const userProfile = this.userService.convertToUserProfile(user);
-    const token = await this.jwtService.generateToken(userProfile);
-    return {token};
+  ): Promise<ApiResponse> {
+    const apiResponse: ApiResponse = {status: 200};
+    const user = await this.userService
+      .verifyCredentials(credentials)
+      .then(res => res)
+      .catch(err => {
+        console.log(err);
+        apiResponse.status = 500;
+        apiResponse.error = 'Invalid credentials';
+        return err;
+      });
+
+    if (apiResponse.status == 200) {
+      const userProfile = this.userService.convertToUserProfile(user);
+      await this.jwtService
+        .generateToken(userProfile)
+        .then(res => (apiResponse.message = res));
+    }
+
+    return apiResponse;
   }
 
   @post('/users/change-password')
@@ -223,6 +242,24 @@ export class UsersController {
 
   @authenticate('jwt')
   @authorize({allowedRoles: ['ADMIN']})
+  @get('/users/approval')
+  @response(200, {
+    description: 'Array of Users model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(Users, {includeRelations: true}),
+        },
+      },
+    },
+  })
+  async findApproval(): Promise<Users[]> {
+    return this.usersRepository.find({where: {approval: 'pending'}});
+  }
+
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @get('/users/{id}')
   @response(200, {
     description: 'Users model instance',
@@ -246,11 +283,9 @@ export class UsersController {
     },
   })
   async userReviews(@param.path.string('id') id: string): Promise<Reviews[]> {
-    return this.usersRepository
-      .userReviews(id)
-      .find({
-        include: [{relation: 'reviewMovie', scope: {include: ['movieLink']}}],
-      });
+    return this.usersRepository.userReviews(id).find({
+      include: [{relation: 'reviewMovie', scope: {include: ['movieLink']}}],
+    });
   }
 
   @authenticate('jwt')
