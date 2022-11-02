@@ -22,7 +22,7 @@ const RegistrationForm = ({ formErrors, onClick, onChange }: AppProps) => {
   return (
     <React.Fragment>
       <Container maxWidth="sm">
-        <Box sx={{ bgcolor: "#EAF2FE", display: "flex", flexWrap: "wrap" }}>
+        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
           <div className="form-header">REGISTRATION</div>
           <FormText
             name="email"

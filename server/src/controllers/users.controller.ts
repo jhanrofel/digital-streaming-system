@@ -260,6 +260,24 @@ export class UsersController {
 
   @authenticate('jwt')
   @authorize({allowedRoles: ['ADMIN']})
+  @get('/users/approved')
+  @response(200, {
+    description: 'Array of Approved Users model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(Users, {includeRelations: true}),
+        },
+      },
+    },
+  })
+  async findApprovedl(): Promise<Users[]> {
+    return this.usersRepository.find({where: {approval: 'approved'}});
+  }
+
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @get('/users/{id}')
   @response(200, {
     description: 'Users model instance',
