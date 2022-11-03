@@ -1,9 +1,10 @@
-import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import * as React from "react";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import ActorList from "./ActorList";
+import ActorAdd from "./ActorAdd";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -24,7 +25,7 @@ function TabPanel(props: TabPanelProps) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          <Typography component="span">{children}</Typography>
         </Box>
       )}
     </div>
@@ -34,11 +35,11 @@ function TabPanel(props: TabPanelProps) {
 function a11yProps(index: number) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 
-const Actors= () => {
+const Actors = () => {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -46,10 +47,14 @@ const Actors= () => {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="LIST" {...a11yProps(0)} />
+    <Box sx={{ width: "100%", display: "static", marginTop: "100px" }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="basic tabs example"
+        >
+          <Tab label="ACTORS" {...a11yProps(0)} />
           <Tab label="ADD" {...a11yProps(1)} />
           <Tab label="INACTIVE" {...a11yProps(2)} />
         </Tabs>
@@ -58,10 +63,10 @@ const Actors= () => {
         <ActorList />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <ActorAdd />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        <ActorList />
       </TabPanel>
     </Box>
   );
