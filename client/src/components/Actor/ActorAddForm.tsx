@@ -24,12 +24,9 @@ interface FormValue {
   gender: string;
   banner: string;
   catalogue: string;
-  pictures?: string;
   facebook?: string;
   instagram?: string;
   youtube?: string;
-  trailer?: string;
-  clips?: string;
 }
 
 interface FormErrors {
@@ -39,12 +36,9 @@ interface FormErrors {
   birthday:  string;
   banner: string;
   catalogue: string;
-  pictures?: string;
   facebook?: string;
   instagram?: string;
   youtube?: string;
-  trailer?: string;
-  clips?: string;
 }
 
 const genderData = ["Male", "Female"];
@@ -115,13 +109,6 @@ const ActorAddForm = ({
           onChange={onChange}
         />
         <FormText
-          name="pictures"
-          value={formValues.pictures}
-          label="Pictures"
-          type="search"
-          onChange={onChange}
-        />
-        <FormText
           name="facebook"
           value={formValues.facebook}
           label="Faceboook"
@@ -139,20 +126,6 @@ const ActorAddForm = ({
           name="youtube"
           value={formValues.youtube}
           label="Youtube Channel"
-          type="search"
-          onChange={onChange}
-        />
-        <FormText
-          name="trailer"          
-          value={formValues.trailer}
-          label="Trailer"
-          type="search"
-          onChange={onChange}
-        />
-        <FormText
-          name="clips"
-          value={formValues.clips}
-          label="Clips"
           type="search"
           onChange={onChange}
         />

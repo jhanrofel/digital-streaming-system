@@ -24,12 +24,9 @@ interface RowValues {
 interface ActorLink {
   banner: string;
   catalogue: string;
-  pictures?: string[];
   facebook?: string;
   instagram?: string;
   youtube?: string;
-  trailer?: string;
-  clips?: string[];
 }
 
 const ActorList = () => {

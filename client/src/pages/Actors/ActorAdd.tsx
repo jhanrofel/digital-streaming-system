@@ -1,5 +1,4 @@
 import React, {useEffect} from "react";
-import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../utilities/hooks";
 import ActorAddForm from "../../components/Actor/ActorAddForm";
 import { SelectChangeEvent } from "@mui/material/Select";
@@ -12,12 +11,9 @@ interface FormValue {
   gender: string;
   banner: string;
   catalogue: string;
-  pictures?: string;
   facebook?: string;
   instagram?: string;
   youtube?: string;
-  trailer?: string;
-  clips?: string;
 }
 
 interface FormErrors {
@@ -27,17 +23,13 @@ interface FormErrors {
   birthday: string;
   banner: string;
   catalogue: string;
-  pictures?: string;
   facebook?: string;
   instagram?: string;
   youtube?: string;
-  trailer?: string;
-  clips?: string;
 }
 
 const ActorAdd = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const [birthday, setBirthday] = React.useState<Dayjs | null>(null);
   useEffect(() => {
@@ -51,12 +43,9 @@ const ActorAdd = () => {
     gender: "",
     banner: "",
     catalogue: "",
-    pictures: "",
     facebook: "",
     instagram: "",
     youtube: "",
-    trailer: "",
-    clips: "",
   });
 
   const [formErrors, setFormErrors] = React.useState<FormErrors>({
@@ -90,9 +79,6 @@ const ActorAdd = () => {
         setFormValues((state) => ({ ...state, catalogue: value }));
         setFormErrors((state) => ({ ...state, catalogue: "" }));
         break;
-      case "pictures":
-        setFormValues((state) => ({ ...state, pictures: value }));
-        break;
       case "facebook":
         setFormValues((state) => ({ ...state, facebook: value }));
         break;
@@ -101,12 +87,6 @@ const ActorAdd = () => {
         break;
       case "youtube":
         setFormValues((state) => ({ ...state, youtube: value }));
-        break;
-      case "trailer":
-        setFormValues((state) => ({ ...state, trailer: value }));
-        break;
-      case "clips":
-        setFormValues((state) => ({ ...state, clips: value }));
         break;
       default:
         break;
@@ -134,12 +114,9 @@ const ActorAdd = () => {
   interface ActorLink {
     banner: string;
     catalogue: string;
-    pictures?: string[];
     facebook?: string;
     instagram?: string;
     youtube?: string;
-    trailer?: string;
-    clips?: string[];
   }
 
   const onClickSubmitHandler = async (): Promise<void> => {
@@ -152,12 +129,9 @@ const ActorAdd = () => {
         actorLink: {
           banner: formValues.banner,
           catalogue: formValues.catalogue,
-          pictures: [],
           facebook: formValues.facebook,
           instagram: formValues.instagram,
           youtube: formValues.youtube,
-          trailer: formValues.trailer,
-          clips: [],
         },
       };
 
@@ -170,12 +144,9 @@ const ActorAdd = () => {
             gender: "",
             banner: "",
             catalogue: "",
-            pictures: "",
             facebook: "",
             instagram: "",
             youtube: "",
-            trailer: "",
-            clips: "",
           }));
           setBirthday(null);
           alert("Actor added.");
