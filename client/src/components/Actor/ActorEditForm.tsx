@@ -7,7 +7,7 @@ import FormDate from "../../components/FormDate";
 import { SelectChangeEvent } from "@mui/material/Select";
 import Divider from "@mui/material/Divider";
 import { Dayjs } from "dayjs";
-import Container from '@mui/material/Container';
+import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 
 type AppProps = {
@@ -26,27 +26,21 @@ interface FormValue {
   gender: string;
   banner: string;
   catalogue: string;
-  pictures?: string;
   facebook?: string;
   instagram?: string;
   youtube?: string;
-  trailer?: string;
-  clips?: string;
 }
 
 interface FormErrors {
   firstName: string;
   lastName: string;
   gender: string;
-  birthday:  string;
+  birthday: string;
   banner: string;
   catalogue: string;
-  pictures?: string;
   facebook?: string;
   instagram?: string;
   youtube?: string;
-  trailer?: string;
-  clips?: string;
 }
 
 const genderData = ["Male", "Female"];
@@ -58,12 +52,12 @@ const ActorEditForm = ({
   onClick,
   onChange,
   onChangeSelect,
-  setBirthday
+  setBirthday,
 }: AppProps) => {
   const navigate = useNavigate();
 
   return (
-    <Container sx={{ marginTop:10 }}>
+    <Container sx={{ marginTop: 10 }}>
       <Box sx={{ display: "flex", width: 600 }}>
         <FormText
           name="firstName"
@@ -91,7 +85,12 @@ const ActorEditForm = ({
           options={genderData}
           onChange={onChangeSelect}
         />
-        <FormDate error={formErrors.birthday} label="Birthday" value={birthday} setNewValue={setBirthday} />
+        <FormDate
+          error={formErrors.birthday}
+          label="Birthday"
+          value={birthday}
+          setNewValue={setBirthday}
+        />
       </Box>
       <Divider
         sx={{ display: "flex", width: 600, paddingTop: 5 }}
@@ -138,8 +137,11 @@ const ActorEditForm = ({
           onChange={onChange}
         />
       </Box>
-      <Box sx={{ display:"flex", width: 600 }}>
-        <FormButton label="Back to List" onClick={() => navigate("../actors")} />
+      <Box sx={{ display: "flex", width: 600 }}>
+        <FormButton
+          label="Back to List"
+          onClick={() => navigate("../actors")}
+        />
         <FormButton label="Save" onClick={onClick} />
       </Box>
     </Container>

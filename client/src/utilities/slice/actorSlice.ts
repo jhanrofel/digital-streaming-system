@@ -17,12 +17,10 @@ interface ActorDataOne {
 interface LinkClass {
   banner: string;
   catalogue: string;
-  pictures?: string[];
   facebook?: string;
   instagram?: string;
   youtube?: string;
   trailer?: string;
-  clips?: string[];
 }
 
 interface Movies {
@@ -60,7 +58,7 @@ export const actorsUpdate = createAsyncThunk(
 
 export const actorsDelete = createAsyncThunk(
   "actors/delete",
-  async (actorId:string) => {
+  async (actorId: string) => {
     return axios({
       url: `/actors/${actorId}`,
       method: "delete",

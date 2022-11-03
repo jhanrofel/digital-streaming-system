@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { useAppDispatch } from "../../utilities/hooks";
 import ActorAddForm from "../../components/Actor/ActorAddForm";
 import { SelectChangeEvent } from "@mui/material/Select";
@@ -35,7 +35,6 @@ const ActorAdd = () => {
   useEffect(() => {
     formErrors.birthday = "";
   }, [birthday]);
-  
 
   const [formValues, setFormValues] = React.useState<FormValue>({
     firstName: "",
@@ -56,7 +55,6 @@ const ActorAdd = () => {
     banner: "",
     catalogue: "",
   });
-
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>): void => {
     let name = (event.target as HTMLInputElement).name;
@@ -125,7 +123,7 @@ const ActorAdd = () => {
         firstName: formValues.firstName,
         lastName: formValues.lastName,
         gender: formValues.gender,
-        birthday: birthday?birthday.toString():"",
+        birthday: birthday ? birthday.toString() : "",
         actorLink: {
           banner: formValues.banner,
           catalogue: formValues.catalogue,

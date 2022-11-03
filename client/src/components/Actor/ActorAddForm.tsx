@@ -33,7 +33,7 @@ interface FormErrors {
   firstName: string;
   lastName: string;
   gender: string;
-  birthday:  string;
+  birthday: string;
   banner: string;
   catalogue: string;
   facebook?: string;
@@ -50,10 +50,8 @@ const ActorAddForm = ({
   onClick,
   onChange,
   onChangeSelect,
-  setBirthday
+  setBirthday,
 }: AppProps) => {
-  
-
   return (
     <>
       <Box sx={{ display: "flex", width: 600 }}>
@@ -83,7 +81,12 @@ const ActorAddForm = ({
           options={genderData}
           onChange={onChangeSelect}
         />
-        <FormDate error={formErrors.birthday} label="Birthday" value={birthday} setNewValue={setBirthday} />
+        <FormDate
+          error={formErrors.birthday}
+          label="Birthday"
+          value={birthday}
+          setNewValue={setBirthday}
+        />
       </Box>
       <Divider
         sx={{ display: "flex", width: 600, paddingTop: 5 }}

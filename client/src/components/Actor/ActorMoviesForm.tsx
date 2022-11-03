@@ -28,33 +28,35 @@ interface LinkClass {
   catalogue: string;
 }
 
-
-const ActorMovies = ({ actor, movies}: AppProps) => {
+const ActorMovies = ({ actor, movies }: AppProps) => {
   const navigate = useNavigate();
   return (
     <React.Fragment>
-    <Container sx={{ marginTop: 10 }}>
-      <Divider
-        sx={{ display: "flex", width: 600, paddingTop: 5 }}
-        textAlign="left"
-      >
-        {`${actor.firstName} ${actor.lastName}'s MOVIES `}
-      </Divider>
-      <Grid>
-        <List>
-          <ListItem>
-            {movies?.map((movie) => 
-              (<FormCard title={movie.title} link={movie.movieLink.banner} />)
-            )}
-          </ListItem>
-        </List>
-      </Grid>
-      
-    
-    </Container>
-    <Container sx={{ width: 300 }}>
-      <FormButton label="Back to Actors List" onClick={() => {navigate("../actors")}} />
-    </Container>
+      <Container sx={{ marginTop: 10 }}>
+        <Divider
+          sx={{ display: "flex", width: 600, paddingTop: 5 }}
+          textAlign="left"
+        >
+          {`${actor.firstName} ${actor.lastName}'s MOVIES `}
+        </Divider>
+        <Grid>
+          <List>
+            <ListItem>
+              {movies?.map((movie) => (
+                <FormCard title={movie.title} link={movie.movieLink.banner} />
+              ))}
+            </ListItem>
+          </List>
+        </Grid>
+      </Container>
+      <Container sx={{ width: 300 }}>
+        <FormButton
+          label="Back to Actors List"
+          onClick={() => {
+            navigate("../actors");
+          }}
+        />
+      </Container>
     </React.Fragment>
   );
 };

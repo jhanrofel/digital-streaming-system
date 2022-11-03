@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import ActorEditForm from "../../components/Actor/ActorEditForm";
 import { SelectChangeEvent } from "@mui/material/Select";
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from "dayjs";
 import { actorsOne, actorsUpdate } from "../../utilities/slice/actorSlice";
 
 interface FormValue {
@@ -53,7 +53,7 @@ const ActorEdit = () => {
     gender: actor.gender || "",
     link: actor.link || "",
     banner: "",
-    catalogue:  "",
+    catalogue: "",
     facebook: "",
     instagram: "",
     youtube: "",
@@ -67,15 +67,14 @@ const ActorEdit = () => {
       lastName: actor.lastName || "",
       gender: actor.gender || "",
       link: actor.link || "",
-      banner: actor.actorLink?actor.actorLink.banner:"",
-      catalogue: actor.actorLink?actor.actorLink.catalogue:"",
-      facebook: actor.actorLink?actor.actorLink.facebook:"",
-      instagram: actor.actorLink?actor.actorLink.instagram:"",
-      youtube: actor.actorLink?actor.actorLink.youtube:"",
-      trailer: actor.actorLink?actor.actorLink.trailer:"",
+      banner: actor.actorLink ? actor.actorLink.banner : "",
+      catalogue: actor.actorLink ? actor.actorLink.catalogue : "",
+      facebook: actor.actorLink ? actor.actorLink.facebook : "",
+      instagram: actor.actorLink ? actor.actorLink.instagram : "",
+      youtube: actor.actorLink ? actor.actorLink.youtube : "",
     }));
 
-    setBirthday(dayjs(actor.birthday))
+    setBirthday(dayjs(actor.birthday));
   }, [actor]);
 
   const [formErrors, setFormErrors] = React.useState<FormErrors>({
