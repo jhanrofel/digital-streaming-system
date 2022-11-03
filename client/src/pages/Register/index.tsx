@@ -82,7 +82,10 @@ const Register = () => {
           alert(res.payload.message);
           navigate("/");
         } else {
-          alert(res.payload);
+          setFormErrors((state) => ({
+            ...state,
+            email: res.payload,
+          }));
         }
       });
     }
@@ -127,10 +130,15 @@ const Register = () => {
       const apos = formValues.email.indexOf("@");
       const dotpos = formValues.email.lastIndexOf(".");
       if (apos < 1 || dotpos - apos < 2) {
-        alert("Invalid email.");
-      }
-      if (formValues.password !== formValues.confirm) {
-        alert("Confirm password does not match.");
+        setFormErrors((state) => ({
+          ...state,
+          email: "Invalid email.",
+        }));
+      } else if (formValues.password !== formValues.confirm) {
+        setFormErrors((state) => ({
+          ...state,
+          confirm: "Confirm password does not match.",
+        }));
       } else {
         valid = true;
       }
@@ -143,7 +151,7 @@ const Register = () => {
     <RegistrationForm
       formErrors={formErrors}
       onChange={onChangeHandler}
-      onClick={onClickSubmitHandler}
+      onClick={onClickSubmitHandler} 
     />
   );
 };

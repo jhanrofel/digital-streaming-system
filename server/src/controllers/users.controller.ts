@@ -99,7 +99,7 @@ export class UsersController {
         if (err.code === 11000) {
           return {
             status: 500,
-            error: `${err.keyValue.email} email already exist.`,
+            error: `${err.keyValue.email} email already in used.`,
           };
         } else {
           return {status: 500, error: err.message};
