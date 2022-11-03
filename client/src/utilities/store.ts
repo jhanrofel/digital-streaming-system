@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import usersReducer from "./slice/userSlice";
 import actorsReducer from "./slice/actorSlice";
+import categoriesReducer from "./slice/categorySlice";
 
 export const store = configureStore({
   reducer: {
     users: usersReducer,
     actors: actorsReducer,
+    categories: categoriesReducer,
   },
   middleware:(getDefaultMiddleware) => getDefaultMiddleware({
     serializableCheck: false,

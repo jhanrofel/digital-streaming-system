@@ -5,7 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { usersApproval, usersApprove } from "../../utilities/slice/userSlice";
@@ -59,7 +59,7 @@ const ApprovalList = () => {
       headerName: "Action",
       width: 150,
       sortable: false,
-      renderCell: (params) => {        
+      renderCell: (params) => {
         const onClickApprovedAdmin = async () => {
           const formValues: ApproveFormValues = {
             id: params.id,
@@ -94,14 +94,17 @@ const ApprovalList = () => {
           <IconButton>
             <Stack spacing={2} direction="row">
               <Tooltip title="Approved as Admin">
-                <AdminPanelSettingsIcon color="warning" onClick={onClickApprovedAdmin} />
+                <AdminPanelSettingsIcon
+                  color="warning"
+                  onClick={onClickApprovedAdmin}
+                />
               </Tooltip>
               <Tooltip title="Approved">
                 <ThumbUpIcon color="primary" onClick={onClickApproved} />
               </Tooltip>
               <Tooltip title="Disapproved">
                 <ThumbDownIcon color="error" onClick={onClickDisapproved} />
-              </Tooltip>              
+              </Tooltip>
             </Stack>
           </IconButton>
         );
