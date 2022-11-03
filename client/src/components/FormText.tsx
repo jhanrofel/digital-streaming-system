@@ -1,37 +1,32 @@
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 
 type AppProps = {
   name: string;
+  value?: string;
   label: string;
   type: string;
-  error: string;
+  error?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
 };
 
-const FormText = ({ name, label, type, error, onChange }: AppProps) => {
+const FormText = ({ name, value, label, type, error, onChange }: AppProps) => {
   return (
     <FormControl fullWidth sx={{ m: 1 }} variant="filled">
+      <TextField
+        id={name}
+        value={value}
+        name={name}
+        label={label}
+        type={type}
+        variant="filled"
+        onChange={onChange}
+      />
       {error ? (
-        <TextField
-          error
-          id={name}
-          name={name}
-          label={label}
-          type={type}
-          variant="filled"
-          helperText={error}
-          onChange={onChange}
-        />
+        <FormHelperText error>{error}</FormHelperText>
       ) : (
-        <TextField
-          id={name}
-          name={name}
-          label={label}
-          type={type}
-          variant="filled"
-          onChange={onChange}
-        />
+        <FormHelperText></FormHelperText>
       )}
     </FormControl>
   );
