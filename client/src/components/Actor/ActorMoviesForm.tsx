@@ -20,6 +20,7 @@ interface FormValue {
 
 interface MoviesClass {
   title: string;
+  link: string;
   movieLink: LinkClass;
 }
 
@@ -41,11 +42,13 @@ const ActorMovies = ({ actor, movies }: AppProps) => {
         </Divider>
         <Grid>
           <List>
-            <ListItem>
+            
               {movies?.map((movie) => (
+                <ListItem key={movie.link}>
                 <FormCard title={movie.title} link={movie.movieLink.banner} />
+                </ListItem>
               ))}
-            </ListItem>
+            
           </List>
         </Grid>
       </Container>

@@ -1,8 +1,7 @@
-
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
 
 type AppProps = {
   title: string;
@@ -17,7 +16,7 @@ const FormCard = ({ title, link }: AppProps) => {
         height="300"
         image={link}
         alt={title}
-        sx={{objectFit: "contain" }}
+        sx={{ objectFit: "contain" }}
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">

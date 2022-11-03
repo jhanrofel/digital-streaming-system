@@ -25,6 +25,7 @@ interface LinkClass {
 
 interface Movies {
   title: string;
+  link: string;
   movieLink: LinkClass;
 }
 
