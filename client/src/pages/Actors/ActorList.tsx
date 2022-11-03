@@ -3,36 +3,37 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import PersonIcon from "@mui/icons-material/Person";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
-import { usersApproved, usersApprove } from "../../utilities/slice/userSlice";
+import { useNavigate } from "react-router-dom";
+import { actorsList } from "../../utilities/slice/actorSlice";
+import EditIcon from "@mui/icons-material/Edit";
 
 interface RowValues {
-  id: string;
-  email: string;
+  id?: string;
   firstName: string;
   lastName: string;
-  role: string;
+  gender: string;
+  birthday: string;
+  link?: string;
+  actorLink: ActorLink;
 }
 
-interface ApproveFormValues {
-  id: string | number;
-  approval: string;
-  role: string;
-  form: string;
+interface ActorLink {
+  banner: string;
+  catalogue: string;
+  pictures?: string[];
+  facebook?: string;
+  instagram?: string;
+  youtube?: string;
+  trailer?: string;
+  clips?: string[];
 }
 
 const ActorList = () => {
+  const navigate = useNavigate();
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 90 },
-    {
-      field: "email",
-      headerName: "Email",
-      width: 200,
-      editable: true,
-    },
     {
       field: "firstName",
       headerName: "First name",
@@ -46,19 +47,34 @@ const ActorList = () => {
       editable: true,
     },
     {
-      field: "fullName",
-      headerName: "Full name",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 200,
-      valueGetter: (params: GridValueGetterParams) =>
-        `${params.row.firstName || ""} ${params.row.lastName || ""}`,
-    },
-    {
-      field: "role",
-      headerName: "Role",
+      field: "gender",
+      headerName: "Gender",
       sortable: false,
       width: 150,
+    },
+    {
+      field: "birthday",
+      headerName: "Birtday",
+      sortable: false,
+      width: 150,
+      valueGetter: (params: GridValueGetterParams) =>
+        `${params.row.birthday.substring(0, 10)}`,
+    },
+    {
+      field: "banner",
+      headerName: "Banner",
+      sortable: false,
+      width: 150,
+      valueGetter: (params: GridValueGetterParams) =>
+        `${params.row.actorLink.banner}`,
+    },
+    {
+      field: "catalogue",
+      headerName: "Catalogue",
+      sortable: false,
+      width: 150,
+      valueGetter: (params: GridValueGetterParams) =>
+        `${params.row.actorLink.catalogue}`,
     },
     {
       field: "action",
@@ -66,54 +82,27 @@ const ActorList = () => {
       width: 150,
       sortable: false,
       renderCell: (params) => {
-        const onClickRoleAdmin = async () => {
-          const formValues: ApproveFormValues = {
-            id: params.id,
-            approval: "approved",
-            role: "ADMIN",
-            form: "list",
-          };
-          await dispatch(usersApprove(formValues));
-        };
-
-        const onClickRoleUser = async () => {
-          const formValues: ApproveFormValues = {
-            id: params.id,
-            approval: "approved",
-            role: "USER",
-            form: "list",
-          };
-          await dispatch(usersApprove(formValues));
+        const onClickEdit = () => {
+          navigate("../actors-edit", { state: params.row.id });
         };
 
         return (
           <IconButton>
-            {params.row.role === "USER" ? (
-              <Stack spacing={2} direction="row">
-                <Tooltip title="Make Account as Admin">
-                  <AdminPanelSettingsIcon
-                    color="warning"
-                    onClick={onClickRoleAdmin}
-                  />
-                </Tooltip>
-              </Stack>
-            ) : (
-              <Stack spacing={2} direction="row">
-                <Tooltip title="Make Account as User" >
-                  <PersonIcon color="primary" onClick={onClickRoleUser}/>
-                </Tooltip>
-              </Stack>
-            )}
+            <Stack spacing={2} direction="row">
+              <Tooltip title="Edit actor details">
+                <EditIcon color="primary" onClick={onClickEdit} />
+              </Tooltip>
+            </Stack>
           </IconButton>
         );
       },
     },
   ];
   const dispatch = useAppDispatch();
-  const rows: RowValues[] = useAppSelector((state) => state.users.data);
+  const rows: RowValues[] = useAppSelector((state) => state.actors.data);
 
   useEffect(() => {
-    dispatch(usersApproved());
+    dispatch(actorsList());
   }, [dispatch]);
 
   return (

@@ -1,23 +1,22 @@
-import React, {useEffect} from "react";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../utilities/hooks";
-import ActorAddForm from "../../components/Actor/ActorAddForm";
+import React, { useEffect } from "react";
+import { useNavigate,useLocation } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
+import ActorEditForm from "../../components/Actor/ActorEditForm";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { actorsPost } from "../../utilities/slice/actorSlice";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from 'dayjs';
+import { actorsOne, actorsUpdate } from "../../utilities/slice/actorSlice";
 
 interface FormValue {
   firstName: string;
   lastName: string;
   gender: string;
+  link: string;
   banner: string;
   catalogue: string;
-  pictures?: string;
   facebook?: string;
   instagram?: string;
   youtube?: string;
   trailer?: string;
-  clips?: string;
 }
 
 interface FormErrors {
@@ -27,37 +26,57 @@ interface FormErrors {
   birthday: string;
   banner: string;
   catalogue: string;
-  pictures?: string;
   facebook?: string;
   instagram?: string;
   youtube?: string;
   trailer?: string;
-  clips?: string;
 }
 
-const ActorAdd = () => {
+const ActorEdit = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const { state } = useLocation();
+  const actorId = state;
+  const actor = useAppSelector((state) => state.actors.dataOne);
 
   const [birthday, setBirthday] = React.useState<Dayjs | null>(null);
   useEffect(() => {
     formErrors.birthday = "";
   }, [birthday]);
-  
+
+  useEffect(() => {
+    dispatch(actorsOne(actorId));
+  }, [dispatch, actorId]);
 
   const [formValues, setFormValues] = React.useState<FormValue>({
-    firstName: "",
-    lastName: "",
-    gender: "",
+    firstName: actor.firstName || "",
+    lastName: actor.lastName || "",
+    gender: actor.gender || "",
+    link: actor.link || "",
     banner: "",
-    catalogue: "",
-    pictures: "",
+    catalogue:  "",
     facebook: "",
     instagram: "",
     youtube: "",
     trailer: "",
-    clips: "",
   });
+
+  useEffect(() => {
+    setFormValues((state) => ({
+      ...state,
+      firstName: actor.firstName || "",
+      lastName: actor.lastName || "",
+      gender: actor.gender || "",
+      link: actor.link || "",
+      banner: actor.actorLink?actor.actorLink.banner:"",
+      catalogue: actor.actorLink?actor.actorLink.catalogue:"",
+      facebook: actor.actorLink?actor.actorLink.facebook:"",
+      instagram: actor.actorLink?actor.actorLink.instagram:"",
+      youtube: actor.actorLink?actor.actorLink.youtube:"",
+      trailer: actor.actorLink?actor.actorLink.trailer:"",
+    }));
+
+    setBirthday(dayjs(actor.birthday))
+  }, [actor]);
 
   const [formErrors, setFormErrors] = React.useState<FormErrors>({
     firstName: "",
@@ -67,7 +86,6 @@ const ActorAdd = () => {
     banner: "",
     catalogue: "",
   });
-
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>): void => {
     let name = (event.target as HTMLInputElement).name;
@@ -90,9 +108,6 @@ const ActorAdd = () => {
         setFormValues((state) => ({ ...state, catalogue: value }));
         setFormErrors((state) => ({ ...state, catalogue: "" }));
         break;
-      case "pictures":
-        setFormValues((state) => ({ ...state, pictures: value }));
-        break;
       case "facebook":
         setFormValues((state) => ({ ...state, facebook: value }));
         break;
@@ -104,9 +119,6 @@ const ActorAdd = () => {
         break;
       case "trailer":
         setFormValues((state) => ({ ...state, trailer: value }));
-        break;
-      case "clips":
-        setFormValues((state) => ({ ...state, clips: value }));
         break;
       default:
         break;
@@ -127,58 +139,41 @@ const ActorAdd = () => {
     lastName: string;
     gender: string;
     birthday: string;
-    link?: string;
+    link: string;
     actorLink: ActorLink;
   }
 
   interface ActorLink {
     banner: string;
     catalogue: string;
-    pictures?: string[];
     facebook?: string;
     instagram?: string;
     youtube?: string;
     trailer?: string;
-    clips?: string[];
   }
 
   const onClickSubmitHandler = async (): Promise<void> => {
     if (formValidation()) {
       const postUserValue: ActorDataOne = {
+        id: actorId,
         firstName: formValues.firstName,
         lastName: formValues.lastName,
         gender: formValues.gender,
-        birthday: birthday?birthday.toString():"",
+        birthday: birthday ? birthday.toString() : "",
+        link: formValues.link,
         actorLink: {
           banner: formValues.banner,
           catalogue: formValues.catalogue,
-          pictures: [],
           facebook: formValues.facebook,
           instagram: formValues.instagram,
           youtube: formValues.youtube,
           trailer: formValues.trailer,
-          clips: [],
         },
       };
 
-      await dispatch(actorsPost(postUserValue)).then((res) => {
-        if (res.type === "actors/post/fulfilled") {
-          setFormValues((state) => ({
-            ...state,
-            firstName: "",
-            lastName: "",
-            gender: "",
-            banner: "",
-            catalogue: "",
-            pictures: "",
-            facebook: "",
-            instagram: "",
-            youtube: "",
-            trailer: "",
-            clips: "",
-          }));
-          setBirthday(null);
-          alert("Actor added.");
+      await dispatch(actorsUpdate(postUserValue)).then((res) => {
+        if (res.type === "actors/update/fulfilled") {
+          alert("Actor updated.");
         } else {
           alert(res.payload);
         }
@@ -234,7 +229,7 @@ const ActorAdd = () => {
   };
 
   return (
-    <ActorAddForm
+    <ActorEditForm
       formErrors={formErrors}
       formValues={formValues}
       birthday={birthday}
@@ -243,7 +238,8 @@ const ActorAdd = () => {
       onChangeSelect={onChangeSelect}
       setBirthday={setBirthday}
     />
+    // <div>test</div>
   );
 };
 
-export default ActorAdd;
+export default ActorEdit;

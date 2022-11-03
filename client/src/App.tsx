@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Actors from "./pages/Actors";
+import ActorEdit from "./pages/Actors/ActorEdit";
 import Dashboard from "./pages/Dashboard";
 import Movies from "./pages/Movies";
 import Reviews from "./pages/Reviews";
@@ -23,6 +24,7 @@ function App() {
         </Route>
         <Route path="/" element={<PrivateLayout />}>
           <Route path="/actors" element={<Actors />}></Route>
+          <Route path="/actors-edit" element={<ActorEdit />}></Route>
           <Route path="/dashboard" element={<Dashboard />}></Route>
           <Route path="/movies" element={<Movies />}></Route>
           <Route path="/reviews" element={<Reviews />}></Route>

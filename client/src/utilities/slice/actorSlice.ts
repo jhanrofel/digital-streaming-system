@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { authenticationToken, unauthorize } from "../authentication";
+import { authenticationToken } from "../authentication";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3001";
 
@@ -9,7 +9,8 @@ interface ActorDataOne {
   lastName: string;
   gender: string;
   birthday: string;
-  actorLink : ActorLink
+  link?: string;
+  actorLink: ActorLink;
 }
 
 interface ActorLink {
@@ -37,6 +38,42 @@ export const actorsPost = createAsyncThunk(
   }
 );
 
+export const actorsUpdate = createAsyncThunk(
+  "actors/update",
+  async (formValues: ActorDataOne) => {
+    return axios({
+      url: `/actors/${formValues.id}`,
+      method: "patch",
+      data: formValues,
+      headers: { Authorization: authenticationToken() },
+    })
+      .then((res) => res.data)
+      .catch((err) => err);
+  }
+);
+
+export const actorsList = createAsyncThunk("actors/list", async () => {
+  return axios({
+    url: `/actors`,
+    method: "get",
+    headers: { Authorization: authenticationToken() },
+  })
+    .then((res) => res.data)
+    .catch((err) => err);
+});
+
+export const actorsOne = createAsyncThunk(
+  "actors/one",
+  async (actorId: string) => {
+    return axios({
+      url: `/actors/${actorId}`,
+      method: "get",
+      headers: { Authorization: authenticationToken() },
+    })
+      .then((res) => res.data)
+      .catch((err) => err);
+  }
+);
 
 interface ActorData {
   logged: boolean;
@@ -60,6 +97,15 @@ export const actorSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(actorsList.fulfilled, (state, action) => {
+      state.data = action.payload;
+    });
+    builder.addCase(actorsOne.fulfilled, (state, action) => {
+      state.dataOne = action.payload;
+    });
+    builder.addCase(actorsUpdate.fulfilled, (state, action) => {
+      state.dataOne = action.payload;
+    });
   },
 });
 
