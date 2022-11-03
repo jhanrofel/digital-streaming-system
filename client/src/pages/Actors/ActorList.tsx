@@ -6,8 +6,10 @@ import Tooltip from "@mui/material/Tooltip";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { useNavigate } from "react-router-dom";
-import { actorsList } from "../../utilities/slice/actorSlice";
+import { actorsList, actorsDelete } from "../../utilities/slice/actorSlice";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import TheatersIcon from "@mui/icons-material/Theaters";
 
 interface RowValues {
   id?: string;
@@ -86,12 +88,29 @@ const ActorList = () => {
           navigate("../actors-edit", { state: params.row.id });
         };
 
+        const onClickMovies = () => {
+          navigate("../actors-movies", { state: params.row.id });
+        };
+
+        const onClickDelete = () => {
+          dispatch(actorsDelete(params.row.id));
+        };
+
         return (
           <IconButton>
             <Stack spacing={2} direction="row">
               <Tooltip title="Edit actor details">
                 <EditIcon color="primary" onClick={onClickEdit} />
               </Tooltip>
+              {params.row.actorMovies ? (
+                <Tooltip title="Movie belongs">
+                  <TheatersIcon color="primary" onClick={onClickMovies} />
+                </Tooltip>
+              ) : (
+                <Tooltip title="Delete actor">
+                  <DeleteIcon color="error" onClick={onClickDelete} />
+                </Tooltip>
+              )}
             </Stack>
           </IconButton>
         );

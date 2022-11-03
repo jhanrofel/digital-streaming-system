@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useNavigate,useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import ActorEditForm from "../../components/Actor/ActorEditForm";
 import { SelectChangeEvent } from "@mui/material/Select";
@@ -238,7 +238,6 @@ const ActorEdit = () => {
       onChangeSelect={onChangeSelect}
       setBirthday={setBirthday}
     />
-    // <div>test</div>
   );
 };
 

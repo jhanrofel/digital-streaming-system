@@ -56,7 +56,6 @@ const Actors = () => {
         >
           <Tab label="ACTORS" {...a11yProps(0)} />
           <Tab label="ADD" {...a11yProps(1)} />
-          <Tab label="INACTIVE" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -64,9 +63,6 @@ const Actors = () => {
       </TabPanel>
       <TabPanel value={value} index={1}>
         <ActorAdd />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <ActorList />
       </TabPanel>
     </Box>
   );

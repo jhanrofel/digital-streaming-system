@@ -9,7 +9,7 @@ import {
   requestBody,
   response,
 } from '@loopback/rest';
-import {Actors} from '../models';
+import {Actors,Movies} from '../models';
 import {
   ActorsRepository,
   LinksRepository,
@@ -126,8 +126,24 @@ export class ActorsController {
   })
   async findById(@param.path.string('id') id: string): Promise<Actors> {
     return this.actorsRepository.findById(id, {
-      include: [{relation: 'actorLink', scope: {fields: {id: false}}}],
+      include: [
+        {relation: 'actorLink', scope: {fields: {id: false}}},
+        {relation: 'actorMovies'},
+      ],
     });
+  }
+
+  @get('/actors/{id}/movies')
+  @response(200, {
+    description: 'Actors model instance',
+    content: {
+      'application/json': {
+        schema: getModelSchemaRef(Actors, {includeRelations: true}),
+      },
+    },
+  })
+  async findMoviesById(@param.path.string('id') id: string): Promise<Movies[]> {
+    return this.actorsRepository.actorMovies(id).find({include:['movieLink']});
   }
 
   @authenticate('jwt')
@@ -165,7 +181,10 @@ export class ActorsController {
   })
   async deleteById(@param.path.string('id') id: string): Promise<ApiResponse> {
     const actor = await this.actorsRepository.findById(id, {
-      include: [{relation: 'actorLink', scope: {fields: {id: false}}},{relation:'actorMovies'}],
+      include: [
+        {relation: 'actorLink', scope: {fields: {id: false}}},
+        {relation: 'actorMovies'},
+      ],
     });
 
     const movieCount = await this.movieActorRepository.count({actorId: id});

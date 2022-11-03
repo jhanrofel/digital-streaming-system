@@ -10,10 +10,11 @@ interface ActorDataOne {
   gender: string;
   birthday: string;
   link?: string;
-  actorLink: ActorLink;
+  actorLink: LinkClass;
+  actorMovies?: Movies[];
 }
 
-interface ActorLink {
+interface LinkClass {
   banner: string;
   catalogue: string;
   pictures?: string[];
@@ -22,6 +23,11 @@ interface ActorLink {
   youtube?: string;
   trailer?: string;
   clips?: string[];
+}
+
+interface Movies {
+  title: string;
+  movieLink: LinkClass;
 }
 
 export const actorsPost = createAsyncThunk(
@@ -52,6 +58,19 @@ export const actorsUpdate = createAsyncThunk(
   }
 );
 
+export const actorsDelete = createAsyncThunk(
+  "actors/delete",
+  async (actorId:string) => {
+    return axios({
+      url: `/actors/${actorId}`,
+      method: "delete",
+      headers: { Authorization: authenticationToken() },
+    })
+      .then((res) => res.data.actors[0])
+      .catch((err) => err);
+  }
+);
+
 export const actorsList = createAsyncThunk("actors/list", async () => {
   return axios({
     url: `/actors`,
@@ -75,16 +94,31 @@ export const actorsOne = createAsyncThunk(
   }
 );
 
+export const actorsMovies = createAsyncThunk(
+  "actors/movies",
+  async (actorId: string) => {
+    return axios({
+      url: `/actors/${actorId}/movies`,
+      method: "get",
+      headers: { Authorization: authenticationToken() },
+    })
+      .then((res) => res.data)
+      .catch((err) => err);
+  }
+);
+
 interface ActorData {
   logged: boolean;
   data: ActorDataOne[] | [];
   dataOne: ActorDataOne;
+  dataMovies: Movies[] | [];
 }
 
 const initialState = {
   logged: false,
   data: [],
   dataOne: {},
+  dataMovies: [],
 } as ActorData;
 
 export const actorSlice = createSlice({
@@ -105,6 +139,12 @@ export const actorSlice = createSlice({
     });
     builder.addCase(actorsUpdate.fulfilled, (state, action) => {
       state.dataOne = action.payload;
+    });
+    builder.addCase(actorsDelete.fulfilled, (state, action) => {
+      state.data = state.data.filter((actor) => actor.id !== action.payload.id);
+    });
+    builder.addCase(actorsMovies.fulfilled, (state, action) => {
+      state.dataMovies = action.payload;
     });
   },
 });
