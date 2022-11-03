@@ -84,7 +84,9 @@ export const categoriesSlice = createSlice({
       state.data = [...state.data, action.payload];
     });
     builder.addCase(categoriesDelete.fulfilled, (state, action) => {
-      state.data = state.data.filter((category) => category.id !== action.payload);
+      state.data = state.data.filter(
+        (category) => category.id !== action.payload
+      );
     });
   },
 });

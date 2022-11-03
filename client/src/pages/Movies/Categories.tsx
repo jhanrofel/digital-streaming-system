@@ -12,8 +12,8 @@ import {
   categoriesDelete,
   selectCategories,
 } from "../../utilities/slice/categorySlice";
-import AddCategoryDialogue from "../../components/Dialogue/AddCategoryDialogue";
-import DeleteDialogue from "../../components/Dialogue/DeleteDialog";
+import AddCategoryDialogue from "../../components/Dialog/AddCategoryDialogue";
+import DeleteDialogue from "../../components/Dialog/DeleteDialog";
 
 interface RowValues {
   id?: string;
@@ -74,7 +74,7 @@ const Categories = () => {
   ];
   const dispatch = useAppDispatch();
   const rows: RowValues[] = useAppSelector((state) => state.categories.data);
-  const [open, setOpen] = React.useState<boolean>(false);  
+  const [open, setOpen] = React.useState<boolean>(false);
   const category = useAppSelector((state) => state.categories.dataOne);
 
   const onConfirmDelete = async () => {
