@@ -3,12 +3,17 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import PersonIcon from "@mui/icons-material/Person";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
-import { categoriesList } from "../../utilities/slice/categorySlice";
-import AddCategoryModal from "../../components/Modal/AddCategoryModal";
+import {
+  categoriesList,
+  categoriesDelete,
+  selectCategories,
+} from "../../utilities/slice/categorySlice";
+import AddCategoryDialogue from "../../components/Dialogue/AddCategoryDialogue";
+import DeleteDialogue from "../../components/Dialogue/DeleteDialog";
 
 interface RowValues {
   id?: string;
@@ -30,15 +35,17 @@ const Categories = () => {
       width: 150,
       sortable: false,
       renderCell: (params) => {
-        // const onClickRoleAdmin = async () => {
-        //   const formValues: ApproveFormValues = {
-        //     id: params.id,
-        //     approval: "approved",
-        //     role: "ADMIN",
-        //     form: "list",
-        //   };
-        //   await dispatch(usersApprove(formValues));
-        // };
+        const onClickDelete = async () => {
+          dispatch(selectCategories(params.row.id));
+          setOpen(true);
+          //   const formValues: ApproveFormValues = {
+          //     id: params.id,
+          //     approval: "approved",
+          //     role: "ADMIN",
+          //     form: "list",
+          //   };
+          //   await dispatch(usersApprove(formValues));
+        };
 
         // const onClickRoleUser = async () => {
         //   const formValues: ApproveFormValues = {
@@ -52,22 +59,14 @@ const Categories = () => {
 
         return (
           <IconButton>
-            {params.row.role === "USER" ? (
-              <Stack spacing={2} direction="row">
-                <Tooltip title="Make Account as Admin">
-                  <AdminPanelSettingsIcon
-                    color="warning"
-                    // onClick={onClickRoleAdmin}
-                  />
-                </Tooltip>
-              </Stack>
-            ) : (
-              <Stack spacing={2} direction="row">
-                <Tooltip title="Make Account as User">
-                  <PersonIcon color="primary" />
-                </Tooltip>
-              </Stack>
-            )}
+            <Stack spacing={2} direction="row">
+              <Tooltip title="Edit Category">
+                <EditIcon color="primary" />
+              </Tooltip>
+              <Tooltip title="Delete Category">
+                <DeleteIcon color="error" onClick={onClickDelete} />
+              </Tooltip>
+            </Stack>
           </IconButton>
         );
       },
@@ -75,6 +74,13 @@ const Categories = () => {
   ];
   const dispatch = useAppDispatch();
   const rows: RowValues[] = useAppSelector((state) => state.categories.data);
+  const [open, setOpen] = React.useState<boolean>(false);  
+  const category = useAppSelector((state) => state.categories.dataOne);
+
+  const onConfirmDelete = async () => {
+    await dispatch(categoriesDelete(category.id));
+    setOpen(false);
+  };
 
   useEffect(() => {
     dispatch(categoriesList());
@@ -99,7 +105,12 @@ const Categories = () => {
           }}
         />
       </Box>
-      <AddCategoryModal />
+      <AddCategoryDialogue />
+      <DeleteDialogue
+        setOpen={setOpen}
+        open={open}
+        onConfirmDelete={onConfirmDelete}
+      />
     </>
   );
 };

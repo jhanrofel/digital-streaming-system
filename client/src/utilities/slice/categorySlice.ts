@@ -37,6 +37,19 @@ export const categoriesPost = createAsyncThunk(
   }
 );
 
+export const categoriesDelete = createAsyncThunk(
+  "categories/delete",
+  async (categoryId: string | undefined, { rejectWithValue }) => {
+    return axios({
+      url: `/categories/${categoryId}`,
+      method: "delete",
+      headers: { Authorization: authenticationToken() },
+    })
+      .then(() => categoryId)
+      .catch((err) => err);
+  }
+);
+
 interface CategoriesDataOne {
   id?: string;
   name: string;
@@ -59,6 +72,9 @@ export const categoriesSlice = createSlice({
     clearCategories: (state) => {
       state.data = [];
     },
+    selectCategories: (state, action) => {
+      state.dataOne = { id: action.payload, name: "" };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(categoriesList.fulfilled, (state, action) => {
@@ -67,8 +83,11 @@ export const categoriesSlice = createSlice({
     builder.addCase(categoriesPost.fulfilled, (state, action) => {
       state.data = [...state.data, action.payload];
     });
+    builder.addCase(categoriesDelete.fulfilled, (state, action) => {
+      state.data = state.data.filter((category) => category.id !== action.payload);
+    });
   },
 });
 
-export const { clearCategories } = categoriesSlice.actions;
+export const { clearCategories, selectCategories } = categoriesSlice.actions;
 export default categoriesSlice.reducer;
