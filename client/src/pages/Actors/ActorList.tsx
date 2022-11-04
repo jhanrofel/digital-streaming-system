@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
@@ -6,10 +6,11 @@ import Tooltip from "@mui/material/Tooltip";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { useNavigate } from "react-router-dom";
-import { actorsList, actorsDelete } from "../../utilities/slice/actorSlice";
+import { actorsList, actorsDelete, selectActors } from "../../utilities/slice/actorSlice";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TheatersIcon from "@mui/icons-material/Theaters";
+import DeleteDialogue from "../../components/Dialog/DeleteDialog";
 
 interface RowValues {
   id?: string;
@@ -31,6 +32,8 @@ interface ActorLink {
 
 const ActorList = () => {
   const navigate = useNavigate();
+  const [open, setOpen] = React.useState<boolean>(false);
+  const actor = useAppSelector((state) => state.actors.dataOne);
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 90 },
     {
@@ -90,7 +93,8 @@ const ActorList = () => {
         };
 
         const onClickDelete = () => {
-          dispatch(actorsDelete(params.row.id));
+          dispatch(selectActors({id:params.row.id}));
+          setOpen(true);
         };
 
         return (
@@ -116,10 +120,21 @@ const ActorList = () => {
   ];
   const dispatch = useAppDispatch();
   const rows: RowValues[] = useAppSelector((state) => state.actors.data);
+  const onConfirmDelete = async () => {
+    await dispatch(actorsDelete(actor.id ? actor.id : "")).then((res) => {
+      if (res.type === "actors/delete/fulfilled") {
+        setOpen(false);
+      } else {
+        alert(res.payload);
+      }
+    });
+  };
 
-  useEffect(() => {
+  React.useEffect(() => {
     dispatch(actorsList());
   }, [dispatch]);
+
+  
 
   return (
     <>
@@ -140,6 +155,11 @@ const ActorList = () => {
           }}
         />
       </Box>
+      <DeleteDialogue
+        setOpen={setOpen}
+        open={open}
+        onConfirmDelete={onConfirmDelete}
+      />
     </>
   );
 };

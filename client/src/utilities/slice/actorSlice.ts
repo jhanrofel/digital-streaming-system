@@ -124,9 +124,12 @@ export const actorSlice = createSlice({
   name: "actors",
   initialState,
   reducers: {
-    clearactor: (state) => {
+    clearActor: (state) => {
       state.logged = false;
       state.data = [];
+    },
+    selectActors: (state, action) => {
+      state.dataOne = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -148,5 +151,5 @@ export const actorSlice = createSlice({
   },
 });
 
-export const { clearactor } = actorSlice.actions;
+export const { clearActor, selectActors } = actorSlice.actions;
 export default actorSlice.reducer;

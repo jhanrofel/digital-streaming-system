@@ -6,7 +6,11 @@ import Tooltip from "@mui/material/Tooltip";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { useNavigate } from "react-router-dom";
-import { moviesList, moviesDelete,selectMovies } from "../../utilities/slice/movieSlice";
+import {
+  moviesList,
+  moviesDelete,
+  selectMovies,
+} from "../../utilities/slice/movieSlice";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TheatersIcon from "@mui/icons-material/Theaters";
@@ -94,7 +98,7 @@ const MovieList = () => {
         };
 
         const onClickDelete = () => {
-          dispatch(selectMovies({id:params.row.id}));
+          dispatch(selectMovies({ id: params.row.id }));
           setOpen(true);
         };
 
@@ -129,7 +133,6 @@ const MovieList = () => {
         alert(res.payload);
       }
     });
-    
   };
 
   return (
