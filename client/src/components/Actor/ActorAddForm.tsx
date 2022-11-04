@@ -89,7 +89,7 @@ const ActorAddForm = ({
         />
       </Box>
       <Divider
-        sx={{ display: "flex", width: 600, paddingTop: 5 }}
+        sx={{ display: "flex", width: 600, paddingTop: 3 }}
         textAlign="left"
       >
         LINKS

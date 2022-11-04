@@ -7,6 +7,8 @@ import FormSelect from "../FormSelect";
 import { SelectChangeEvent } from "@mui/material/Select";
 import Divider from "@mui/material/Divider";
 import FormAutoComplete from "../FormAutoComplete";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import Tooltip from "@mui/material/Tooltip";
 
 type AppProps = {
   formErrors: FormErrors;
@@ -166,7 +168,7 @@ const MovieEditForm = ({
           onChange={onChange}
         />
       </Box>
-      <Box sx={{ width: 800 }}>
+      <Box sx={{ display: "flex", width: 800 }}>
         <FormAutoComplete
           id="actors"
           label="Actors"
@@ -175,6 +177,9 @@ const MovieEditForm = ({
           options={actorsOption}
           onChange={onChangeActors}
         />
+        <Tooltip title="Add Actors">
+          <AddBoxIcon color="primary" onClick={() => navigate("../actors")} />
+        </Tooltip>
       </Box>
       <Box sx={{ width: 800 }}>
         <FormAutoComplete
@@ -186,14 +191,8 @@ const MovieEditForm = ({
           onChange={onChangeCategories}
         />
       </Box>
-      <Box sx={{ display: "flex", width: 600 }}>
+      <Box sx={{ width: 200 }}>
         <FormButton label="Save" onClick={onClick} />
-        <FormButton
-          label="Back to List"
-          onClick={() => {
-            navigate("../movies");
-          }}
-        />
       </Box>
     </>
   );

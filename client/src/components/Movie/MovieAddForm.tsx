@@ -6,8 +6,9 @@ import FormText from "../FormText";
 import FormSelect from "../FormSelect";
 import { SelectChangeEvent } from "@mui/material/Select";
 import Divider from "@mui/material/Divider";
-import Container from "@mui/material/Container";
 import FormAutoComplete from "../FormAutoComplete";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import Tooltip from "@mui/material/Tooltip";
 
 type AppProps = {
   formErrors: FormErrors;
@@ -66,7 +67,7 @@ const MovieAddForm = ({
 }: AppProps) => {
   const navigate = useNavigate();
   return (
-    <Container sx={{ display: "inline" }}>
+    <>
       <Box sx={{ display: "flex", maxWidth: 600 }}>
         <FormText
           name="title"
@@ -167,7 +168,7 @@ const MovieAddForm = ({
           onChange={onChange}
         />
       </Box>
-      <Box sx={{ width: 800 }}>
+      <Box sx={{ display:"flex", width: 800 }}>
         <FormAutoComplete
           id="actors"
           label="Actors"
@@ -176,6 +177,9 @@ const MovieAddForm = ({
           options={actorsOption}
           onChange={onChangeActors}
         />
+        <Tooltip title="Add Actors">
+          <AddBoxIcon color="primary" onClick={() => navigate("../actors")} />
+        </Tooltip>
       </Box>
       <Box sx={{ width: 800 }}>
         <FormAutoComplete
@@ -187,16 +191,10 @@ const MovieAddForm = ({
           onChange={onChangeCategories}
         />
       </Box>
-      <Box sx={{ display: "flex", width: 600 }}>
+      <Box sx={{ width: 200 }}>
         <FormButton label="Save" onClick={onClick} />
-        <FormButton
-          label="Create New Actors"
-          onClick={() => {
-            navigate("../actors");
-          }}
-        />
       </Box>
-    </Container>
+    </>
   );
 };
 
