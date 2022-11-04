@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../utilities/hooks";
-import RegistrationForm from "../../components/register/Register";
+import RegistrationForm from "../../components/Register";
 import { usersRegister } from "../../utilities/slice/userSlice";
 
 interface FormValue {

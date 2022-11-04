@@ -1,25 +1,35 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../utilities/hooks";
 import { usersData, usersLogin } from "../../utilities/slice/userSlice";
 import { cookiesCreate } from "../../utilities/cookies";
 import { loggedInCreate } from "../../utilities/loggedIn";
-import LoginForm from "../../components/login/Login";
+import LoginForm from "../../components/Login";
 
 interface FormValue {
   email: string;
   password: string;
 }
 
+interface AlertData {
+  open: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
+}
+
 const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [formValues, setFormValues] = useState<FormValue>({
+  const [alertData, setAlertData] = React.useState<AlertData>({
+    open: false,
+    message: "",
+    severity: "info",
+  });
+  const [formValues, setFormValues] = React.useState<FormValue>({
     email: "",
     password: "",
   });
-
-  const [formErrors, setFormErrors] = useState<FormValue>({
+  const [formErrors, setFormErrors] = React.useState<FormValue>({
     email: "",
     password: "",
   });
@@ -59,7 +69,7 @@ const Login = () => {
           cookiesCreate(res.payload);
           return true;
         } else {
-          alert(res.payload);
+          setAlertData({ open: true, message: res.payload, severity: "error" });
           return false;
         }
       });
@@ -103,6 +113,8 @@ const Login = () => {
       formErrors={formErrors}
       onChange={onChangeHandler}
       onClick={onClickSubmitHandler}
+      alertData={alertData}
+      setAlertData={setAlertData}
     />
   );
 };

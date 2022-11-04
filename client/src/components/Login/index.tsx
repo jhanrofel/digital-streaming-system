@@ -3,11 +3,14 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import FormButton from "../FormButton";
 import FormText from "../FormText";
+import SnackAlert from "../SnackAlert";
 
 type AppProps = {
   formErrors: FormValue;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
+  alertData: AlertData;
+  setAlertData: (value: AlertData) => void;
 };
 
 interface FormValue {
@@ -15,7 +18,19 @@ interface FormValue {
   password: string;
 }
 
-const LoginForm = ({ formErrors, onClick, onChange }: AppProps) => {
+interface AlertData {
+  open: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
+}
+
+const LoginForm = ({
+  formErrors,
+  onClick,
+  onChange,
+  alertData,
+  setAlertData,
+}: AppProps) => {
   return (
     <React.Fragment>
       <Container maxWidth="sm">
@@ -38,6 +53,7 @@ const LoginForm = ({ formErrors, onClick, onChange }: AppProps) => {
           <FormButton label="Login" onClick={onClick} />
         </Box>
       </Container>
+      <SnackAlert alertData={alertData} setAlertData={setAlertData} />
     </React.Fragment>
   );
 };

@@ -1,8 +1,8 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import FormButton from "../../components/FormButton";
-import FormText from "../../components/FormText";
+import FormButton from "../FormButton";
+import FormText from "../FormText";
 
 type AppProps = {
   formErrors: FormValue;
