@@ -6,7 +6,6 @@ import FormText from "../FormText";
 import FormSelect from "../FormSelect";
 import { SelectChangeEvent } from "@mui/material/Select";
 import Divider from "@mui/material/Divider";
-import Container from "@mui/material/Container";
 import FormAutoComplete from "../FormAutoComplete";
 
 type AppProps = {
@@ -53,7 +52,7 @@ interface OptionClass {
   id: string;
 }
 
-const MovieAddForm = ({
+const MovieEditForm = ({
   formErrors,
   formValues,
   actorsOption,
@@ -66,8 +65,8 @@ const MovieAddForm = ({
 }: AppProps) => {
   const navigate = useNavigate();
   return (
-    <Container sx={{ display: "inline" }}>
-      <Box sx={{ display: "flex", maxWidth: 600 }}>
+    <>
+      <Box sx={{ display: "flex", maxWidth: 600, marginTop: 10 }}>
         <FormText
           name="title"
           value={formValues.title}
@@ -190,14 +189,14 @@ const MovieAddForm = ({
       <Box sx={{ display: "flex", width: 600 }}>
         <FormButton label="Save" onClick={onClick} />
         <FormButton
-          label="Create New Actors"
+          label="Back to List"
           onClick={() => {
-            navigate("../actors");
+            navigate("../movies");
           }}
         />
       </Box>
-    </Container>
+    </>
   );
 };
 
-export default MovieAddForm;
+export default MovieEditForm;

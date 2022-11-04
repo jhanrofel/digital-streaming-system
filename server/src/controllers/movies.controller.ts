@@ -177,11 +177,20 @@ export class MoviesController {
     movies: MovieClass,
   ): Promise<Movies> {
     const link = movies.movieLink;
+    const actors = movies.actors;
     await this.linksRepository.updateById(movies.link, link);
     await this.moviesRepository.updateById(
       id,
-      _.omit(movies, ['movieLink', 'link']),
+      _.omit(movies, ['movieLink', 'movieActors', 'link', 'actors', 'id']),
     );
+
+    await this.movieActorRepository.deleteAll({movieId: id});
+    for (const actor of actors) {
+      await this.movieActorRepository.create({
+        movieId: id,
+        actorId: actor,
+      });
+    }
 
     return this.moviesRepository.findById(id, {
       include: ['movieLink', 'movieActors'],

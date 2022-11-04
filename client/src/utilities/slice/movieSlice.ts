@@ -3,7 +3,7 @@ import { authenticationToken } from "../authentication";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3001";
 
-export const moviesList = createAsyncThunk("moviess/list", async () => {
+export const moviesList = createAsyncThunk("movies/list", async () => {
   return axios({
     url: `/movies`,
     method: "get",
@@ -13,12 +13,39 @@ export const moviesList = createAsyncThunk("moviess/list", async () => {
     .catch((err) => err);
 });
 
+export const moviesOne = createAsyncThunk(
+  "movies/one",
+  async (movieId: string) => {
+    return axios({
+      url: `/movies/${movieId}`,
+      method: "get",
+      headers: { Authorization: authenticationToken() },
+    })
+      .then((res) => res.data)
+      .catch((err) => err);
+  }
+);
+
 export const moviesPost = createAsyncThunk(
   "movies/post",
   async (formValues: MoviesDataOne) => {
     return axios({
       url: `/movies`,
       method: "post",
+      data: formValues,
+      headers: { Authorization: authenticationToken() },
+    })
+      .then((res) => res.data)
+      .catch((err) => err);
+  }
+);
+
+export const moviesUpdate = createAsyncThunk(
+  "movies/patch",
+  async (formValues: MoviesDataOne) => {
+    return axios({
+      url: `/movies/${formValues.id}`,
+      method: "patch",
       data: formValues,
       headers: { Authorization: authenticationToken() },
     })
@@ -61,6 +88,7 @@ interface MoviesDataOne {
 interface MoviesData {
   data: MoviesDataOne[] | [];
   dataOne: MoviesDataOne;
+  dataGetOne: any;
 }
 
 interface MovieLink {
@@ -75,6 +103,7 @@ interface MovieLink {
 const initialState = {
   data: [],
   dataOne: {},
+  dataGetOne: [],
 } as MoviesData;
 
 export const moviesSlice = createSlice({
@@ -91,6 +120,9 @@ export const moviesSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(moviesList.fulfilled, (state, action) => {
       state.data = action.payload;
+    });
+    builder.addCase(moviesOne.fulfilled, (state, action) => {
+      state.dataGetOne = action.payload;
     });
     builder.addCase(moviesPost.fulfilled, (state, action) => {
       state.data = [...state.data, action.payload];
