@@ -1,6 +1,6 @@
 import React from "react";
 import Divider from "@mui/material/Divider";
-import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -33,31 +33,25 @@ const ActorMovies = ({ actor, movies }: AppProps) => {
   const navigate = useNavigate();
   return (
     <React.Fragment>
-      <Container sx={{ marginTop: 10 }}>
-        <Divider
-          sx={{ display: "flex", width: 600, paddingTop: 5 }}
-          textAlign="left"
-        >
-          {`${actor.firstName} ${actor.lastName}'s MOVIES `}
-        </Divider>
-        <Grid>
-          <List>
-            {movies?.map((movie) => (
-              <ListItem key={movie.link}>
-                <FormCard title={movie.title} link={movie.movieLink.banner} />
-              </ListItem>
-            ))}
-          </List>
-        </Grid>
-      </Container>
-      <Container sx={{ width: 300 }}>
+      <Divider
+        sx={{ display: "flex", width: 600, paddingTop: 10 }}
+        textAlign="left"
+      >
+        {`${actor.firstName} ${actor.lastName}'s MOVIES `}
+      </Divider>
+      <Box sx={{ display: "flex" }}>
+        {movies?.map((movie,i) => (
+          <FormCard key={i} title={movie.title} link={movie.movieLink.banner}/>
+        ))}
+      </Box>
+      <Box sx={{ width: 300 }}>
         <FormButton
           label="Back to Actors List"
           onClick={() => {
             navigate("../actors");
           }}
         />
-      </Container>
+      </Box>
     </React.Fragment>
   );
 };

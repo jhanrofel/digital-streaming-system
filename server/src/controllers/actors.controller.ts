@@ -143,7 +143,7 @@ export class ActorsController {
     },
   })
   async findMoviesById(@param.path.string('id') id: string): Promise<Movies[]> {
-    return this.actorsRepository.actorMovies(id).find({include:['movieLink']});
+    return this.actorsRepository.actorMovies(id).find({include:[{relation:'movieLink'}],order:['yearReleased DESC']});
   }
 
   @authenticate('jwt')
