@@ -145,7 +145,7 @@ const MovieEdit = () => {
       );
 
       setSelectedCategories(movieCategories);
-    }
+    }// eslint-disable-next-line
   }, [movie]);
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>): void => {

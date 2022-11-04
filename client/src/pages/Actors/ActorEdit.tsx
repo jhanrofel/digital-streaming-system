@@ -50,7 +50,7 @@ const ActorEdit = () => {
   });
   const [birthday, setBirthday] = React.useState<Dayjs | null>(null);
   useEffect(() => {
-    formErrors.birthday = "";
+    formErrors.birthday = "";// eslint-disable-next-line
   }, [birthday]);
 
   useEffect(() => {

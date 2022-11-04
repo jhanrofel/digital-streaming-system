@@ -12,7 +12,8 @@ export const loggedInCreate = (user: UserLoggedIn): void => {
     "loggedIn",
     JSON.stringify({
       id: user.id,
-      fullname: `${user.firstName} ${user.lastName}`,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
     })
   );
