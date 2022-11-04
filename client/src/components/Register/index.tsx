@@ -3,11 +3,15 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import FormButton from "../FormButton";
 import FormText from "../FormText";
+import SnackAlert from "../SnackAlert";
 
 type AppProps = {
+  formValues: FormValue;
   formErrors: FormValue;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
+  alertData: AlertData;
+  setAlertData: (value: AlertData) => void;
 };
 
 interface FormValue {
@@ -18,7 +22,20 @@ interface FormValue {
   confirm: string;
 }
 
-const RegistrationForm = ({ formErrors, onClick, onChange }: AppProps) => {
+interface AlertData {
+  open: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
+}
+
+const RegistrationForm = ({
+  formValues,
+  formErrors,
+  onClick,
+  onChange,
+  alertData,
+  setAlertData,
+}: AppProps) => {
   return (
     <React.Fragment>
       <Container maxWidth="sm">
@@ -26,6 +43,7 @@ const RegistrationForm = ({ formErrors, onClick, onChange }: AppProps) => {
           <div className="form-header">REGISTRATION</div>
           <FormText
             name="email"
+            value={formValues.email}
             label="Email"
             type="search"
             error={formErrors.email}
@@ -33,6 +51,7 @@ const RegistrationForm = ({ formErrors, onClick, onChange }: AppProps) => {
           />
           <FormText
             name="firstName"
+            value={formValues.firstName}
             label="First Name"
             type="search"
             error={formErrors.firstName}
@@ -40,6 +59,7 @@ const RegistrationForm = ({ formErrors, onClick, onChange }: AppProps) => {
           />
           <FormText
             name="lastName"
+            value={formValues.lastName}
             label="Last Name"
             type="search"
             error={formErrors.lastName}
@@ -47,6 +67,7 @@ const RegistrationForm = ({ formErrors, onClick, onChange }: AppProps) => {
           />
           <FormText
             name="password"
+            value={formValues.password}
             label="Password"
             type="password"
             error={formErrors.password}
@@ -54,6 +75,7 @@ const RegistrationForm = ({ formErrors, onClick, onChange }: AppProps) => {
           />
           <FormText
             name="confirm"
+            value={formValues.confirm}
             label="Confirm Password"
             type="password"
             error={formErrors.confirm}
@@ -62,6 +84,7 @@ const RegistrationForm = ({ formErrors, onClick, onChange }: AppProps) => {
           <FormButton label="Create Account" onClick={onClick} />
         </Box>
       </Container>
+      <SnackAlert alertData={alertData} setAlertData={setAlertData} />
     </React.Fragment>
   );
 };

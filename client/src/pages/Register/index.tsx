@@ -12,9 +12,20 @@ interface FormValue {
   confirm: string;
 }
 
+interface AlertData {
+  open: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
+}
+
 const Register = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [alertData, setAlertData] = React.useState<AlertData>({
+    open: false,
+    message: "",
+    severity: "info",
+  });
   const [formValues, setFormValues] = useState<FormValue>({
     email: "",
     firstName: "",
@@ -79,8 +90,18 @@ const Register = () => {
 
       await dispatch(usersRegister(postUserValue)).then((res) => {
         if (res.type === "users/register/fulfilled") {
-          alert(res.payload.message);
-          navigate("/");
+          setFormValues({
+            email: "",
+            firstName: "",
+            lastName: "",
+            password: "",
+            confirm: "",
+          });
+          setAlertData({
+            open: true,
+            message: res.payload.message,
+            severity: "info",
+          });
         } else {
           setFormErrors((state) => ({
             ...state,
@@ -149,9 +170,12 @@ const Register = () => {
 
   return (
     <RegistrationForm
+      formValues={formValues}
       formErrors={formErrors}
       onChange={onChangeHandler}
-      onClick={onClickSubmitHandler} 
+      onClick={onClickSubmitHandler}
+      alertData={alertData}
+      setAlertData={setAlertData}
     />
   );
 };
