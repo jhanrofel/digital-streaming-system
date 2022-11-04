@@ -37,12 +37,23 @@ interface OptionClass {
   id: string;
 }
 
+interface AlertData {
+  open: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
+}
+
 const MovieEdit = () => {
   const dispatch = useAppDispatch();
   const { state } = useLocation();
   const movieId = state;
   const movie = useAppSelector((state) => state.movies.dataGetOne);
   const actors = useAppSelector((state) => state.actors.data);
+  const [alertData, setAlertData] = React.useState<AlertData>({
+    open: false,
+    message: "",
+    severity: "info",
+  });
   const [selectedActors, setSelectedActors] = React.useState<
     Array<OptionClass>
   >([]);
@@ -257,9 +268,13 @@ const MovieEdit = () => {
 
       await dispatch(moviesUpdate(postMovieValue)).then((res) => {
         if (res.type === "movies/patch/fulfilled") {
-          alert("Movie updated.");
+          setAlertData({
+            open: true,
+            message: "Movie updated.",
+            severity: "success",
+          });
         } else {
-          alert(res.payload);
+          setAlertData({ open: true, message: res.payload, severity: "error" });
         }
       });
     }
@@ -344,6 +359,8 @@ const MovieEdit = () => {
       onChangeSelect={onChangeSelect}
       onChangeActors={onChangeActors}
       onChangeCategories={onChangeCategories}
+      alertData={alertData}
+      setAlertData={setAlertData}
     />
   );
 };

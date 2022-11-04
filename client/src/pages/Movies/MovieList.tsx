@@ -13,7 +13,6 @@ import {
 } from "../../utilities/slice/movieSlice";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import TheatersIcon from "@mui/icons-material/Theaters";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
 
 interface RowValues {
@@ -91,10 +90,6 @@ const MovieList = () => {
       renderCell: (params) => {
         const onClickEdit = () => {
           navigate("../movies-edit", { state: params.row.id });
-        };
-
-        const onClickMovies = () => {
-          navigate("../movies-movies", { state: params.row.id });
         };
 
         const onClickDelete = () => {

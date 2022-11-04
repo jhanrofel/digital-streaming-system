@@ -9,6 +9,7 @@ import Divider from "@mui/material/Divider";
 import FormAutoComplete from "../FormAutoComplete";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import Tooltip from "@mui/material/Tooltip";
+import SnackAlert from "../SnackAlert";
 
 type AppProps = {
   formErrors: FormErrors;
@@ -20,6 +21,8 @@ type AppProps = {
   onChangeSelect: (event: SelectChangeEvent) => void;
   onChangeActors: any;
   onChangeCategories: any;
+  alertData: AlertData;
+  setAlertData: (value: AlertData) => void;
 };
 
 interface FormValue {
@@ -47,6 +50,12 @@ interface FormErrors {
   actors: string;
 }
 
+interface AlertData {
+  open: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
+}
+
 const optionData = ["True", "False"];
 
 interface OptionClass {
@@ -64,6 +73,8 @@ const MovieAddForm = ({
   onChangeSelect,
   onChangeActors,
   onChangeCategories,
+  alertData,
+  setAlertData,
 }: AppProps) => {
   const navigate = useNavigate();
   return (
@@ -168,7 +179,7 @@ const MovieAddForm = ({
           onChange={onChange}
         />
       </Box>
-      <Box sx={{ display:"flex", width: 800 }}>
+      <Box sx={{ display: "flex", width: 800 }}>
         <FormAutoComplete
           id="actors"
           label="Actors"
@@ -194,6 +205,7 @@ const MovieAddForm = ({
       <Box sx={{ width: 200 }}>
         <FormButton label="Save" onClick={onClick} />
       </Box>
+      <SnackAlert alertData={alertData} setAlertData={setAlertData} />
     </>
   );
 };

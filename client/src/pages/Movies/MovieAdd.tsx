@@ -36,8 +36,19 @@ interface OptionClass {
   id: string;
 }
 
+interface AlertData {
+  open: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
+}
+
 const MovieAdd = () => {
   const dispatch = useAppDispatch();
+  const [alertData, setAlertData] = React.useState<AlertData>({
+    open: false,
+    message: "",
+    severity: "info",
+  });
   const actors = useAppSelector((state) => state.actors.data);
   const [selectedActors, setSelectedActors] = React.useState<
     Array<OptionClass>
@@ -46,12 +57,10 @@ const MovieAdd = () => {
   const [selectedCategories, setSelectedCategories] = React.useState<
     Array<OptionClass>
   >([]);
-
   const actorsOption: OptionClass[] = actors.map((actor) => ({
     label: `${actor.firstName} ${actor.lastName}`,
     id: actor.id ? actor.id : "",
   }));
-
   const categoriesOption: OptionClass[] = categories.map((category) => ({
     label: category.name,
     id: category.id ? category.id : "",
@@ -214,9 +223,13 @@ const MovieAdd = () => {
           }));
           setSelectedActors([]);
           setSelectedCategories([]);
-          alert("Movie added.");
+          setAlertData({
+            open: true,
+            message: "Movie added.",
+            severity: "success",
+          });
         } else {
-          alert(res.payload);
+          setAlertData({ open: true, message: res.payload, severity: "error" });
         }
       });
     }
@@ -301,6 +314,8 @@ const MovieAdd = () => {
       onChangeSelect={onChangeSelect}
       onChangeActors={onChangeActors}
       onChangeCategories={onChangeCategories}
+      alertData={alertData}
+      setAlertData={setAlertData}
     />
   );
 };
