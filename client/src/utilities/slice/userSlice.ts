@@ -20,7 +20,7 @@ export const usersRegister = createAsyncThunk(
     })
       .then((res) => {
         if (res.data.status === 200) {
-          return res.data;
+          return res.data.users[0];
         } else {
           return rejectWithValue(res.data.error);
         }

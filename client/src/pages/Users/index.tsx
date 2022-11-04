@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import UserList from "./UserList";
 import Approval from "./Approval";
+import UserAdd from "./UserAdd";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -56,13 +57,17 @@ const Users = () => {
             aria-label="basic tabs example"
           >
             <Tab label="USERS" {...a11yProps(0)} />
-            <Tab label="APPROVAL" {...a11yProps(1)} />
+            <Tab label="ADD" {...a11yProps(1)} />
+            <Tab label="APPROVAL" {...a11yProps(2)} />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
           <UserList />
         </TabPanel>
         <TabPanel value={value} index={1}>
+          <UserAdd />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
           <Approval />
         </TabPanel>
       </Box>
