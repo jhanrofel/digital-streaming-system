@@ -7,6 +7,7 @@ import FormDate from "../../components/FormDate";
 import { SelectChangeEvent } from "@mui/material/Select";
 import Divider from "@mui/material/Divider";
 import { Dayjs } from "dayjs";
+import SnackAlert from "../SnackAlert";
 
 type AppProps = {
   formErrors: FormErrors;
@@ -16,6 +17,8 @@ type AppProps = {
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onChangeSelect: (event: SelectChangeEvent) => void;
   setBirthday: any;
+  alertData: AlertData;
+  setAlertData: (value: AlertData) => void;
 };
 
 interface FormValue {
@@ -41,6 +44,12 @@ interface FormErrors {
   youtube?: string;
 }
 
+interface AlertData {
+  open: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
+}
+
 const genderData = ["Male", "Female"];
 
 const ActorAddForm = ({
@@ -51,6 +60,8 @@ const ActorAddForm = ({
   onChange,
   onChangeSelect,
   setBirthday,
+  alertData,
+  setAlertData,
 }: AppProps) => {
   return (
     <>
@@ -136,6 +147,7 @@ const ActorAddForm = ({
       <Box sx={{ width: 600 }}>
         <FormButton label="Save" onClick={onClick} />
       </Box>
+      <SnackAlert alertData={alertData} setAlertData={setAlertData} />
     </>
   );
 };

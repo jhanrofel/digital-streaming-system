@@ -28,9 +28,19 @@ interface FormErrors {
   youtube?: string;
 }
 
+interface AlertData {
+  open: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
+}
+
 const ActorAdd = () => {
   const dispatch = useAppDispatch();
-
+  const [alertData, setAlertData] = React.useState<AlertData>({
+    open: false,
+    message: "",
+    severity: "info",
+  });
   const [birthday, setBirthday] = React.useState<Dayjs | null>(null);
   useEffect(() => {
     formErrors.birthday = "";
@@ -133,6 +143,8 @@ const ActorAdd = () => {
         },
       };
 
+      const actorGender = formValues.gender === "Male" ? "Actor" : "Actress";
+
       await dispatch(actorsPost(postUserValue)).then((res) => {
         if (res.type === "actors/post/fulfilled") {
           setFormValues((state) => ({
@@ -147,9 +159,13 @@ const ActorAdd = () => {
             youtube: "",
           }));
           setBirthday(null);
-          alert("Actor added.");
+          setAlertData({
+            open: true,
+            message: `${actorGender} added.`,
+            severity: "success",
+          });
         } else {
-          alert(res.payload);
+          setAlertData({ open: true, message: res.payload, severity: "error" });
         }
       });
     }
@@ -211,6 +227,8 @@ const ActorAdd = () => {
       onClick={onClickSubmitHandler}
       onChangeSelect={onChangeSelect}
       setBirthday={setBirthday}
+      alertData={alertData}
+      setAlertData={setAlertData}
     />
   );
 };

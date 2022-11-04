@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../utilities/hooks";
-import RegistrationForm from "../../components/Register";
 import { usersRegister } from "../../utilities/slice/userSlice";
+import RegistrationForm from "../../components/Register";
 
 interface FormValue {
   email: string;
@@ -20,7 +19,6 @@ interface AlertData {
 
 const Register = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const [alertData, setAlertData] = React.useState<AlertData>({
     open: false,
     message: "",
@@ -100,7 +98,7 @@ const Register = () => {
           setAlertData({
             open: true,
             message: res.payload.message,
-            severity: "info",
+            severity: "success",
           });
         } else {
           setFormErrors((state) => ({

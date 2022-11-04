@@ -7,8 +7,8 @@ import FormDate from "../../components/FormDate";
 import { SelectChangeEvent } from "@mui/material/Select";
 import Divider from "@mui/material/Divider";
 import { Dayjs } from "dayjs";
-import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
+import SnackAlert from "../SnackAlert";
 
 type AppProps = {
   formErrors: FormErrors;
@@ -18,6 +18,8 @@ type AppProps = {
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onChangeSelect: (event: SelectChangeEvent) => void;
   setBirthday: any;
+  alertData: AlertData;
+  setAlertData: (value: AlertData) => void;
 };
 
 interface FormValue {
@@ -43,6 +45,12 @@ interface FormErrors {
   youtube?: string;
 }
 
+interface AlertData {
+  open: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
+}
+
 const genderData = ["Male", "Female"];
 
 const ActorEditForm = ({
@@ -53,12 +61,14 @@ const ActorEditForm = ({
   onChange,
   onChangeSelect,
   setBirthday,
+  alertData,
+  setAlertData,
 }: AppProps) => {
   const navigate = useNavigate();
 
   return (
-    <Container sx={{ marginTop: 10 }}>
-      <Box sx={{ display: "flex", width: 600 }}>
+    <>
+      <Box sx={{ display: "flex", width: 600, marginTop: 10 }}>
         <FormText
           name="firstName"
           value={formValues.firstName}
@@ -143,8 +153,9 @@ const ActorEditForm = ({
           onClick={() => navigate("../actors")}
         />
         <FormButton label="Save" onClick={onClick} />
+        <SnackAlert alertData={alertData} setAlertData={setAlertData} />
       </Box>
-    </Container>
+    </>
   );
 };
 

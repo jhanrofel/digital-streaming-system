@@ -32,12 +32,22 @@ interface FormErrors {
   trailer?: string;
 }
 
+interface AlertData {
+  open: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
+}
+
 const ActorEdit = () => {
   const dispatch = useAppDispatch();
   const { state } = useLocation();
   const actorId = state;
   const actor = useAppSelector((state) => state.actors.dataOne);
-
+  const [alertData, setAlertData] = React.useState<AlertData>({
+    open: false,
+    message: "",
+    severity: "info",
+  });
   const [birthday, setBirthday] = React.useState<Dayjs | null>(null);
   useEffect(() => {
     formErrors.birthday = "";
@@ -170,11 +180,17 @@ const ActorEdit = () => {
         },
       };
 
+      const actorGender = formValues.gender === "Male" ? "Actor" : "Actress";
+
       await dispatch(actorsUpdate(postUserValue)).then((res) => {
         if (res.type === "actors/update/fulfilled") {
-          alert("Actor updated.");
+          setAlertData({
+            open: true,
+            message: `${actorGender} updated.`,
+            severity: "success",
+          });
         } else {
-          alert(res.payload);
+          setAlertData({ open: true, message: res.payload, severity: "error" });
         }
       });
     }
@@ -236,6 +252,8 @@ const ActorEdit = () => {
       onClick={onClickSubmitHandler}
       onChangeSelect={onChangeSelect}
       setBirthday={setBirthday}
+      alertData={alertData}
+      setAlertData={setAlertData}
     />
   );
 };
