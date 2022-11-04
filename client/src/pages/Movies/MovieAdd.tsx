@@ -175,7 +175,7 @@ const MovieAdd = () => {
 
   const onClickSubmitHandler = async (): Promise<void> => {
     const actorsValue = selectedActors.map((actor) => actor.id);
-    const categoriesValue = selectedActors.map((actor) => actor.id);
+    const categoriesValue = selectedCategories.map((category) => category.id);
     if (formValidation()) {
       const postMovieValue: MovieDataOne = {
         title: formValues.title,
@@ -212,6 +212,8 @@ const MovieAdd = () => {
             categories: [],
             actors: [],
           }));
+          setSelectedActors([]);
+          setSelectedCategories([]);
           alert("Movie added.");
         } else {
           alert(res.payload);

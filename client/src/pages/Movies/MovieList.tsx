@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
@@ -6,10 +6,11 @@ import Tooltip from "@mui/material/Tooltip";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { useNavigate } from "react-router-dom";
-import { moviesList, moviesDelete } from "../../utilities/slice/movieSlice";
+import { moviesList, moviesDelete,selectMovies } from "../../utilities/slice/movieSlice";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TheatersIcon from "@mui/icons-material/Theaters";
+import DeleteDialogue from "../../components/Dialog/DeleteDialog";
 
 interface RowValues {
   id?: string;
@@ -37,6 +38,8 @@ const currencyFormatter = new Intl.NumberFormat("en-US", {
 
 const MovieList = () => {
   const navigate = useNavigate();
+  const [open, setOpen] = React.useState<boolean>(false);
+  const movie = useAppSelector((state) => state.movies.dataOne);
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 90 },
     {
@@ -91,7 +94,8 @@ const MovieList = () => {
         };
 
         const onClickDelete = () => {
-          dispatch(moviesDelete(params.row.id));
+          dispatch(selectMovies({id:params.row.id}));
+          setOpen(true);
         };
 
         return (
@@ -100,15 +104,10 @@ const MovieList = () => {
               <Tooltip title="Edit movie details">
                 <EditIcon color="primary" onClick={onClickEdit} />
               </Tooltip>
-              {params.row.movieMovies ? (
-                <Tooltip title="Movie belongs">
-                  <TheatersIcon color="primary" onClick={onClickMovies} />
-                </Tooltip>
-              ) : (
-                <Tooltip title="Delete movie">
-                  <DeleteIcon color="error" onClick={onClickDelete} />
-                </Tooltip>
-              )}
+
+              <Tooltip title="Delete movie">
+                <DeleteIcon color="error" onClick={onClickDelete} />
+              </Tooltip>
             </Stack>
           </IconButton>
         );
@@ -118,9 +117,20 @@ const MovieList = () => {
   const dispatch = useAppDispatch();
   const rows: RowValues[] = useAppSelector((state) => state.movies.data);
 
-  useEffect(() => {
+  React.useEffect(() => {
     dispatch(moviesList());
   }, [dispatch]);
+
+  const onConfirmDelete = async () => {
+    await dispatch(moviesDelete(movie.id ? movie.id : "")).then((res) => {
+      if (res.type === "movies/delete/fulfilled") {
+        setOpen(false);
+      } else {
+        alert(res.payload);
+      }
+    });
+    
+  };
 
   return (
     <>
@@ -141,6 +151,11 @@ const MovieList = () => {
           }}
         />
       </Box>
+      <DeleteDialogue
+        setOpen={setOpen}
+        open={open}
+        onConfirmDelete={onConfirmDelete}
+      />
     </>
   );
 };

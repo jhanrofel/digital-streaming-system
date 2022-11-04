@@ -28,14 +28,20 @@ export const moviesPost = createAsyncThunk(
 );
 
 export const moviesDelete = createAsyncThunk(
-  "movies/post",
-  async (movieId: string) => {
+  "movies/delete",
+  async (movieId: string, { rejectWithValue }) => {
     return axios({
       url: `/movies/${movieId}`,
       method: "delete",
       headers: { Authorization: authenticationToken() },
     })
-      .then((res) => res.data)
+      .then((res) => {
+        if (res.data.status === 200) {
+          return res.data.movies[0];
+        } else {
+          return rejectWithValue(res.data.error);
+        }
+      })
       .catch((err) => err);
   }
 );
@@ -75,8 +81,11 @@ export const moviesSlice = createSlice({
   name: "movies",
   initialState,
   reducers: {
-    clearmovies: (state) => {
+    clearMovies: (state) => {
       state.data = [];
+    },
+    selectMovies: (state, action) => {
+      state.dataOne = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -86,8 +95,11 @@ export const moviesSlice = createSlice({
     builder.addCase(moviesPost.fulfilled, (state, action) => {
       state.data = [...state.data, action.payload];
     });
+    builder.addCase(moviesDelete.fulfilled, (state, action) => {
+      state.data = state.data.filter((movie) => movie.id !== action.payload.id);
+    });
   },
 });
 
-export const { clearmovies } = moviesSlice.actions;
+export const { clearMovies, selectMovies } = moviesSlice.actions;
 export default moviesSlice.reducer;
