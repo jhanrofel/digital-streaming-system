@@ -91,6 +91,25 @@ export const usersApproved = createAsyncThunk("users/approved", async () => {
     });
 });
 
+export const usersDelete = createAsyncThunk(
+  "users/delete",
+  async (userId: string) => {
+    return axios({
+      url: `/users/${userId}`,
+      method: "delete",
+      headers: {
+        Authorization: authenticationToken(),
+      },
+    })
+      .then(() => userId)
+      .catch((error) => {
+        if (error.response.data.error.name === "UnauthorizedError")
+          unauthorize();
+        return error;
+      });
+  }
+);
+
 interface ApproveFormValues {
   id: string | number;
   approval: string;
@@ -153,6 +172,9 @@ export const userSlice = createSlice({
         role: "",
       };
     },
+    selectUsers: (state, action) => {
+      state.dataOne = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(usersRegister.fulfilled, (state, action) => {
@@ -169,7 +191,7 @@ export const userSlice = createSlice({
         state.data = state.data.filter((user) => user.id !== action.payload.id);
 
       if (action.payload.form === "list") {
-        state.data = state.data.map((user) => 
+        state.data = state.data.map((user) =>
           user.id === action.payload.id
             ? { ...user, role: action.payload.role }
             : user
@@ -179,8 +201,11 @@ export const userSlice = createSlice({
     builder.addCase(usersApproved.fulfilled, (state, action) => {
       state.data = action.payload;
     });
+    builder.addCase(usersDelete.fulfilled, (state, action) => {
+      state.data = state.data.filter((user) => user.id !== action.payload);
+    });
   },
 });
 
-export const { clearUser } = userSlice.actions;
+export const { clearUser, selectUsers } = userSlice.actions;
 export default userSlice.reducer;

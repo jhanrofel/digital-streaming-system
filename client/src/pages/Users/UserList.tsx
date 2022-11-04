@@ -1,13 +1,19 @@
-import { useEffect } from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import PersonIcon from "@mui/icons-material/Person";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
-import { usersApproved, usersApprove } from "../../utilities/slice/userSlice";
+import {
+  usersApproved,
+  usersDelete,
+  selectUsers,
+} from "../../utilities/slice/userSlice";
+import DeleteDialogue from "../../components/Dialog/DeleteDialog";
 
 interface RowValues {
   id: string;
@@ -17,14 +23,10 @@ interface RowValues {
   role: string;
 }
 
-interface ApproveFormValues {
-  id: string | number;
-  approval: string;
-  role: string;
-  form: string;
-}
-
 const UserList = () => {
+  const navigate = useNavigate();
+  const [open, setOpen] = React.useState<boolean>(false);
+  const user = useAppSelector((state) => state.users.dataOne);
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 90 },
     {
@@ -46,15 +48,6 @@ const UserList = () => {
       editable: true,
     },
     {
-      field: "fullName",
-      headerName: "Full name",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 200,
-      valueGetter: (params: GridValueGetterParams) =>
-        `${params.row.firstName || ""} ${params.row.lastName || ""}`,
-    },
-    {
       field: "role",
       headerName: "Role",
       sortable: false,
@@ -66,44 +59,44 @@ const UserList = () => {
       width: 150,
       sortable: false,
       renderCell: (params) => {
-        const onClickRoleAdmin = async () => {
-          const formValues: ApproveFormValues = {
-            id: params.id,
-            approval: "approved",
-            role: "ADMIN",
-            form: "list",
-          };
-          await dispatch(usersApprove(formValues));
-        };
+        // const onClickRoleAdmin = async () => {
+        //   const formValues: ApproveFormValues = {
+        //     id: params.id,
+        //     approval: "approved",
+        //     role: "ADMIN",
+        //     form: "list",
+        //   };
+        //   await dispatch(usersApprove(formValues));
+        // };
 
-        const onClickRoleUser = async () => {
-          const formValues: ApproveFormValues = {
-            id: params.id,
-            approval: "approved",
-            role: "USER",
-            form: "list",
-          };
-          await dispatch(usersApprove(formValues));
+        // const onClickRoleUser = async () => {
+        //   const formValues: ApproveFormValues = {
+        //     id: params.id,
+        //     approval: "approved",
+        //     role: "USER",
+        //     form: "list",
+        //   };
+        //   await dispatch(usersApprove(formValues));
+        // };
+
+        const onClickEdit = () => {
+          navigate("../users-edit", { state: params.row.id });
+        };
+        const onClickDelete = () => {
+          dispatch(selectUsers({ id: params.row.id }));
+          setOpen(true);
         };
 
         return (
           <IconButton>
-            {params.row.role === "USER" ? (
-              <Stack spacing={2} direction="row">
-                <Tooltip title="Make Account as Admin">
-                  <AdminPanelSettingsIcon
-                    color="warning"
-                    onClick={onClickRoleAdmin}
-                  />
-                </Tooltip>
-              </Stack>
-            ) : (
-              <Stack spacing={2} direction="row">
-                <Tooltip title="Make Account as User" >
-                  <PersonIcon color="primary" onClick={onClickRoleUser}/>
-                </Tooltip>
-              </Stack>
-            )}
+            <Stack spacing={2} direction="row">
+              <Tooltip title="Edit actor details">
+                <EditIcon color="primary" onClick={onClickEdit} />
+              </Tooltip>
+              <Tooltip title="Delete actor">
+                <DeleteIcon color="error" onClick={onClickDelete} />
+              </Tooltip>
+            </Stack>
           </IconButton>
         );
       },
@@ -112,9 +105,19 @@ const UserList = () => {
   const dispatch = useAppDispatch();
   const rows: RowValues[] = useAppSelector((state) => state.users.data);
 
-  useEffect(() => {
+  React.useEffect(() => {
     dispatch(usersApproved());
   }, [dispatch]);
+
+  const onConfirmDelete = async () => {
+    await dispatch(usersDelete(user.id ? user.id : "")).then((res) => {
+      if (res.type === "users/delete/fulfilled") {
+        setOpen(false);
+      } else {
+        alert(res.payload);
+      }
+    });
+  };
 
   return (
     <>
@@ -135,6 +138,11 @@ const UserList = () => {
           }}
         />
       </Box>
+      <DeleteDialogue
+        setOpen={setOpen}
+        open={open}
+        onConfirmDelete={onConfirmDelete}
+      />
     </>
   );
 };
