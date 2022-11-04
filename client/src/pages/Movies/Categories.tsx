@@ -38,24 +38,7 @@ const Categories = () => {
         const onClickDelete = async () => {
           dispatch(selectCategories(params.row.id));
           setOpen(true);
-          //   const formValues: ApproveFormValues = {
-          //     id: params.id,
-          //     approval: "approved",
-          //     role: "ADMIN",
-          //     form: "list",
-          //   };
-          //   await dispatch(usersApprove(formValues));
         };
-
-        // const onClickRoleUser = async () => {
-        //   const formValues: ApproveFormValues = {
-        //     id: params.id,
-        //     approval: "approved",
-        //     role: "USER",
-        //     form: "list",
-        //   };
-        //   await dispatch(usersApprove(formValues));
-        // };
 
         return (
           <IconButton>
@@ -78,7 +61,7 @@ const Categories = () => {
   const category = useAppSelector((state) => state.categories.dataOne);
 
   const onConfirmDelete = async () => {
-    await dispatch(categoriesDelete(category.id));
+    await dispatch(categoriesDelete(category.id?category.id:""));
     setOpen(false);
   };
 

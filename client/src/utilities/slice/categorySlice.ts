@@ -39,7 +39,7 @@ export const categoriesPost = createAsyncThunk(
 
 export const categoriesDelete = createAsyncThunk(
   "categories/delete",
-  async (categoryId: string | undefined, { rejectWithValue }) => {
+  async (categoryId: string, { rejectWithValue }) => {
     return axios({
       url: `/categories/${categoryId}`,
       method: "delete",
