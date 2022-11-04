@@ -15,7 +15,7 @@ export const moviesList = createAsyncThunk("moviess/list", async () => {
 
 export const moviesPost = createAsyncThunk(
   "movies/post",
-  async (formValues: moviesDataOne) => {
+  async (formValues: MoviesDataOne) => {
     return axios({
       url: `/movies`,
       method: "post",
@@ -27,7 +27,20 @@ export const moviesPost = createAsyncThunk(
   }
 );
 
-interface moviesDataOne {
+export const moviesDelete = createAsyncThunk(
+  "movies/post",
+  async (movieId: string) => {
+    return axios({
+      url: `/movies/${movieId}`,
+      method: "delete",
+      headers: { Authorization: authenticationToken() },
+    })
+      .then((res) => res.data)
+      .catch((err) => err);
+  }
+);
+
+interface MoviesDataOne {
   id?: string;
   title: string;
   cost: number;
@@ -36,17 +49,27 @@ interface moviesDataOne {
   featured: boolean;
   categories: string[];
   actors: string[];
+  movieLink: MovieLink;
 }
 
-interface moviesData {
-  data: moviesDataOne[] | [];
-  dataOne: moviesDataOne;
+interface MoviesData {
+  data: MoviesDataOne[] | [];
+  dataOne: MoviesDataOne;
+}
+
+interface MovieLink {
+  banner: string;
+  catalogue: string;
+  facebook?: string;
+  instagram?: string;
+  youtube?: string;
+  trailer?: string;
 }
 
 const initialState = {
   data: [],
   dataOne: {},
-} as moviesData;
+} as MoviesData;
 
 export const moviesSlice = createSlice({
   name: "movies",

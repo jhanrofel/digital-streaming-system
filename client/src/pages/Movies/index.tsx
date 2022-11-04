@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Categories from "../../pages/Movies/Categories";
 import MovieAdd from "./MovieAdd";
+import MovieList from "./MovieList";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -60,7 +61,7 @@ const Movies = () => {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        Test
+        <MovieList />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <MovieAdd />
