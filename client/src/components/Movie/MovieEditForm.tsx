@@ -9,6 +9,7 @@ import Divider from "@mui/material/Divider";
 import FormAutoComplete from "../FormAutoComplete";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import Tooltip from "@mui/material/Tooltip";
+import Avatar from "@mui/material/Avatar";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
@@ -138,6 +139,12 @@ const MovieEditForm = ({
           error={formErrors.banner}
           onChange={onChange}
         />
+        <Avatar
+          variant="square"
+          alt="Image Banner"
+          src={formValues.banner}
+          sx={{ width: 65, height: 65 }}
+        />
         <FormText
           name="catalogue"
           value={formValues.catalogue}
@@ -145,6 +152,12 @@ const MovieEditForm = ({
           type="search"
           error={formErrors.catalogue}
           onChange={onChange}
+        />
+        <Avatar
+          variant="square"
+          alt="Image Banner"
+          src={formValues.catalogue}
+          sx={{ width: 65, height: 65 }}
         />
       </Box>
       <Box sx={{ display: "flex", maxWidth: 800 }}>
@@ -202,7 +215,11 @@ const MovieEditForm = ({
           onChange={onChangeCategories}
         />
       </Box>
-      <Box sx={{ width: 200 }}>
+      <Box sx={{ display: "flex", width: 400 }}>
+        <FormButton
+          label="Back to List"
+          onClick={() => navigate("../movies")}
+        />
         <FormButton label="Save" onClick={onClick} />
       </Box>
       <SnackAlert alertData={alertData} setAlertData={setAlertData} />

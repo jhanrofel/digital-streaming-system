@@ -6,10 +6,15 @@ import Tooltip from "@mui/material/Tooltip";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { useNavigate } from "react-router-dom";
-import { actorsList, actorsDelete, selectActors } from "../../utilities/slice/actorSlice";
+import {
+  actorsList,
+  actorsDelete,
+  selectActors,
+} from "../../utilities/slice/actorSlice";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TheatersIcon from "@mui/icons-material/Theaters";
+import Avatar from "@mui/material/Avatar";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
 
 interface RowValues {
@@ -67,16 +72,32 @@ const ActorList = () => {
       headerName: "Banner",
       sortable: false,
       width: 150,
-      valueGetter: (params: GridValueGetterParams) =>
-        `${params.row.actorLink.banner}`,
+      renderCell: (params) => {
+        return (
+          <Avatar
+            variant="square"
+            alt="Image Banner"
+            src={params.row.actorLink.banner}
+            sx={{ width: 50, height: 50 }}
+          />
+        );
+      },
     },
     {
       field: "catalogue",
       headerName: "Catalogue",
       sortable: false,
       width: 150,
-      valueGetter: (params: GridValueGetterParams) =>
-        `${params.row.actorLink.catalogue}`,
+      renderCell: (params) => {
+        return (
+          <Avatar
+            variant="square"
+            alt="Image Catalog"
+            src={params.row.actorLink.catalogue}
+            sx={{ width: 50, height: 50 }}
+          />
+        );
+      },
     },
     {
       field: "action",
@@ -93,7 +114,7 @@ const ActorList = () => {
         };
 
         const onClickDelete = () => {
-          dispatch(selectActors({id:params.row.id}));
+          dispatch(selectActors({ id: params.row.id }));
           setOpen(true);
         };
 
@@ -133,8 +154,6 @@ const ActorList = () => {
   React.useEffect(() => {
     dispatch(actorsList());
   }, [dispatch]);
-
-  
 
   return (
     <>

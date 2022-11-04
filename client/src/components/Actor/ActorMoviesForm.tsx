@@ -42,13 +42,11 @@ const ActorMovies = ({ actor, movies }: AppProps) => {
         </Divider>
         <Grid>
           <List>
-            
-              {movies?.map((movie) => (
-                <ListItem key={movie.link}>
+            {movies?.map((movie) => (
+              <ListItem key={movie.link}>
                 <FormCard title={movie.title} link={movie.movieLink.banner} />
-                </ListItem>
-              ))}
-            
+              </ListItem>
+            ))}
           </List>
         </Grid>
       </Container>

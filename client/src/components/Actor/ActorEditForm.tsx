@@ -6,6 +6,7 @@ import FormSelect from "../../components/FormSelect";
 import FormDate from "../../components/FormDate";
 import { SelectChangeEvent } from "@mui/material/Select";
 import Divider from "@mui/material/Divider";
+import Avatar from "@mui/material/Avatar";
 import { Dayjs } from "dayjs";
 import { useNavigate } from "react-router-dom";
 import SnackAlert from "../SnackAlert";
@@ -108,7 +109,7 @@ const ActorEditForm = ({
       >
         LINKS
       </Divider>
-      <Box sx={{ width: 600 }}>
+      <Box sx={{ display: "flex", width: 600 }}>
         <FormText
           name="banner"
           value={formValues.banner}
@@ -117,6 +118,14 @@ const ActorEditForm = ({
           error={formErrors.banner}
           onChange={onChange}
         />
+        <Avatar
+          variant="square"
+          alt="Image Banner"
+          src={formValues.banner}
+          sx={{ width: 65, height: 65 }}
+        />
+      </Box>
+      <Box sx={{ display: "flex", width: 600 }}>
         <FormText
           name="catalogue"
           value={formValues.catalogue}
@@ -125,6 +134,14 @@ const ActorEditForm = ({
           error={formErrors.catalogue}
           onChange={onChange}
         />
+        <Avatar
+          variant="square"
+          alt="Image Catalogue"
+          src={formValues.catalogue}
+          sx={{ width: 65, height: 65 }}
+        />
+      </Box>
+      <Box sx={{ width: 600 }}>
         <FormText
           name="facebook"
           value={formValues.facebook}

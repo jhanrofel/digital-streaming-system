@@ -14,6 +14,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
+import Avatar from "@mui/material/Avatar";
 
 interface RowValues {
   id?: string;
@@ -69,18 +70,36 @@ const MovieList = () => {
     {
       field: "banner",
       headerName: "Banner",
-      sortable: false,
       width: 150,
-      valueGetter: (params: GridValueGetterParams) =>
-        `${params.row.movieLink.banner}`,
+      align: "center",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <Avatar
+            variant="square"
+            alt="Image Banner"
+            src={params.row.movieLink.banner}
+            sx={{ width: 50, height: 50 }}
+          />
+        );
+      },
     },
     {
       field: "catalogue",
       headerName: "Catalogue",
-      sortable: false,
       width: 150,
-      valueGetter: (params: GridValueGetterParams) =>
-        `${params.row.movieLink.catalogue}`,
+      align: "center",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <Avatar
+            variant="square"
+            alt="Image Banner"
+            src={params.row.movieLink.catalogue}
+            sx={{ width: 50, height: 50 }}
+          />
+        );
+      },
     },
     {
       field: "action",
