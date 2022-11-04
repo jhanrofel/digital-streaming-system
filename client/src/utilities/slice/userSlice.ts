@@ -50,15 +50,26 @@ export const usersLogin = createAsyncThunk(
   }
 );
 
+export const usersOne = createAsyncThunk(
+  "users/one",
+  async (userId: string) => {
+    return axios({
+      url: `/users/${userId}`,
+      method: "get",
+      headers: { Authorization: authenticationToken() },
+    }).then((res) => {
+      console.log(res);
+      return res.data;
+    });
+  }
+);
+
 export const usersData = createAsyncThunk("users/me", async () => {
   return axios({
     url: `/users/me`,
     method: "get",
     headers: { Authorization: authenticationToken() },
-  }).then((res) => {
-    console.log(res);
-    return res.data;
-  });
+  }).then((res) => res.data);
 });
 
 export const usersApproval = createAsyncThunk("users/approval", async () => {
@@ -90,6 +101,39 @@ export const usersApproved = createAsyncThunk("users/approved", async () => {
       return error;
     });
 });
+
+interface PatchInput {
+  id: string;
+  role: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+}
+
+export const usersUpdate = createAsyncThunk(
+  "users/update",
+  async (formValues: PatchInput, { rejectWithValue }) => {
+    return axios({
+      url: `/users/${formValues.id}`,
+      method: "patch",
+      data: formValues,
+      headers: {
+        Authorization: authenticationToken(),
+      },
+    })
+      .then((res) => {
+        console.log(res, formValues);
+        if (res.data.status === 200) {
+          return res.data.message;
+        } else {
+          return rejectWithValue(res.data.error);
+        }
+      })
+      .catch((err) => {
+        return err;
+      });
+  }
+);
 
 export const usersDelete = createAsyncThunk(
   "users/delete",
@@ -203,6 +247,9 @@ export const userSlice = createSlice({
     });
     builder.addCase(usersDelete.fulfilled, (state, action) => {
       state.data = state.data.filter((user) => user.id !== action.payload);
+    });
+    builder.addCase(usersOne.fulfilled, (state, action) => {
+      state.dataOne = action.payload;
     });
   },
 });

@@ -7,6 +7,7 @@ import Movies from "./pages/Movies";
 import MovieEdit from "./pages/Movies/MovieEdit";
 import Reviews from "./pages/Reviews";
 import Users from "./pages/Users";
+import UserEdit from "./pages/Users/UserEdit";
 import Welcome from "./pages/Welcome";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
@@ -33,6 +34,7 @@ function App() {
           <Route path="/movies-edit" element={<MovieEdit />}></Route>
           <Route path="/reviews" element={<Reviews />}></Route>
           <Route path="/users" element={<Users />}></Route>
+          <Route path="/users-edit" element={<UserEdit />}></Route>
         </Route>
       </Routes>
     </BrowserRouter>

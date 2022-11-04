@@ -322,8 +322,26 @@ export class UsersController {
       },
     })
     users: Users,
-  ): Promise<void> {
-    await this.usersRepository.updateById(id, users);
+  ): Promise<ApiResponse> {
+    return this.usersRepository
+      .updateById(id, users)
+      .then(res => {
+        return {
+          status: 200,
+          message: 'User updated.',
+          users: [res],
+        };
+      })
+      .catch(err => {
+        if (err.code === 11000) {
+          return {
+            status: 500,
+            error: `${err.keyValue.email} email already in used.`,
+          };
+        } else {
+          return {status: 500, error: err.message};
+        }
+      });
   }
 
   @authenticate('jwt')
