@@ -6,12 +6,15 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import PersonOffIcon from "@mui/icons-material/PersonOff";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import {
   usersApproved,
   usersDelete,
   selectUsers,
+  usersUpdate,
 } from "../../utilities/slice/userSlice";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
 
@@ -21,6 +24,7 @@ interface RowValues {
   firstName: string;
   lastName: string;
   role: string;
+  status?: string;
 }
 
 const UserList = () => {
@@ -52,39 +56,50 @@ const UserList = () => {
       headerName: "Role",
       sortable: false,
       width: 150,
+      align: "center",
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      sortable: false,
+      width: 150,
+      align: "center",
     },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      width: 200,
+      align: "center",
       sortable: false,
       renderCell: (params) => {
-        // const onClickRoleAdmin = async () => {
-        //   const formValues: ApproveFormValues = {
-        //     id: params.id,
-        //     approval: "approved",
-        //     role: "ADMIN",
-        //     form: "list",
-        //   };
-        //   await dispatch(usersApprove(formValues));
-        // };
-
-        // const onClickRoleUser = async () => {
-        //   const formValues: ApproveFormValues = {
-        //     id: params.id,
-        //     approval: "approved",
-        //     role: "USER",
-        //     form: "list",
-        //   };
-        //   await dispatch(usersApprove(formValues));
-        // };
-
         const onClickEdit = () => {
           navigate("../users-edit", { state: params.row.id });
         };
         const onClickDelete = () => {
           dispatch(selectUsers({ id: params.row.id }));
           setOpen(true);
+        };
+        const onClickActivate = async () => {
+          const formValues: RowValues = {
+            id: params.row.id,
+            role: params.row.role,
+            email: params.row.id,
+            firstName: params.row.firstName,
+            lastName: params.row.lastName,
+            status: "ACTIVATED",
+          };
+          await dispatch(usersUpdate(formValues));
+        };
+        const onClickDeactivate = async () => {
+          const formValues: RowValues = {
+            id: params.row.id,
+            role: params.row.role,
+            email: params.row.id,
+            firstName: params.row.firstName,
+            lastName: params.row.lastName,
+            status: "DEACTIVATED",
+          };
+          await dispatch(usersUpdate(formValues));
         };
 
         return (
@@ -96,6 +111,15 @@ const UserList = () => {
               <Tooltip title="Delete actor">
                 <DeleteIcon color="error" onClick={onClickDelete} />
               </Tooltip>
+              {params.row.status === "ACTIVATED" ? (
+                <Tooltip title="Deactivate user.">
+                  <PersonOffIcon color="error" onClick={onClickDeactivate} />
+                </Tooltip>
+              ) : (
+                <Tooltip title="Activate user.">
+                  <PersonAddIcon color="primary" onClick={onClickActivate} />
+                </Tooltip>
+              )}
             </Stack>
           </IconButton>
         );

@@ -108,6 +108,7 @@ interface PatchInput {
   email: string;
   firstName: string;
   lastName: string;
+  status?: string;
 }
 
 export const usersUpdate = createAsyncThunk(
@@ -122,9 +123,8 @@ export const usersUpdate = createAsyncThunk(
       },
     })
       .then((res) => {
-        console.log(res, formValues);
         if (res.data.status === 200) {
-          return res.data.message;
+          return formValues;
         } else {
           return rejectWithValue(res.data.error);
         }
@@ -250,6 +250,13 @@ export const userSlice = createSlice({
     });
     builder.addCase(usersOne.fulfilled, (state, action) => {
       state.dataOne = action.payload;
+    });
+    builder.addCase(usersUpdate.fulfilled, (state, action) => {
+      state.data = state.data.map((user) =>
+        user.id === action.payload.id
+          ? { ...user, status: action.payload.status }
+          : user
+      );
     });
   },
 });

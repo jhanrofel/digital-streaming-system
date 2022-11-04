@@ -43,6 +43,12 @@ export class Users extends Entity {
   })
   approval: string;
 
+  @property({
+    type: 'string',
+    default: 'ACTIVATED',
+  })
+  status: string;
+
   @hasOne(() => UserCredentials, {keyTo: 'userId'})
   userCredentials: UserCredentials;
 

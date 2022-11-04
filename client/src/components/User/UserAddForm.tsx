@@ -41,7 +41,7 @@ const UserAddForm = ({
 }: AppProps) => {
   return (
     <>
-      <Box sx={{ display: "flex", width: 600 }}>
+      <Box sx={{ width: 600 }}>
         <FormSelect
           name="role"
           value={formValues.role}
@@ -50,6 +50,8 @@ const UserAddForm = ({
           options={roleData}
           onChange={onChangeSelect}
         />
+      </Box>
+      <Box sx={{ width: 600 }}>
         <FormText
           name="email"
           value={formValues.email}
@@ -59,7 +61,7 @@ const UserAddForm = ({
           onChange={onChange}
         />
       </Box>
-      <Box sx={{ display: "flex", width: 600 }}>
+      <Box sx={{ width: 600 }}>
         <FormText
           name="firstName"
           value={formValues.firstName}
@@ -68,6 +70,8 @@ const UserAddForm = ({
           error={formErrors.firstName}
           onChange={onChange}
         />
+      </Box>
+      <Box sx={{ width: 600 }}>
         <FormText
           name="lastName"
           value={formValues.lastName}
@@ -77,7 +81,7 @@ const UserAddForm = ({
           onChange={onChange}
         />
       </Box>
-      <Box sx={{ width: 600 }}>
+      <Box sx={{ width: 200 }}>
         <FormButton label="Save" onClick={onClick} />
       </Box>
       <SnackAlert alertData={alertData} setAlertData={setAlertData} />
