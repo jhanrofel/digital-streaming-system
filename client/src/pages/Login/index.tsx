@@ -75,10 +75,13 @@ const Login = () => {
       });
 
       if (valid) {
-        await dispatch(usersData()).then((res) => {
-          console.log(res);
-          navigate("/dashboard");
+        await dispatch(usersData()).then((res) => {          
           if (res.type === "users/me/fulfilled") {
+            if (res.payload.role === "ADMIN") {
+              navigate("/dashboard");
+            } else {
+              navigate("/");
+            }
             loggedInCreate(res.payload);
           } else {
             alert(res.payload);

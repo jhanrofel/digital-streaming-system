@@ -3,6 +3,7 @@ import usersReducer from "./slice/userSlice";
 import actorsReducer from "./slice/actorSlice";
 import categoriesReducer from "./slice/categorySlice";
 import moviesReducer from "./slice/movieSlice";
+import reviewsReducer from "./slice/reviewSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     actors: actorsReducer,
     categories: categoriesReducer,
     movies: moviesReducer,
+    reviews: reviewsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

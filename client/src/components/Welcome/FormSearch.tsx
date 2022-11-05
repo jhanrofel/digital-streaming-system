@@ -1,7 +1,6 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
 import FormText from "../FormText";
@@ -11,7 +10,6 @@ type AppProps = {
   error: string;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
-  setSearch: (value: string) => void;
 };
 
 const FormSearch = ({
@@ -19,7 +17,6 @@ const FormSearch = ({
   error,
   onClick,
   onChange,
-  setSearch,
 }: AppProps) => {
   return (
     <>

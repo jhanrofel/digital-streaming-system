@@ -1,9 +1,19 @@
+import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { isLogged } from "../../utilities/loggedIn";
+import { userMe } from "../../utilities/api";
 import AdminNavBar from "./AdminNavBar";
 
 const PrivateLayout: React.FC = () => {
-  return isLogged() ? (
+  const [role, setRole] = React.useState<string>("ADMIN");
+
+  React.useEffect(() => {
+    userMe().then((res) => {
+      setRole(res.role)
+    });
+  },[]);
+
+  return isLogged() && role === "ADMIN"  ? (
     <>
       <AdminNavBar /> <Outlet />
     </>

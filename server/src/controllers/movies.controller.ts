@@ -169,7 +169,7 @@ export class MoviesController {
   })
   async findById(@param.path.string('id') id: string): Promise<Movies> {
     return this.moviesRepository.findById(id, {
-      include: ['movieLink', 'movieActors'],
+      include: [{relation:'movieLink'},{relation:'movieActors',scope:{include:['actorLink']}} ],
     });
   }
 

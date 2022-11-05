@@ -5,6 +5,7 @@ import ActorMovies from "./pages/Actors/ActorMovies";
 import Dashboard from "./pages/Dashboard";
 import Movies from "./pages/Movies";
 import MovieEdit from "./pages/Movies/MovieEdit";
+import MovieDetails from "./pages/Movies/MovieDetails";
 import Reviews from "./pages/Reviews";
 import Users from "./pages/Users";
 import UserEdit from "./pages/Users/UserEdit";
@@ -26,6 +27,7 @@ function App() {
           <Route path="/register" element={<Register />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/*" element={<PageNotFound />}></Route>
+          <Route path="/movies-details" element={<MovieDetails />}></Route>
         </Route>
         <Route path="/" element={<PrivateLayout />}>
           <Route path="/actors" element={<Actors />}></Route>

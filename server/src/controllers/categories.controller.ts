@@ -21,14 +21,14 @@ interface ApiResponse {
   error?: string;
 }
 
-@authenticate('jwt')
-@authorize({allowedRoles: ['ADMIN']})
 export class CategoriesController {
   constructor(
     @repository(CategoriesRepository)
     public categoriesRepository: CategoriesRepository,
   ) {}
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @post('/categories')
   @response(200, {
     description: 'Categories model instance',
@@ -85,6 +85,8 @@ export class CategoriesController {
     return this.categoriesRepository.findById(id);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @patch('/categories/{id}')
   @response(204, {
     description: 'Categories PATCH success',
@@ -117,6 +119,8 @@ export class CategoriesController {
       });
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @del('/categories/{id}')
   @response(204, {
     description: 'Categories DELETE success',

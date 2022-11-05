@@ -11,7 +11,7 @@ import FormImageList from "../../components/FormImageList";
 const Search = () => {
   const dispatch = useAppDispatch();
   const { state } = useLocation();
-  const search = state;
+  const search = state.search;
   const movies = useAppSelector((state) => state.movies.data);
   const movieData: any = movies.map((movie) => ({
     id: movie.id,
@@ -29,12 +29,11 @@ const Search = () => {
     url: movies.movieLink.banner,
   }));
 
-  console.log(movies);
-
   React.useEffect(() => {
     dispatch(moviesSearch(search));
     dispatch(moviesLatestUploads());
   }, [dispatch, search]);
+
   return (
     <>
       <Box sx={{ width: "100%" }}>

@@ -5,6 +5,6 @@ export const authenticationToken = (): string => {
   return `Bearer ${token}`;
 };
 
-export const unauthorize = () => {
+export const unauthorize = (): void => {
   cookiesRemove();
 };

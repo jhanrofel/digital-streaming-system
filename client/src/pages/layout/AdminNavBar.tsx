@@ -15,6 +15,10 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { clearCategories } from "../../utilities/slice/categorySlice";
+import { clearActor } from "../../utilities/slice/actorSlice";
+import { clearMovies } from "../../utilities/slice/movieSlice";
+import { clearReviews } from "../../utilities/slice/reviewSlice";
 
 const pages = ["Movies", "Actors", "Users", "Reviews"];
 const settings = [ "Dashboard", "Logout"];
@@ -31,6 +35,10 @@ const NavigationBar: React.FC = () => {
   const handleCloseUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     switch ((event.target as HTMLInputElement).innerText) {
       case "Logout":
+        dispatch(clearActor());
+        dispatch(clearCategories());
+        dispatch(clearMovies());
+        dispatch(clearReviews());
         dispatch(clearUser());
         loggedInRemove();
         cookiesRemove();

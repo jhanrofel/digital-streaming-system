@@ -18,7 +18,7 @@ const Welcome = () => {
     if (search === "") {
       setError("Input here to search.");
     } else {
-      navigate("../search", {state:search});
+      navigate("../search", {state:{search:search}});
     }
   };
 
@@ -27,7 +27,6 @@ const Welcome = () => {
       <Box sx={{ width: "100%", display: "flex" }}>
         <FormImageQuilted />
         <FormSearch
-          setSearch={setSearch}
           error={error}
           search={search}
           onChange={onChangeHandler}
