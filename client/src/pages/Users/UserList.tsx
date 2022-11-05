@@ -83,7 +83,7 @@ const UserList = () => {
           const formValues: RowValues = {
             id: params.row.id,
             role: params.row.role,
-            email: params.row.id,
+            email: params.row.email,
             firstName: params.row.firstName,
             lastName: params.row.lastName,
             status: "ACTIVATED",
@@ -94,7 +94,7 @@ const UserList = () => {
           const formValues: RowValues = {
             id: params.row.id,
             role: params.row.role,
-            email: params.row.id,
+            email: params.row.email,
             firstName: params.row.firstName,
             lastName: params.row.lastName,
             status: "DEACTIVATED",

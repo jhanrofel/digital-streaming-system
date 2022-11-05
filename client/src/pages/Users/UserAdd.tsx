@@ -44,10 +44,10 @@ const UserAdd = () => {
     let value = (event.target as HTMLInputElement).value;
 
     switch (name) {
-        case "email":
-          setFormValues((state) => ({ ...state, email: value }));
-          setFormErrors((state) => ({ ...state, email: "" }));
-          break;
+      case "email":
+        setFormValues((state) => ({ ...state, email: value }));
+        setFormErrors((state) => ({ ...state, email: "" }));
+        break;
       case "firstName":
         setFormValues((state) => ({ ...state, firstName: value }));
         setFormErrors((state) => ({ ...state, firstName: "" }));
@@ -118,11 +118,11 @@ const UserAdd = () => {
         ...state,
         role: "Role is required.",
       }));
-      if (formValues.email === "")
-        setFormErrors((state) => ({
-          ...state,
-          email: "Email is required.",
-        }));
+    if (formValues.email === "")
+      setFormErrors((state) => ({
+        ...state,
+        email: "Email is required.",
+      }));
     if (formValues.firstName === "")
       setFormErrors((state) => ({
         ...state,
