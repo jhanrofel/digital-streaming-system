@@ -8,10 +8,11 @@ type AppProps = {
   label: string;
   type: string;
   error?: string;
+  variant?: "filled" | "standard" | "outlined" | undefined;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
 };
 
-const FormText = ({ name, value, label, type, error, onChange }: AppProps) => {
+const FormText = ({ name, value, label, type, error, variant, onChange }: AppProps) => {
   return (
     <FormControl fullWidth sx={{ m: 1 }} variant="filled">
       <TextField
@@ -20,7 +21,7 @@ const FormText = ({ name, value, label, type, error, onChange }: AppProps) => {
         name={name}
         label={label}
         type={type}
-        variant="filled"
+        variant={variant?variant:"filled"}
         onChange={onChange}
       />
       {error ? (

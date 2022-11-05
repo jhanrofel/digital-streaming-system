@@ -1,20 +1,20 @@
 import React from "react";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
-import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { useNavigate } from "react-router-dom";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import {
   moviesList,
   moviesDelete,
   selectMovies,
 } from "../../utilities/slice/movieSlice";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
-import Avatar from "@mui/material/Avatar";
 
 interface RowValues {
   id?: string;

@@ -9,6 +9,7 @@ import Reviews from "./pages/Reviews";
 import Users from "./pages/Users";
 import UserEdit from "./pages/Users/UserEdit";
 import Welcome from "./pages/Welcome";
+import Search from "./pages/Search";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import PageNotFound from "./pages/PageNotFound";
@@ -21,6 +22,7 @@ function App() {
       <Routes>
         <Route path="/" element={<PublicLayout />}>
           <Route path="/" element={<Welcome />}></Route>
+          <Route path="/search" element={<Search />}></Route>
           <Route path="/register" element={<Register />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/*" element={<PageNotFound />}></Route>
