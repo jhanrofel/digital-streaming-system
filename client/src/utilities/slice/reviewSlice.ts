@@ -18,6 +18,29 @@ interface PostInput {
   movie: string;
 }
 
+export const reviewsApprovalList = createAsyncThunk(
+  "reviews/approval-list",
+  async () => {
+    return axios({
+      url: `/reviews/approval`,
+      method: "get",
+    })
+      .then((res) => res.data)
+      .catch((err) => err);
+  }
+);
+
+interface PostInput {
+  description: string;
+  rating: number | null;
+  movie: string;
+}
+
+interface ApprovalInput {
+  id: string;
+  approval: string;
+}
+
 export const reviewsPost = createAsyncThunk(
   "reviews/post",
   async (formValues: PostInput, { rejectWithValue }) => {
@@ -39,6 +62,20 @@ export const reviewsPost = createAsyncThunk(
   }
 );
 
+export const reviewsApproval = createAsyncThunk(
+  "reviews",
+  async (formValues: ApprovalInput) => {
+    return axios({
+      url: `/reviews/${formValues.id}/approval`,
+      method: "patch",
+      data: formValues,
+      headers: { Authorization: authenticationToken() },
+    })
+      .then(() => formValues.id)
+      .catch((err) => err);
+  }
+);
+
 export const reviewsDelete = createAsyncThunk(
   "reviews/delete",
   async (categoryId: string, { rejectWithValue }) => {
@@ -53,8 +90,20 @@ export const reviewsDelete = createAsyncThunk(
 );
 
 interface ReviewsDataOne {
-  id?: string;
-  name: string;
+  id: string;
+  description: string;
+  rating: number;
+  createdAt: string;
+  reviewMovie: ReviewMovie;
+  reviewUser: ReviewUser;
+}
+
+interface ReviewMovie {
+  title: string;
+}
+
+interface ReviewUser {
+  email: string;
 }
 
 interface ReviewsData {
@@ -75,20 +124,18 @@ export const reviewsSlice = createSlice({
       state.data = [];
     },
     selectReviews: (state, action) => {
-      state.dataOne = { id: action.payload, name: "" };
+      state.dataOne = { ...state.dataOne, id: action.payload };
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(reviewsList.fulfilled, (state, action) => {
+    builder.addCase(reviewsApprovalList.fulfilled, (state, action) => {
       state.data = action.payload;
     });
     builder.addCase(reviewsPost.fulfilled, (state, action) => {
       state.data = [...state.data, action.payload];
     });
-    builder.addCase(reviewsDelete.fulfilled, (state, action) => {
-      state.data = state.data.filter(
-        (category) => category.id !== action.payload
-      );
+    builder.addCase(reviewsApproval.fulfilled, (state, action) => {
+      state.data = state.data.filter((review) => review.id !== action.payload);
     });
   },
 });

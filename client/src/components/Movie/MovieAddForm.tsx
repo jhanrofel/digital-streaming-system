@@ -16,8 +16,8 @@ type AppProps = {
   formValues: FormValue;
   actorsOption: OptionClass[];
   categoriesOption: OptionClass[];
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
   onChangeSelect: (event: SelectChangeEvent) => void;
   onChangeActors: any;
   onChangeCategories: any;

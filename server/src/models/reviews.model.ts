@@ -28,7 +28,7 @@ export class Reviews extends Entity {
     required: true,
     default: new Date(),
   })
-  createAt: string;
+  createdAt: string;
 
   @property({
     type: 'string',
