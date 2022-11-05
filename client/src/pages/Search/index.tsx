@@ -1,40 +1,57 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
-import { moviesList } from "../../utilities/slice/movieSlice";
+import {
+  moviesLatestUploads,
+  moviesSearch,
+} from "../../utilities/slice/movieSlice";
 import FormImageList from "../../components/FormImageList";
-
-interface ImageData {
-  id: string;
-  title: string;
-  subtitle: string;
-  url: string;
-}
-
-
 
 const Search = () => {
   const dispatch = useAppDispatch();
+  const { state } = useLocation();
+  const search = state;
   const movies = useAppSelector((state) => state.movies.data);
+  const movieData: any = movies.map((movie) => ({
+    id: movie.id,
+    title: movie.title,
+    subtitle: movie.yearReleased,
+    url: movie.movieLink.banner,
+  }));
+  const moviesLatest = useAppSelector(
+    (state) => state.movies.dataLatestUploads
+  );
+  const movieDataLatestUploads: any = moviesLatest.map((movies) => ({
+    id: movies.id,
+    title: movies.title,
+    subtitle: movies.yearReleased,
+    url: movies.movieLink.banner,
+  }));
 
-//   if (movies.length > 0) {
-    const movieData:any = movies.map((movie) => ({
-      id: movie.id,
-      title: movie.title,
-      subtitle: movie.yearReleased,
-      url: movie.movieLink.banner,
-    }));
-//   }
-
-console.log(movieData)
+  console.log(movies);
 
   React.useEffect(() => {
-    dispatch(moviesList());
-  }, [dispatch]);
+    dispatch(moviesSearch(search));
+    dispatch(moviesLatestUploads());
+  }, [dispatch, search]);
   return (
     <>
       <Box sx={{ width: "100%" }}>
-        <FormImageList movieData={movieData}/>
+        {movieData.length > 0 ? (
+          <>
+            <FormImageList header="SEARCH RESULTS" movieData={movieData} />
+            <FormImageList
+              header="LATEST UPLOADS"
+              movieData={movieDataLatestUploads}
+            />
+          </>
+        ) : (
+          <FormImageList
+            header="0 SEARCH RESULTS, CHECK THESE MOVIES"
+            movieData={movieDataLatestUploads}
+          />
+        )}
       </Box>
     </>
   );

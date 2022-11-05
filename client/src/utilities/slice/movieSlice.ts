@@ -26,6 +26,31 @@ export const moviesOne = createAsyncThunk(
   }
 );
 
+export const moviesSearch = createAsyncThunk(
+  "movies/search",
+  async (search: string) => {
+    return axios({
+      url: `/movies/search`,
+      method: "post",
+      data: {search:search},
+    })
+      .then((res) => res.data)
+      .catch((err) => err);
+  }
+);
+
+export const moviesLatestUploads = createAsyncThunk(
+  "movies/latest-uploads",
+  async () => {
+    return axios({
+      url: `/movies/latest-uploads`,
+      method: "get",
+    })
+      .then((res) => res.data)
+      .catch((err) => err);
+  }
+);
+
 export const moviesPost = createAsyncThunk(
   "movies/post",
   async (formValues: MoviesDataOne) => {
@@ -87,6 +112,7 @@ interface MoviesDataOne {
 
 interface MoviesData {
   data: MoviesDataOne[] | [];
+  dataLatestUploads: MoviesDataOne[] | [];
   dataOne: MoviesDataOne;
   dataGetOne: any;
 }
@@ -102,6 +128,7 @@ interface MovieLink {
 
 const initialState = {
   data: [],
+  dataLatestUploads: [],
   dataOne: {},
   dataGetOne: [],
 } as MoviesData;
@@ -120,6 +147,12 @@ export const moviesSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(moviesList.fulfilled, (state, action) => {
       state.data = action.payload;
+    });
+    builder.addCase(moviesSearch.fulfilled, (state, action) => {
+      state.data = action.payload;
+    });
+    builder.addCase(moviesLatestUploads.fulfilled, (state, action) => {
+      state.dataLatestUploads = action.payload;
     });
     builder.addCase(moviesOne.fulfilled, (state, action) => {
       state.dataGetOne = action.payload;

@@ -16,21 +16,21 @@ export const MoviesPatchSchema: SchemaObject = {
     cost: {type: 'number'},
     comingSoon: {type: 'boolean', enum: [true, false]},
     featured: {type: 'boolean', enum: [true, false]},
-    hashTag: {type: 'array',default: []},
-    categories: {type: 'array',default: []},
+    hashTag: {type: 'array', default: []},
+    categories: {type: 'array', default: []},
     movieLink: {
       type: 'object',
-      required: ['banner','catalogue'],
+      required: ['banner', 'catalogue'],
       properties: {
         id: {type: 'string'},
         banner: {type: 'string'},
         catalogue: {type: 'string'},
-        picture: {type: 'array',default: []},
+        picture: {type: 'array', default: []},
         facebook: {type: 'string'},
         instagram: {type: 'string'},
         youtube: {type: 'string'},
         trailer: {type: 'string'},
-        clip: {type: 'array',default: []},
+        clip: {type: 'array', default: []},
       },
     },
   },
@@ -49,5 +49,14 @@ export const MoviesPostSchema: SchemaObject = {
     comingSoon: {type: 'boolean', enum: [true, false]},
     featured: {type: 'boolean', enum: [true, false]},
     actors: {type: 'array'},
+  },
+};
+
+export const MoviesSearchSchema: SchemaObject = {
+  type: 'object',
+  title: 'Search Movie',
+  required: ['search'],
+  properties: {
+    search: {type: 'string'},
   },
 };

@@ -1,4 +1,4 @@
-import {Count, CountSchema, repository} from '@loopback/repository';
+import {Count, CountSchema, Filter, repository} from '@loopback/repository';
 import {
   post,
   param,
@@ -15,7 +15,11 @@ import {
   MovieActorRepository,
   LinksRepository,
 } from '../repositories';
-import {MoviesPatchSchema, MoviesPostSchema} from '../schemas';
+import {
+  MoviesPatchSchema,
+  MoviesPostSchema,
+  MoviesSearchSchema,
+} from '../schemas';
 import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 import _ from 'lodash';
@@ -42,6 +46,10 @@ class LinkClass {
   youtube?: string;
   trailer?: string;
   clip?: string[];
+}
+
+class SearchClass {
+  search: string;
 }
 
 interface ApiResponse {
@@ -122,6 +130,32 @@ export class MoviesController {
   })
   async find(): Promise<Movies[]> {
     return this.moviesRepository.find({include: ['movieLink', 'movieActors']});
+  }
+
+  @post('/movies/search')
+  @response(200, {
+    description: 'Array of Movies model instances',
+  })
+  async searchMovie(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: MoviesSearchSchema,
+        },
+      },
+    })
+    filter: SearchClass,
+  ): Promise<Movies[]> {
+    const pattern = new RegExp('.*'+filter.search+'.*', "i");
+    return this.moviesRepository.find({where: {title:{regexp:pattern}},include:['movieLink']});
+  }
+
+  @get('/movies/latest-uploads')
+  @response(200, {
+    description: 'Array of Movies model instances',
+  })
+  async latestUploads(): Promise<Movies[]> {
+    return this.moviesRepository.find({order:['createdAt DESC'],limit:10,include:['movieLink']});
   }
 
   @get('/movies/{id}')
