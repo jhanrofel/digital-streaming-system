@@ -3,18 +3,15 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import FormButton from "../FormButton";
 import FormText from "../FormText";
-import SnackAlert from "../SnackAlert";
 
 type AppProps = {
-  formValues: FormValue;
-  formErrors: FormValue;
+  formValues: FormValues;
+  formErrors: FormValues;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
-  alertData: AlertData;
-  setAlertData: (value: AlertData) => void;
 };
 
-interface FormValue {
+interface FormValues {
   email: string;
   firstName: string;
   lastName: string;
@@ -22,19 +19,11 @@ interface FormValue {
   confirm: string;
 }
 
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-}
-
 const RegistrationForm = ({
   formValues,
   formErrors,
   onClick,
   onChange,
-  alertData,
-  setAlertData,
 }: AppProps) => {
   return (
     <React.Fragment>
@@ -81,10 +70,11 @@ const RegistrationForm = ({
             error={formErrors.confirm}
             onChange={onChange}
           />
+        </Box>
+        <Box sx={{ width: 1, display: "flex", justifyContent: "center" }}>
           <FormButton label="Create Account" onClick={onClick} />
         </Box>
       </Container>
-      <SnackAlert alertData={alertData} setAlertData={setAlertData} />
     </React.Fragment>
   );
 };
