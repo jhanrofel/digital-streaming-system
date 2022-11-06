@@ -1,12 +1,18 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../utilities/hooks";
-import { usersData, usersLogin } from "../../utilities/slice/userSlice";
 import { cookiesCreate } from "../../utilities/cookies";
+import { useAppDispatch } from "../../utilities/hooks";
 import { loggedInCreate } from "../../utilities/loggedIn";
+import { usersData, usersLogin } from "../../utilities/slice/userSlice";
 import LoginForm from "../../components/Login";
 
-interface FormValue {
+interface FormValues {
+  email: string;
+  password: string;
+  alert: AlertData;
+}
+
+interface FormErrors {
   email: string;
   password: string;
 }
@@ -20,16 +26,16 @@ interface AlertData {
 const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [alertData, setAlertData] = React.useState<AlertData>({
-    open: false,
-    message: "",
-    severity: "info",
-  });
-  const [formValues, setFormValues] = React.useState<FormValue>({
+  const [formValues, setFormValues] = React.useState<FormValues>({
     email: "",
     password: "",
+    alert: {
+      open: false,
+      message: "",
+      severity: "info",
+    },
   });
-  const [formErrors, setFormErrors] = React.useState<FormValue>({
+  const [formErrors, setFormErrors] = React.useState<FormErrors>({
     email: "",
     password: "",
   });
@@ -54,40 +60,22 @@ const Login = () => {
 
   const onClickSubmitHandler = async (): Promise<void> => {
     if (formValidation()) {
-      interface PostValue {
-        email: string;
-        password: string;
-      }
-
-      const postUserValue: PostValue = {
+      const postUserValue: FormErrors = {
         email: formValues.email,
         password: formValues.password,
       };
 
-      const valid = await dispatch(usersLogin(postUserValue)).then((res) => {
+      await dispatch(usersLogin(postUserValue)).then((res) => {
         if (res.type === "users/login/fulfilled") {
           cookiesCreate(res.payload);
-          return true;
+          checkUserRole();
         } else {
-          setAlertData({ open: true, message: res.payload, severity: "error" });
-          return false;
+          setFormValues((state) => ({
+            ...state,
+            alert: { open: true, message: res.payload, severity: "error" },
+          }));
         }
       });
-
-      if (valid) {
-        await dispatch(usersData()).then((res) => {          
-          if (res.type === "users/me/fulfilled") {
-            if (res.payload.role === "ADMIN") {
-              navigate("/dashboard");
-            } else {
-              navigate("/");
-            }
-            loggedInCreate(res.payload);
-          } else {
-            alert(res.payload);
-          }
-        });
-      }
     }
   };
 
@@ -111,13 +99,40 @@ const Login = () => {
     return valid;
   };
 
+  const checkUserRole = async (): Promise<void> => {
+    await dispatch(usersData()).then((res) => {
+      if (res.type === "users/me/fulfilled") {
+        if (res.payload.role === "ADMIN") {
+          navigate("/dashboard");
+        } else {
+          navigate("/");
+        }
+        loggedInCreate(res.payload);
+      } else {
+        setFormValues((state) => ({
+          ...state,
+          alert: { open: true, message: res.payload, severity: "error" },
+        }));
+      }
+    });
+  };
+
+  const onClickCloseAlertHandler = (
+    event: Event | React.SyntheticEvent<any, Event>
+  ): void => {
+    setFormValues((state) => ({
+      ...state,
+      alert: { open: false, message: "", severity: "info" },
+    }));
+  };
+
   return (
     <LoginForm
+      formValues={formValues}
       formErrors={formErrors}
       onChange={onChangeHandler}
       onClick={onClickSubmitHandler}
-      alertData={alertData}
-      setAlertData={setAlertData}
+      onClickCloseAlert={onClickCloseAlertHandler}
     />
   );
 };

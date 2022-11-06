@@ -6,14 +6,20 @@ import FormText from "../FormText";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
-  formErrors: FormValue;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  formValues: FormValues;
+  formErrors: FormErrors;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
-  alertData: AlertData;
-  setAlertData: (value: AlertData) => void;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 };
 
-interface FormValue {
+interface FormValues {
+  email: string;
+  password: string;
+  alert: AlertData;
+}
+
+interface FormErrors {
   email: string;
   password: string;
 }
@@ -25,11 +31,11 @@ interface AlertData {
 }
 
 const LoginForm = ({
+  formValues,
   formErrors,
   onClick,
   onChange,
-  alertData,
-  setAlertData,
+  onClickCloseAlert,
 }: AppProps) => {
   return (
     <React.Fragment>
@@ -53,7 +59,10 @@ const LoginForm = ({
           <FormButton label="Login" onClick={onClick} />
         </Box>
       </Container>
-      <SnackAlert alertData={alertData} setAlertData={setAlertData} />
+      <SnackAlert
+        alertData={formValues.alert}
+        onClickCloseAlert={onClickCloseAlert}
+      />
     </React.Fragment>
   );
 };

@@ -13,7 +13,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 
 type AppProps = {
   alertData: AlertData;
-  setAlertData:(value: AlertData) => void;
+  onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 };
 
 interface AlertData {
@@ -22,18 +22,17 @@ interface AlertData {
   severity: "error" | "info" | "success" | "warning";
 }
 
-export default function SimpleSnackbar({ alertData,setAlertData }: AppProps) {
-  const handleClose = () => {
-    setAlertData({open:false,message:"",severity:"info"});
-  };
-
+export default function SimpleSnackbar({
+  alertData,
+  onClickCloseAlert,
+}: AppProps) {
   const action = (
     <React.Fragment>
       <IconButton
         size="small"
         aria-label="close"
         color="inherit"
-        onClick={handleClose}
+        onClick={onClickCloseAlert}
       >
         <CloseIcon fontSize="small" />
       </IconButton>
@@ -43,13 +42,17 @@ export default function SimpleSnackbar({ alertData,setAlertData }: AppProps) {
   return (
     <div>
       <Snackbar
-        anchorOrigin={{ vertical:"top", horizontal:"center" }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={alertData.open}
         autoHideDuration={5000}
-        onClose={handleClose}
+        onClose={onClickCloseAlert}
         action={action}
       >
-        <Alert onClose={handleClose} severity={alertData.severity} sx={{ width: "100%" }}>
+        <Alert
+          onClose={onClickCloseAlert}
+          severity={alertData.severity}
+          sx={{ width: "100%" }}
+        >
           {alertData.message}
         </Alert>
       </Snackbar>
