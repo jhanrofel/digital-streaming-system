@@ -187,6 +187,7 @@ interface UsersDataOne {
   lastName: string;
   email: string;
   role: string;
+  status: string;
 }
 
 interface UsersData {
@@ -214,6 +215,7 @@ export const userSlice = createSlice({
         lastName: "",
         email: "",
         role: "",
+        status: "",
       };
     },
     selectUsers: (state, action) => {

@@ -1,14 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import PersonOffIcon from "@mui/icons-material/PersonOff";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import {
   usersApproved,
@@ -16,6 +7,15 @@ import {
   selectUsers,
   usersUpdate,
 } from "../../utilities/slice/userSlice";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import PersonOffIcon from "@mui/icons-material/PersonOff";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
 
 interface RowValues {
@@ -24,7 +24,7 @@ interface RowValues {
   firstName: string;
   lastName: string;
   role: string;
-  status?: string;
+  status: string;
 }
 
 const UserList = () => {

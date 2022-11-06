@@ -1,11 +1,11 @@
 import * as React from "react";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import UserList from "./UserList";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import Typography from "@mui/material/Typography";
 import Approval from "./Approval";
 import UserAdd from "./UserAdd";
+import UserList from "./UserList";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -48,7 +48,7 @@ const Users = () => {
   };
 
   return (
-    <div>
+    <React.Fragment>
       <Box sx={{ width: "100%", display: "static", marginTop: "100px" }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs
@@ -71,7 +71,7 @@ const Users = () => {
           <Approval />
         </TabPanel>
       </Box>
-    </div>
+    </React.Fragment>
   );
 };
 
