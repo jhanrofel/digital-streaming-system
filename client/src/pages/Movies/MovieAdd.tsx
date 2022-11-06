@@ -1,12 +1,12 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
-import MovieAddForm from "../../components/Movie/MovieAddForm";
-import { SelectChangeEvent } from "@mui/material/Select";
 import { actorsList } from "../../utilities/slice/actorSlice";
 import { categoriesList } from "../../utilities/slice/categorySlice";
 import { moviesPost } from "../../utilities/slice/movieSlice";
+import { SelectChangeEvent } from "@mui/material/Select";
+import MovieAddForm from "../../components/Movie/MovieAddForm";
 
-interface FormValue {
+interface FormValues {
   title: string;
   cost: number;
   yearReleased: number;
@@ -20,6 +20,7 @@ interface FormValue {
   youtube?: string;
   trailer?: string;
   actors: OptionClass[];
+  alert: AlertData;
 }
 
 interface FormErrors {
@@ -42,13 +43,30 @@ interface AlertData {
   severity: "error" | "info" | "success" | "warning";
 }
 
+interface PostMovieValue {
+  id?: string;
+  title: string;
+  cost: number;
+  yearReleased: number;
+  comingSoon: boolean;
+  featured: boolean;
+  link?: string;
+  actors: string[];
+  categories: string[];
+  movieLink: MovieLink;
+}
+
+interface MovieLink {
+  banner: string;
+  catalogue: string;
+  facebook?: string;
+  instagram?: string;
+  youtube?: string;
+  trailer?: string;
+}
+
 const MovieAdd = () => {
   const dispatch = useAppDispatch();
-  const [alertData, setAlertData] = React.useState<AlertData>({
-    open: false,
-    message: "",
-    severity: "info",
-  });
   const actors = useAppSelector((state) => state.actors.data);
   const [selectedActors, setSelectedActors] = React.useState<
     Array<OptionClass>
@@ -65,13 +83,7 @@ const MovieAdd = () => {
     label: category.name,
     id: category.id ? category.id : "",
   }));
-
-  React.useEffect(() => {
-    dispatch(actorsList());
-    dispatch(categoriesList());
-  }, [dispatch]);
-
-  const [formValues, setFormValues] = React.useState<FormValue>({
+  const [formValues, setFormValues] = React.useState<FormValues>({
     title: "",
     cost: 0,
     yearReleased: 2022,
@@ -85,8 +97,12 @@ const MovieAdd = () => {
     youtube: "",
     trailer: "",
     actors: [],
+    alert: {
+      open: false,
+      message: "",
+      severity: "info",
+    },
   });
-
   const [formErrors, setFormErrors] = React.useState<FormErrors>({
     title: "",
     cost: "",
@@ -95,6 +111,19 @@ const MovieAdd = () => {
     catalogue: "",
     actors: "",
   });
+
+  React.useEffect(() => {
+    dispatch(actorsList());
+    dispatch(categoriesList());
+  }, [dispatch]);  
+
+  React.useEffect(() => {
+    setFormValues((state) => ({ ...state, actors: selectedActors }));
+  }, [selectedActors]);  
+
+  React.useEffect(() => {
+    setFormValues((state) => ({ ...state, categories: selectedCategories }));
+  }, [selectedCategories]);
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>): void => {
     let name = (event.target as HTMLInputElement).name;
@@ -160,33 +189,11 @@ const MovieAdd = () => {
     }
   };
 
-  interface MovieDataOne {
-    id?: string;
-    title: string;
-    cost: number;
-    yearReleased: number;
-    comingSoon: boolean;
-    featured: boolean;
-    link?: string;
-    actors: string[];
-    categories: string[];
-    movieLink: MovieLink;
-  }
-
-  interface MovieLink {
-    banner: string;
-    catalogue: string;
-    facebook?: string;
-    instagram?: string;
-    youtube?: string;
-    trailer?: string;
-  }
-
   const onClickSubmitHandler = async (): Promise<void> => {
     const actorsValue = selectedActors.map((actor) => actor.id);
     const categoriesValue = selectedCategories.map((category) => category.id);
     if (formValidation()) {
-      const postMovieValue: MovieDataOne = {
+      const postMovieValue: PostMovieValue = {
         title: formValues.title,
         cost: formValues.cost,
         yearReleased: formValues.yearReleased,
@@ -220,16 +227,19 @@ const MovieAdd = () => {
             trailer: "",
             categories: [],
             actors: [],
+            alert: {
+              open: true,
+              message: "Movie added.",
+              severity: "success",
+            }
           }));
           setSelectedActors([]);
           setSelectedCategories([]);
-          setAlertData({
-            open: true,
-            message: "Movie added.",
-            severity: "success",
-          });
         } else {
-          setAlertData({ open: true, message: res.payload, severity: "error" });
+          setFormValues((state) => ({
+            ...state,
+            alert: { open: true, message: res.payload, severity: "error" },
+          }));
         }
       });
     }
@@ -243,20 +253,12 @@ const MovieAdd = () => {
     setFormErrors((state) => ({ ...state, actors: "" }));
   };
 
-  React.useEffect(() => {
-    setFormValues((state) => ({ ...state, actors: selectedActors }));
-  }, [selectedActors]);
-
   const onChangeCategories = (
     event: React.FormEvent<HTMLInputElement>,
     newValue: any
   ) => {
     setSelectedCategories(newValue);
   };
-
-  React.useEffect(() => {
-    setFormValues((state) => ({ ...state, categories: selectedCategories }));
-  }, [selectedCategories]);
 
   const formValidation = (): boolean => {
     let valid = false;
@@ -303,10 +305,19 @@ const MovieAdd = () => {
     return valid;
   };
 
+  const onClickCloseAlertHandler = (
+    event: Event | React.SyntheticEvent<any, Event>
+  ): void => {
+    setFormValues((state) => ({
+      ...state,
+      alert: { open: false, message: "", severity: "info" },
+    }));
+  };
+
   return (
     <MovieAddForm
-      formErrors={formErrors}
       formValues={formValues}
+      formErrors={formErrors}
       actorsOption={actorsOption}
       categoriesOption={categoriesOption}
       onChange={onChangeHandler}
@@ -314,8 +325,7 @@ const MovieAdd = () => {
       onChangeSelect={onChangeSelect}
       onChangeActors={onChangeActors}
       onChangeCategories={onChangeCategories}
-      alertData={alertData}
-      setAlertData={setAlertData}
+      onClickCloseAlert={onClickCloseAlertHandler}
     />
   );
 };

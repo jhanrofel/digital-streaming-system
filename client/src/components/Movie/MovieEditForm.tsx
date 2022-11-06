@@ -1,20 +1,20 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import { SelectChangeEvent } from "@mui/material/Select";
+import Tooltip from "@mui/material/Tooltip";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import FormAutoComplete from "../FormAutoComplete";
 import FormButton from "../FormButton";
 import FormText from "../FormText";
 import FormSelect from "../FormSelect";
-import { SelectChangeEvent } from "@mui/material/Select";
-import Divider from "@mui/material/Divider";
-import FormAutoComplete from "../FormAutoComplete";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import Tooltip from "@mui/material/Tooltip";
-import Avatar from "@mui/material/Avatar";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
+  formValues: FormValues;
   formErrors: FormErrors;
-  formValues: FormValue;
   actorsOption: OptionClass[];
   categoriesOption: OptionClass[];
   onClick: React.MouseEventHandler<HTMLButtonElement>;
@@ -22,11 +22,10 @@ type AppProps = {
   onChangeSelect: (event: SelectChangeEvent) => void;
   onChangeActors: any;
   onChangeCategories: any;
-  alertData: AlertData;
-  setAlertData: (value: AlertData) => void;
+  onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 };
 
-interface FormValue {
+interface FormValues {
   title: string;
   cost: number;
   yearReleased: number;
@@ -40,6 +39,7 @@ interface FormValue {
   youtube?: string;
   trailer?: string;
   actors: OptionClass[];
+  alert: AlertData;
 }
 
 interface FormErrors {
@@ -74,12 +74,11 @@ const MovieEditForm = ({
   onChangeSelect,
   onChangeActors,
   onChangeCategories,
-  alertData,
-  setAlertData,
+  onClickCloseAlert,
 }: AppProps) => {
   const navigate = useNavigate();
   return (
-    <>
+    <React.Fragment>
       <Box sx={{ display: "flex", maxWidth: 600, marginTop: 10 }}>
         <FormText
           name="title"
@@ -222,8 +221,11 @@ const MovieEditForm = ({
         />
         <FormButton label="Save" onClick={onClick} />
       </Box>
-      {/* <SnackAlert alertData={alertData} setAlertData={setAlertData} /> */}
-    </>
+      <SnackAlert
+        alertData={formValues.alert}
+        onClickCloseAlert={onClickCloseAlert}
+      />
+    </React.Fragment>
   );
 };
 

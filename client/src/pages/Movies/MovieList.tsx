@@ -1,5 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
+import {
+  moviesList,
+  moviesDelete,
+  selectMovies,
+} from "../../utilities/slice/movieSlice";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -8,12 +14,6 @@ import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
-import {
-  moviesList,
-  moviesDelete,
-  selectMovies,
-} from "../../utilities/slice/movieSlice";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
 
 interface RowValues {

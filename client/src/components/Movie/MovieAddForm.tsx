@@ -1,19 +1,19 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import { SelectChangeEvent } from "@mui/material/Select";
+import Tooltip from "@mui/material/Tooltip";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import FormAutoComplete from "../FormAutoComplete";
 import FormButton from "../FormButton";
 import FormText from "../FormText";
 import FormSelect from "../FormSelect";
-import { SelectChangeEvent } from "@mui/material/Select";
-import Divider from "@mui/material/Divider";
-import FormAutoComplete from "../FormAutoComplete";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import Tooltip from "@mui/material/Tooltip";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
+  formValues: FormValues;
   formErrors: FormErrors;
-  formValues: FormValue;
   actorsOption: OptionClass[];
   categoriesOption: OptionClass[];
   onChange: React.ChangeEventHandler<HTMLInputElement>;
@@ -21,11 +21,10 @@ type AppProps = {
   onChangeSelect: (event: SelectChangeEvent) => void;
   onChangeActors: any;
   onChangeCategories: any;
-  alertData: AlertData;
-  setAlertData: (value: AlertData) => void;
+  onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 };
 
-interface FormValue {
+interface FormValues {
   title: string;
   cost: number;
   yearReleased: number;
@@ -39,6 +38,7 @@ interface FormValue {
   youtube?: string;
   trailer?: string;
   actors: OptionClass[];
+  alert: AlertData;
 }
 
 interface FormErrors {
@@ -56,12 +56,12 @@ interface AlertData {
   severity: "error" | "info" | "success" | "warning";
 }
 
-const optionData = ["True", "False"];
-
 interface OptionClass {
   label: string;
   id: string;
 }
+
+const optionData = ["True", "False"];
 
 const MovieAddForm = ({
   formErrors,
@@ -73,12 +73,11 @@ const MovieAddForm = ({
   onChangeSelect,
   onChangeActors,
   onChangeCategories,
-  alertData,
-  setAlertData,
+  onClickCloseAlert,
 }: AppProps) => {
   const navigate = useNavigate();
   return (
-    <>
+    <React.Fragment>
       <Box sx={{ display: "flex", maxWidth: 600 }}>
         <FormText
           name="title"
@@ -124,7 +123,7 @@ const MovieAddForm = ({
         />
       </Box>
       <Divider
-        sx={{ display: "flex", maxWidth: 800, paddingTop: 2 }}
+        sx={{ display: "flex", maxWidth: 800, paddingTop: 1 }}
         textAlign="left"
       >
         LINKS
@@ -205,8 +204,11 @@ const MovieAddForm = ({
       <Box sx={{ width: 200 }}>
         <FormButton label="Save" onClick={onClick} />
       </Box>
-      {/* <SnackAlert alertData={alertData} setAlertData={setAlertData} /> */}
-    </>
+      <SnackAlert
+        alertData={formValues.alert}
+        onClickCloseAlert={onClickCloseAlert}
+      />
+    </React.Fragment>
   );
 };
 

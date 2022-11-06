@@ -1,13 +1,13 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
-import MovieEditForm from "../../components/Movie/MovieEditForm";
-import { SelectChangeEvent } from "@mui/material/Select";
 import { actorsList } from "../../utilities/slice/actorSlice";
 import { categoriesList } from "../../utilities/slice/categorySlice";
 import { moviesUpdate, moviesOne } from "../../utilities/slice/movieSlice";
+import { SelectChangeEvent } from "@mui/material/Select";
+import MovieEditForm from "../../components/Movie/MovieEditForm";
 
-interface FormValue {
+interface FormValues {
   title: string;
   cost: number;
   yearReleased: number;
@@ -21,6 +21,7 @@ interface FormValue {
   youtube?: string;
   trailer?: string;
   actors: OptionClass[];
+  alert: AlertData;
 }
 
 interface FormErrors {
@@ -32,15 +33,44 @@ interface FormErrors {
   actors: string;
 }
 
+interface AlertData {
+  open: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
+}
+
 interface OptionClass {
   label: string;
   id: string;
 }
 
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
+interface PostMovieValue {
+  id?: string;
+  title: string;
+  cost: number;
+  yearReleased: number;
+  comingSoon: boolean;
+  featured: boolean;
+  link?: string;
+  actors: string[];
+  categories: string[];
+  movieLink: MovieLink;
+  movieActors: MovieActors[];
+}
+
+interface MovieLink {
+  banner: string;
+  catalogue: string;
+  facebook?: string;
+  instagram?: string;
+  youtube?: string;
+  trailer?: string;
+}
+
+interface MovieActors {
+  id: string;
+  firstName: string;
+  lastName: string;
 }
 
 const MovieEdit = () => {
@@ -49,11 +79,6 @@ const MovieEdit = () => {
   const movieId = state;
   const movie = useAppSelector((state) => state.movies.dataGetOne);
   const actors = useAppSelector((state) => state.actors.data);
-  const [alertData, setAlertData] = React.useState<AlertData>({
-    open: false,
-    message: "",
-    severity: "info",
-  });
   const [selectedActors, setSelectedActors] = React.useState<
     Array<OptionClass>
   >([]);
@@ -70,7 +95,7 @@ const MovieEdit = () => {
     id: category.id ? category.id : "",
   }));
 
-  const [formValues, setFormValues] = React.useState<FormValue>({
+  const [formValues, setFormValues] = React.useState<FormValues>({
     title: movie.title || "",
     cost: movie.cost || 0,
     yearReleased: movie.yearReleased || 2022,
@@ -84,6 +109,11 @@ const MovieEdit = () => {
     youtube: movie.movieLink?.youtube || "",
     trailer: movie.movieLink?.trailer || "",
     actors: [],
+    alert: {
+      open: false,
+      message: "",
+      severity: "info",
+    },
   });
   const [formErrors, setFormErrors] = React.useState<FormErrors>({
     title: "",
@@ -145,8 +175,23 @@ const MovieEdit = () => {
       );
 
       setSelectedCategories(movieCategories);
-    }// eslint-disable-next-line
+    } // eslint-disable-next-line
   }, [movie]);
+
+  React.useEffect(() => {
+    setFormValues((state) => ({ ...state, actors: selectedActors }));
+  }, [selectedActors]);
+
+  const onChangeCategories = (
+    event: React.FormEvent<HTMLInputElement>,
+    newValue: any
+  ) => {
+    setSelectedCategories(newValue);
+  };
+
+  React.useEffect(() => {
+    setFormValues((state) => ({ ...state, categories: selectedCategories }));
+  }, [selectedCategories]);
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>): void => {
     let name = (event.target as HTMLInputElement).name;
@@ -212,40 +257,11 @@ const MovieEdit = () => {
     }
   };
 
-  interface MovieDataOne {
-    id?: string;
-    title: string;
-    cost: number;
-    yearReleased: number;
-    comingSoon: boolean;
-    featured: boolean;
-    link?: string;
-    actors: string[];
-    categories: string[];
-    movieLink: MovieLink;
-    movieActors: MovieActors[];
-  }
-
-  interface MovieLink {
-    banner: string;
-    catalogue: string;
-    facebook?: string;
-    instagram?: string;
-    youtube?: string;
-    trailer?: string;
-  }
-
-  interface MovieActors {
-    id: string;
-    firstName: string;
-    lastName: string;
-  }
-
   const onClickSubmitHandler = async (): Promise<void> => {
     const actorsValue = selectedActors.map((actor) => actor.id);
     const categoriesValue = selectedCategories.map((category) => category.id);
     if (formValidation()) {
-      const postMovieValue: MovieDataOne = {
+      const postMovieValue: PostMovieValue = {
         id: movieId,
         link: movie.link,
         title: formValues.title,
@@ -268,13 +284,19 @@ const MovieEdit = () => {
 
       await dispatch(moviesUpdate(postMovieValue)).then((res) => {
         if (res.type === "movies/patch/fulfilled") {
-          setAlertData({
-            open: true,
-            message: "Movie updated.",
-            severity: "success",
-          });
+          setFormValues((state) => ({
+            ...state,
+            alert: {
+              open: true,
+              message: "Movie updated.",
+              severity: "success",
+            },
+          }));
         } else {
-          setAlertData({ open: true, message: res.payload, severity: "error" });
+          setFormValues((state) => ({
+            ...state,
+            alert: { open: true, message: res.payload, severity: "error" },
+          }));
         }
       });
     }
@@ -287,21 +309,6 @@ const MovieEdit = () => {
     setSelectedActors(newValue);
     setFormErrors((state) => ({ ...state, actors: "" }));
   };
-
-  React.useEffect(() => {
-    setFormValues((state) => ({ ...state, actors: selectedActors }));
-  }, [selectedActors]);
-
-  const onChangeCategories = (
-    event: React.FormEvent<HTMLInputElement>,
-    newValue: any
-  ) => {
-    setSelectedCategories(newValue);
-  };
-
-  React.useEffect(() => {
-    setFormValues((state) => ({ ...state, categories: selectedCategories }));
-  }, [selectedCategories]);
 
   const formValidation = (): boolean => {
     let valid = false;
@@ -348,6 +355,15 @@ const MovieEdit = () => {
     return valid;
   };
 
+  const onClickCloseAlertHandler = (
+    event: Event | React.SyntheticEvent<any, Event>
+  ): void => {
+    setFormValues((state) => ({
+      ...state,
+      alert: { open: false, message: "", severity: "info" },
+    }));
+  };
+
   return (
     <MovieEditForm
       formErrors={formErrors}
@@ -359,8 +375,7 @@ const MovieEdit = () => {
       onChangeSelect={onChangeSelect}
       onChangeActors={onChangeActors}
       onChangeCategories={onChangeCategories}
-      alertData={alertData}
-      setAlertData={setAlertData}
+      onClickCloseAlert={onClickCloseAlertHandler}
     />
   );
 };

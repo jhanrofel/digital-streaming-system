@@ -1,9 +1,9 @@
 import * as React from "react";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Categories from "../../pages/Movies/Categories";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import Typography from "@mui/material/Typography";
+import Categories from "./Categories";
 import MovieAdd from "./MovieAdd";
 import MovieList from "./MovieList";
 

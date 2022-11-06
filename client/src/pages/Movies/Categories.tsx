@@ -1,17 +1,17 @@
-import React, { useEffect } from "react";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import React from "react";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import {
   categoriesList,
   categoriesDelete,
   selectCategories,
 } from "../../utilities/slice/categorySlice";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import AddCategoryDialogue from "../../components/Dialog/AddCategoryDialogue";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
 
@@ -61,11 +61,11 @@ const Categories = () => {
   const category = useAppSelector((state) => state.categories.dataOne);
 
   const onConfirmDelete = async () => {
-    await dispatch(categoriesDelete(category.id?category.id:""));
+    await dispatch(categoriesDelete(category.id ? category.id : ""));
     setOpen(false);
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     dispatch(categoriesList());
   }, [dispatch]);
 
