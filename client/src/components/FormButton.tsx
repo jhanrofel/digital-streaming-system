@@ -8,7 +8,7 @@ type AppProps = {
 
 const FormButton = ({ label, onClick }: AppProps) => {
   return (
-    <FormControl fullWidth sx={{ m: 1 }} variant="filled">
+    <FormControl fullWidth sx={{ m: 1, width: 200 }} variant="filled">
       <Button variant="contained" onClick={onClick}>
         {label}
       </Button>

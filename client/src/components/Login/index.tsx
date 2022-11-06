@@ -56,6 +56,8 @@ const LoginForm = ({
             error={formErrors.password}
             onChange={onChange}
           />
+        </Box>
+        <Box sx={{ width: 1, display: "flex", justifyContent: "center" }}>
           <FormButton label="Login" onClick={onClick} />
         </Box>
       </Container>

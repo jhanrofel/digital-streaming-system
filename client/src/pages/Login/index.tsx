@@ -102,12 +102,12 @@ const Login = () => {
   const checkUserRole = async (): Promise<void> => {
     await dispatch(usersData()).then((res) => {
       if (res.type === "users/me/fulfilled") {
+        loggedInCreate(res.payload);
         if (res.payload.role === "ADMIN") {
           navigate("/dashboard");
         } else {
           navigate("/");
         }
-        loggedInCreate(res.payload);
       } else {
         setFormValues((state) => ({
           ...state,

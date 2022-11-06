@@ -3,7 +3,7 @@ import { useAppDispatch } from "../../utilities/hooks";
 import { usersRegister } from "../../utilities/slice/userSlice";
 import RegistrationForm from "../../components/Register";
 
-interface FormValue {
+interface FormValues {
   email: string;
   firstName: string;
   lastName: string;
@@ -11,28 +11,16 @@ interface FormValue {
   confirm: string;
 }
 
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-}
-
 const Register = () => {
   const dispatch = useAppDispatch();
-  const [alertData, setAlertData] = React.useState<AlertData>({
-    open: false,
-    message: "",
-    severity: "info",
-  });
-  const [formValues, setFormValues] = useState<FormValue>({
+  const [formValues, setFormValues] = useState<FormValues>({
     email: "",
     firstName: "",
     lastName: "",
     password: "",
     confirm: "",
   });
-
-  const [formErrors, setFormErrors] = useState<FormValue>({
+  const [formErrors, setFormErrors] = useState<FormValues>({
     email: "",
     firstName: "",
     lastName: "",
@@ -94,11 +82,6 @@ const Register = () => {
             lastName: "",
             password: "",
             confirm: "",
-          });
-          setAlertData({
-            open: true,
-            message: res.payload.message,
-            severity: "success",
           });
         } else {
           setFormErrors((state) => ({
@@ -172,8 +155,6 @@ const Register = () => {
       formErrors={formErrors}
       onChange={onChangeHandler}
       onClick={onClickSubmitHandler}
-      alertData={alertData}
-      setAlertData={setAlertData}
     />
   );
 };
