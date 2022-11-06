@@ -104,7 +104,7 @@ const Login = () => {
       if (res.type === "users/me/fulfilled") {
         loggedInCreate(res.payload);
         if (res.payload.role === "ADMIN") {
-          navigate("/dashboard");
+          navigate("/movies");
         } else {
           navigate("/");
         }
