@@ -1,27 +1,26 @@
 import React from "react";
+import { Dayjs } from "dayjs";
 import Box from "@mui/material/Box";
+import { SelectChangeEvent } from "@mui/material/Select";
+import Divider from "@mui/material/Divider";
 import FormButton from "../../components/FormButton";
 import FormText from "../../components/FormText";
 import FormSelect from "../../components/FormSelect";
 import FormDate from "../../components/FormDate";
-import { SelectChangeEvent } from "@mui/material/Select";
-import Divider from "@mui/material/Divider";
-import { Dayjs } from "dayjs";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
+  formValues: FormValues;
   formErrors: FormErrors;
-  formValues: FormValue;
   birthday: Dayjs | null;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onChangeSelect: (event: SelectChangeEvent) => void;
   setBirthday: any;
-  alertData: AlertData;
-  setAlertData: (value: AlertData) => void;
+  onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 };
 
-interface FormValue {
+interface FormValues {
   firstName: string;
   lastName: string;
   gender: string;
@@ -30,6 +29,7 @@ interface FormValue {
   facebook?: string;
   instagram?: string;
   youtube?: string;
+  alert: AlertData;
 }
 
 interface FormErrors {
@@ -60,11 +60,10 @@ const ActorAddForm = ({
   onChange,
   onChangeSelect,
   setBirthday,
-  alertData,
-  setAlertData,
+  onClickCloseAlert,
 }: AppProps) => {
   return (
-    <>
+    <React.Fragment>
       <Box sx={{ display: "flex", width: 600 }}>
         <FormText
           name="firstName"
@@ -100,7 +99,7 @@ const ActorAddForm = ({
         />
       </Box>
       <Divider
-        sx={{ display: "flex", width: 600, paddingTop: 3 }}
+        sx={{ display: "flex", width: 600, paddingTop: 2 }}
         textAlign="left"
       >
         LINKS
@@ -147,8 +146,11 @@ const ActorAddForm = ({
       <Box sx={{ width: 600 }}>
         <FormButton label="Save" onClick={onClick} />
       </Box>
-      {/* <SnackAlert alertData={alertData} setAlertData={setAlertData} /> */}
-    </>
+      <SnackAlert
+        alertData={formValues.alert}
+        onClickCloseAlert={onClickCloseAlert}
+      />
+    </React.Fragment>
   );
 };
 

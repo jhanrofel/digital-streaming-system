@@ -1,10 +1,10 @@
 import * as React from "react";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import ActorList from "./ActorList";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import Typography from "@mui/material/Typography";
 import ActorAdd from "./ActorAdd";
+import ActorList from "./ActorList";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -47,24 +47,26 @@ const Actors = () => {
   };
 
   return (
-    <Box sx={{ width: "100%", display: "static", marginTop: "100px" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
-        >
-          <Tab label="ACTORS" {...a11yProps(0)} />
-          <Tab label="ADD" {...a11yProps(1)} />
-        </Tabs>
+    <React.Fragment>
+      <Box sx={{ width: "100%", display: "static", marginTop: "100px" }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+          >
+            <Tab label="ACTORS" {...a11yProps(0)} />
+            <Tab label="ADD" {...a11yProps(1)} />
+          </Tabs>
+        </Box>
+        <TabPanel value={value} index={0}>
+          <ActorList />
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <ActorAdd />
+        </TabPanel>
       </Box>
-      <TabPanel value={value} index={0}>
-        <ActorList />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <ActorAdd />
-      </TabPanel>
-    </Box>
+    </React.Fragment>
   );
 };
 

@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
-import ActorEditForm from "../../components/Actor/ActorEditForm";
-import { SelectChangeEvent } from "@mui/material/Select";
-import dayjs, { Dayjs } from "dayjs";
 import { actorsOne, actorsUpdate } from "../../utilities/slice/actorSlice";
+import dayjs, { Dayjs } from "dayjs";
+import { SelectChangeEvent } from "@mui/material/Select";
+import ActorEditForm from "../../components/Actor/ActorEditForm";
 
-interface FormValue {
+interface FormValues {
   firstName: string;
   lastName: string;
   gender: string;
@@ -17,6 +17,7 @@ interface FormValue {
   instagram?: string;
   youtube?: string;
   trailer?: string;
+  alert: AlertData;
 }
 
 interface FormErrors {
@@ -38,26 +39,32 @@ interface AlertData {
   severity: "error" | "info" | "success" | "warning";
 }
 
+interface ActorPostValue {
+  id?: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  birthday: string;
+  link: string;
+  actorLink: ActorLink;
+}
+
+interface ActorLink {
+  banner: string;
+  catalogue: string;
+  facebook?: string;
+  instagram?: string;
+  youtube?: string;
+  trailer?: string;
+}
+
 const ActorEdit = () => {
   const dispatch = useAppDispatch();
   const { state } = useLocation();
   const actorId = state;
   const actor = useAppSelector((state) => state.actors.dataOne);
-  const [alertData, setAlertData] = React.useState<AlertData>({
-    open: false,
-    message: "",
-    severity: "info",
-  });
   const [birthday, setBirthday] = React.useState<Dayjs | null>(null);
-  useEffect(() => {
-    formErrors.birthday = "";// eslint-disable-next-line
-  }, [birthday]);
-
-  useEffect(() => {
-    dispatch(actorsOne(actorId));
-  }, [dispatch, actorId]);
-
-  const [formValues, setFormValues] = React.useState<FormValue>({
+  const [formValues, setFormValues] = React.useState<FormValues>({
     firstName: actor.firstName || "",
     lastName: actor.lastName || "",
     gender: actor.gender || "",
@@ -68,9 +75,30 @@ const ActorEdit = () => {
     instagram: "",
     youtube: "",
     trailer: "",
+    alert: {
+      open: false,
+      message: "",
+      severity: "info",
+    },
+  });
+  const [formErrors, setFormErrors] = React.useState<FormErrors>({
+    firstName: "",
+    lastName: "",
+    gender: "",
+    birthday: "",
+    banner: "",
+    catalogue: "",
   });
 
-  useEffect(() => {
+  React.useEffect(() => {
+    formErrors.birthday = ""; // eslint-disable-next-line
+  }, [birthday]);
+
+  React.useEffect(() => {
+    dispatch(actorsOne(actorId));
+  }, [dispatch, actorId]);
+
+  React.useEffect(() => {
     setFormValues((state) => ({
       ...state,
       firstName: actor.firstName || "",
@@ -86,15 +114,6 @@ const ActorEdit = () => {
 
     setBirthday(dayjs(actor.birthday));
   }, [actor]);
-
-  const [formErrors, setFormErrors] = React.useState<FormErrors>({
-    firstName: "",
-    lastName: "",
-    gender: "",
-    birthday: "",
-    banner: "",
-    catalogue: "",
-  });
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>): void => {
     let name = (event.target as HTMLInputElement).name;
@@ -142,28 +161,9 @@ const ActorEdit = () => {
     setFormErrors((state) => ({ ...state, gender: "" }));
   };
 
-  interface ActorDataOne {
-    id?: string;
-    firstName: string;
-    lastName: string;
-    gender: string;
-    birthday: string;
-    link: string;
-    actorLink: ActorLink;
-  }
-
-  interface ActorLink {
-    banner: string;
-    catalogue: string;
-    facebook?: string;
-    instagram?: string;
-    youtube?: string;
-    trailer?: string;
-  }
-
   const onClickSubmitHandler = async (): Promise<void> => {
     if (formValidation()) {
-      const postUserValue: ActorDataOne = {
+      const postUserValue: ActorPostValue = {
         id: actorId,
         firstName: formValues.firstName,
         lastName: formValues.lastName,
@@ -184,13 +184,19 @@ const ActorEdit = () => {
 
       await dispatch(actorsUpdate(postUserValue)).then((res) => {
         if (res.type === "actors/update/fulfilled") {
-          setAlertData({
-            open: true,
-            message: `${actorGender} updated.`,
-            severity: "success",
-          });
+          setFormValues((state) => ({
+            ...state,
+            alert: {
+              open: true,
+              message: `${actorGender} updated.`,
+              severity: "success",
+            },
+          }));
         } else {
-          setAlertData({ open: true, message: res.payload, severity: "error" });
+          setFormValues((state) => ({
+            ...state,
+            alert: { open: true, message: res.payload, severity: "error" },
+          }));
         }
       });
     }
@@ -243,6 +249,15 @@ const ActorEdit = () => {
     return valid;
   };
 
+  const onClickCloseAlertHandler = (
+    event: Event | React.SyntheticEvent<any, Event>
+  ): void => {
+    setFormValues((state) => ({
+      ...state,
+      alert: { open: false, message: "", severity: "info" },
+    }));
+  };
+
   return (
     <ActorEditForm
       formErrors={formErrors}
@@ -252,8 +267,7 @@ const ActorEdit = () => {
       onClick={onClickSubmitHandler}
       onChangeSelect={onChangeSelect}
       setBirthday={setBirthday}
-      alertData={alertData}
-      setAlertData={setAlertData}
+      onClickCloseAlert={onClickCloseAlertHandler}
     />
   );
 };

@@ -1,12 +1,9 @@
 import React from "react";
-import Divider from "@mui/material/Divider";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import FormCard from "../../components/FormCard";
-import FormButton from "../../components/FormButton";
 import { useNavigate } from "react-router-dom";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import FormButton from "../../components/FormButton";
+import FormCard from "../../components/FormCard";
 
 type AppProps = {
   actor: FormValue;
@@ -40,8 +37,8 @@ const ActorMovies = ({ actor, movies }: AppProps) => {
         {`${actor.firstName} ${actor.lastName}'s MOVIES `}
       </Divider>
       <Box sx={{ display: "flex" }}>
-        {movies?.map((movie,i) => (
-          <FormCard key={i} title={movie.title} link={movie.movieLink.banner}/>
+        {movies?.map((movie, i) => (
+          <FormCard key={i} title={movie.title} link={movie.movieLink.banner} />
         ))}
       </Box>
       <Box sx={{ width: 300 }}>
