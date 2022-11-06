@@ -1,14 +1,14 @@
-import { useEffect } from "react";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import ThumbDownIcon from "@mui/icons-material/ThumbDown";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { usersApproval, usersApprove } from "../../utilities/slice/userSlice";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 interface RowValues {
   id: string;
@@ -18,7 +18,7 @@ interface RowValues {
 }
 
 interface ApproveFormValues {
-  id: string | number;
+  id: string;
   approval: string;
   role: string;
   form: string;
@@ -46,23 +46,14 @@ const ApprovalList = () => {
       editable: true,
     },
     {
-      field: "fullName",
-      headerName: "Full name",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 160,
-      valueGetter: (params: GridValueGetterParams) =>
-        `${params.row.firstName || ""} ${params.row.lastName || ""}`,
-    },
-    {
       field: "action",
       headerName: "Action",
       width: 150,
       sortable: false,
       renderCell: (params) => {
-        const onClickApprovedAdmin = async () => {
+        const onClickApprovedAdmin = async (): Promise<void> => {
           const formValues: ApproveFormValues = {
-            id: params.id,
+            id: params.row.id,
             approval: "approved",
             role: "ADMIN",
             form: "approval",
@@ -70,9 +61,9 @@ const ApprovalList = () => {
           await dispatch(usersApprove(formValues));
         };
 
-        const onClickApproved = async () => {
+        const onClickApproved = async (): Promise<void> => {
           const formValues: ApproveFormValues = {
-            id: params.id,
+            id: params.row.id,
             approval: "approved",
             role: "USER",
             form: "approval",
@@ -80,9 +71,9 @@ const ApprovalList = () => {
           await dispatch(usersApprove(formValues));
         };
 
-        const onClickDisapproved = async () => {
+        const onClickDisapproved = async (): Promise<void> => {
           const formValues: ApproveFormValues = {
-            id: params.id,
+            id: params.row.id,
             approval: "disapproved",
             role: "USER",
             form: "approval",
@@ -119,7 +110,7 @@ const ApprovalList = () => {
   }, [dispatch]);
 
   return (
-    <>
+    <React.Fragment>
       <Box sx={{ height: 600, width: "100%" }}>
         <DataGrid
           rows={rows}
@@ -137,7 +128,7 @@ const ApprovalList = () => {
           }}
         />
       </Box>
-    </>
+    </React.Fragment>
   );
 };
 

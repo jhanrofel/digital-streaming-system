@@ -58,7 +58,6 @@ export const usersOne = createAsyncThunk(
       method: "get",
       headers: { Authorization: authenticationToken() },
     }).then((res) => {
-      console.log(res);
       return res.data;
     });
   }

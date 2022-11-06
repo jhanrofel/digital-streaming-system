@@ -170,7 +170,7 @@ const ActorEditForm = ({
           onClick={() => navigate("../actors")}
         />
         <FormButton label="Save" onClick={onClick} />
-        <SnackAlert alertData={alertData} setAlertData={setAlertData} />
+        {/* <SnackAlert alertData={alertData} setAlertData={setAlertData} /> */}
       </Box>
     </>
   );

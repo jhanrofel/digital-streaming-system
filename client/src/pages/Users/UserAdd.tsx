@@ -1,10 +1,18 @@
 import React from "react";
 import { useAppDispatch } from "../../utilities/hooks";
-import UserAddForm from "../../components/User/UserAddForm";
-import { SelectChangeEvent } from "@mui/material/Select";
 import { usersRegister } from "../../utilities/slice/userSlice";
+import { SelectChangeEvent } from "@mui/material/Select";
+import UserAddForm from "../../components/User/UserAddForm";
 
-interface FormValue {
+interface FormValues {
+  role: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  alert: AlertData;
+}
+
+interface FormErrors {
   role: string;
   email: string;
   firstName: string;
@@ -17,22 +25,30 @@ interface AlertData {
   severity: "error" | "info" | "success" | "warning";
 }
 
+interface PostUserValue {
+  id?: string;
+  role: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  approval: string;
+  password: string;
+}
+
 const UserAdd = () => {
   const dispatch = useAppDispatch();
-  const [alertData, setAlertData] = React.useState<AlertData>({
-    open: false,
-    message: "",
-    severity: "info",
-  });
-
-  const [formValues, setFormValues] = React.useState<FormValue>({
+  const [formValues, setFormValues] = React.useState<FormValues>({
     role: "USER",
     email: "",
     firstName: "",
     lastName: "",
+    alert: {
+      open: false,
+      message: "",
+      severity: "info",
+    },
   });
-
-  const [formErrors, setFormErrors] = React.useState<FormValue>({
+  const [formErrors, setFormErrors] = React.useState<FormErrors>({
     role: "",
     email: "",
     firstName: "",
@@ -61,7 +77,7 @@ const UserAdd = () => {
     }
   };
 
-  const onChangeSelect = (event: SelectChangeEvent) => {
+  const onChangeSelect = (event: SelectChangeEvent):void => {
     setFormValues((state) => ({
       ...state,
       role: event.target.value,
@@ -69,19 +85,9 @@ const UserAdd = () => {
     setFormErrors((state) => ({ ...state, role: "" }));
   };
 
-  interface UserDataOne {
-    id?: string;
-    role: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    approval: string;
-    password: string;
-  }
-
   const onClickSubmitHandler = async (): Promise<void> => {
     if (formValidation()) {
-      const postUserValue: UserDataOne = {
+      const postUserValue: PostUserValue = {
         role: formValues.role,
         email: formValues.email,
         firstName: formValues.firstName,
@@ -99,13 +105,20 @@ const UserAdd = () => {
             firstName: "",
             lastName: "",
           }));
-          setAlertData({
-            open: true,
-            message: `User added. Password 12345`,
-            severity: "success",
-          });
+
+          setFormValues((state) => ({
+            ...state,
+            alert: {
+              open: true,
+              message: "User added. Password 12345",
+              severity: "success",
+            },
+          }));
         } else {
-          setAlertData({ open: true, message: res.payload, severity: "error" });
+          setFormValues((state) => ({
+            ...state,
+            alert: { open: true, message: res.payload, severity: "error" },
+          }));
         }
       });
     }
@@ -146,6 +159,15 @@ const UserAdd = () => {
     return valid;
   };
 
+  const onClickCloseAlertHandler = (
+    event: Event | React.SyntheticEvent<any, Event>
+  ): void => {
+    setFormValues((state) => ({
+      ...state,
+      alert: { open: false, message: "", severity: "info" },
+    }));
+  };
+
   return (
     <UserAddForm
       formErrors={formErrors}
@@ -153,8 +175,7 @@ const UserAdd = () => {
       onChange={onChangeHandler}
       onClick={onClickSubmitHandler}
       onChangeSelect={onChangeSelect}
-      alertData={alertData}
-      setAlertData={setAlertData}
+      onClickCloseAlert={onClickCloseAlertHandler}
     />
   );
 };

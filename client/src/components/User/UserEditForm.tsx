@@ -1,23 +1,30 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
+import { SelectChangeEvent } from "@mui/material/Select";
 import FormButton from "../FormButton";
 import FormText from "../FormText";
 import FormSelect from "../FormSelect";
-import { SelectChangeEvent } from "@mui/material/Select";
-import { useNavigate } from "react-router-dom";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
-  formErrors: FormValue;
-  formValues: FormValue;
+  formValues: FormValues;
+  formErrors: FormErrors;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onChangeSelect: (event: SelectChangeEvent) => void;
-  alertData: AlertData;
-  setAlertData: (value: AlertData) => void;
+  onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 };
 
-interface FormValue {
+interface FormValues {
+  role: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  alert: AlertData;
+}
+
+interface FormErrors {
   role: string;
   email: string;
   firstName: string;
@@ -38,13 +45,12 @@ const UserEditForm = ({
   onClick,
   onChange,
   onChangeSelect,
-  alertData,
-  setAlertData,
+  onClickCloseAlert,
 }: AppProps) => {
   const navigate = useNavigate();
 
   return (
-    <>
+    <React.Fragment>
       <Box sx={{ display: "flex", width: 600, marginTop: 10 }}>
         <FormSelect
           name="role"
@@ -88,9 +94,12 @@ const UserEditForm = ({
       <Box sx={{ display: "flex", width: 600 }}>
         <FormButton label="Back to List" onClick={() => navigate("../users")} />
         <FormButton label="Save" onClick={onClick} />
-        <SnackAlert alertData={alertData} setAlertData={setAlertData} />
+        <SnackAlert
+          alertData={formValues.alert}
+          onClickCloseAlert={onClickCloseAlert}
+        />
       </Box>
-    </>
+    </React.Fragment>
   );
 };
 

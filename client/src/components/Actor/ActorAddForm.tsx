@@ -147,7 +147,7 @@ const ActorAddForm = ({
       <Box sx={{ width: 600 }}>
         <FormButton label="Save" onClick={onClick} />
       </Box>
-      <SnackAlert alertData={alertData} setAlertData={setAlertData} />
+      {/* <SnackAlert alertData={alertData} setAlertData={setAlertData} /> */}
     </>
   );
 };

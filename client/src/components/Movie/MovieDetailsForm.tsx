@@ -128,7 +128,7 @@ const MovieDetailsForm = ({
           <FormImageList header="ACTORS" movieData={actorData} />
         </Box> */}
       </Box>
-      <SnackAlert alertData={alertData} setAlertData={setAlertData} />
+      {/* <SnackAlert alertData={alertData} setAlertData={setAlertData} /> */}
     </>
   );
 };

@@ -205,7 +205,7 @@ const MovieAddForm = ({
       <Box sx={{ width: 200 }}>
         <FormButton label="Save" onClick={onClick} />
       </Box>
-      <SnackAlert alertData={alertData} setAlertData={setAlertData} />
+      {/* <SnackAlert alertData={alertData} setAlertData={setAlertData} /> */}
     </>
   );
 };

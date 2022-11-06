@@ -1,33 +1,40 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import FormButton from "../FormButton";
-import FormText from "../FormText";
-import FormSelect from "../FormSelect";
 import { SelectChangeEvent } from "@mui/material/Select";
+import FormButton from "../FormButton";
+import FormSelect from "../FormSelect";
+import FormText from "../FormText";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
-  formValues: FormValue;
-  formErrors: FormValue;
+  formValues: FormValues;
+  formErrors: FormErrors;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onChangeSelect: (event: SelectChangeEvent) => void;
-  alertData: AlertData;
-  setAlertData: (value: AlertData) => void;
+  onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 };
 
-interface FormValue {
-  firstName: string;
-  lastName: string;
+interface FormValues {
   role: string;
   email: string;
+  firstName: string;
+  lastName: string;
+  alert: AlertData;
 }
+
+interface FormErrors {
+  role: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+}
+
 interface AlertData {
   open: boolean;
   message: string;
   severity: "error" | "info" | "success" | "warning";
 }
-
 const roleData = ["USER", "ADMIN"];
 
 const UserAddForm = ({
@@ -36,11 +43,10 @@ const UserAddForm = ({
   onClick,
   onChange,
   onChangeSelect,
-  alertData,
-  setAlertData,
+  onClickCloseAlert,
 }: AppProps) => {
   return (
-    <>
+    <React.Fragment>
       <Box sx={{ width: 600 }}>
         <FormSelect
           name="role"
@@ -84,8 +90,11 @@ const UserAddForm = ({
       <Box sx={{ width: 200 }}>
         <FormButton label="Save" onClick={onClick} />
       </Box>
-      <SnackAlert alertData={alertData} setAlertData={setAlertData} />
-    </>
+      <SnackAlert
+        alertData={formValues.alert}
+        onClickCloseAlert={onClickCloseAlert}
+      />
+    </React.Fragment>
   );
 };
 

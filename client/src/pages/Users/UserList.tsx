@@ -79,7 +79,7 @@ const UserList = () => {
           dispatch(selectUsers({ id: params.row.id }));
           setOpen(true);
         };
-        const onClickActivate = async () => {
+        const onClickActivate = async ():Promise<void> => {
           const formValues: RowValues = {
             id: params.row.id,
             role: params.row.role,
@@ -90,7 +90,7 @@ const UserList = () => {
           };
           await dispatch(usersUpdate(formValues));
         };
-        const onClickDeactivate = async () => {
+        const onClickDeactivate = async ():Promise<void> => {
           const formValues: RowValues = {
             id: params.row.id,
             role: params.row.role,
