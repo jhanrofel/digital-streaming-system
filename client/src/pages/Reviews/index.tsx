@@ -3,9 +3,9 @@ import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
-import Approval from "./Approval";
-import Approved from "./Approved";
-import Disapproved from "./Disapproved";
+import Approval from "./ApprovalList";
+import Approved from "./ApprovedList";
+import Disapproved from "./DisapprovedList";
 
 interface TabPanelProps {
   children?: React.ReactNode;

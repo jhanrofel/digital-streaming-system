@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { actorsOne,actorsMovies } from "../../utilities/slice/actorSlice";
 import ActorDetailsForm from "../../components/Actor/ActorDetailsForm";
 
-const ActorsDetails = () => {
+const ActorDetails = () => {
   const dispatch = useAppDispatch();
   const { state } = useLocation();
   const actorId = state;
@@ -25,4 +25,4 @@ const ActorsDetails = () => {
   );
 };
 
-export default ActorsDetails;
+export default ActorDetails;

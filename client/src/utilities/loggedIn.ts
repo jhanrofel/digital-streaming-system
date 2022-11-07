@@ -26,8 +26,7 @@ export const isLogged = (): number => {
 
 export const loggedInData = (): UserLoggedIn => {
   const loggedIn: string = localStorage.getItem("loggedIn") || "";
-  const parseLoggedIn: UserLoggedIn = JSON.parse(loggedIn);
-  return parseLoggedIn;
+  return JSON.parse(loggedIn);
 };
 
 export const loggedInRemove = (): void => {

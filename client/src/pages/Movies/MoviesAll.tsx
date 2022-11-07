@@ -22,20 +22,20 @@ const MoviesAll = () => {
   const moviesDataFeatured = useAppSelector(
     (state) => state.movies.dataFeatured
   );
-  const movieDataFeatured: any = moviesDataFeatured.map((movies) => ({
-    id: movies.id,
-    title: movies.title,
-    subtitle: movies.yearReleased,
-    url: movies.movieLink.catalogue,
+  const movieDataFeatured: any = moviesDataFeatured.map((moviesFeatured) => ({
+    id: moviesFeatured.id,
+    title: moviesFeatured.title,
+    subtitle: moviesFeatured.yearReleased,
+    url: moviesFeatured.movieLink.catalogue,
   }));
   const moviesDataComingSoon = useAppSelector(
     (state) => state.movies.dataComingSoon
   );
-  const movieDataComingSoon: any = moviesDataComingSoon.map((movies) => ({
-    id: movies.id,
-    title: movies.title,
-    subtitle: movies.yearReleased,
-    url: movies.movieLink.catalogue,
+  const movieDataComingSoon: any = moviesDataComingSoon.map((moviesComingSoon) => ({
+    id: moviesComingSoon.id,
+    title: moviesComingSoon.title,
+    subtitle: moviesComingSoon.yearReleased,
+    url: moviesComingSoon.movieLink.catalogue,
   }));
 
   React.useEffect(() => {

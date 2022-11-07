@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
-import Approval from "./Approval";
+import Approval from "./ApprovalList";
 import UserAdd from "./UserAdd";
 import UserList from "./UserList";
 

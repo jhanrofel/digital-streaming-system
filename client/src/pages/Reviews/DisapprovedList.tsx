@@ -33,7 +33,7 @@ interface ApproveFormValues {
   approval: string;
 }
 
-const ApprovalList = () => {
+const DisapprovedList = () => {
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 90 },
     {
@@ -127,4 +127,4 @@ const ApprovalList = () => {
   );
 };
 
-export default ApprovalList;
+export default DisapprovedList;
