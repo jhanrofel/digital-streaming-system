@@ -9,7 +9,7 @@ const PrivateLayout: React.FC = () => {
 
   React.useEffect(() => {
     userMe().then((res) => {
-      setRole(res.role)
+      setRole(res.user.role)
     });
   },[]);
 

@@ -21,7 +21,7 @@ import { clearMovies } from "../../utilities/slice/movieSlice";
 import { clearReviews } from "../../utilities/slice/reviewSlice";
 
 const pages = ["Movies", "Actors", "Users", "Reviews"];
-const settings = [ "Dashboard", "Logout"];
+const settings = [ "Admin Dashboard", "Logout"];
 const NavigationBar: React.FC = () => {
   const loggedIn = loggedInData();
   const navigate = useNavigate();
@@ -44,11 +44,11 @@ const NavigationBar: React.FC = () => {
         cookiesRemove();
         navigate("/");
         break;
-      case "Dashboard":
-        navigate("/dashboard");
+      case "Admin Dashboard":
+        navigate("/movies");
         break;
       default:
-        navigate("/dashboard");
+        navigate("/movies");
         break;
     }
     setAnchorElUser(null);

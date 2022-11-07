@@ -50,6 +50,7 @@ interface ApiResponse {
   status: number;
   message?: string;
   users?: Users[] | void[];
+  user?: Users | void;
   error?: string;
 }
 
@@ -220,8 +221,17 @@ export class UsersController {
   async whoAmI(
     @inject(SecurityBindings.USER)
     currentUserProfile: UserProfile,
-  ): Promise<Users> {
-    return this.usersRepository.findById(currentUserProfile[securityId]);
+  ): Promise<ApiResponse> {
+    return this.usersRepository
+      .findById(currentUserProfile[securityId])
+      .then(res => {
+        console.log(res);
+        return {status: 200, message: 'Valid user.', user: res};
+      })
+      .catch(err => {
+        console.log(err);
+        return {status: 500, error: err.message};
+      });
   }
 
   @get('/users')
