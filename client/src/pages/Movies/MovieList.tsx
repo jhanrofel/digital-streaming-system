@@ -28,11 +28,8 @@ interface RowValues {
 }
 
 interface MovieLink {
-  banner: string;
   catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
+  trailer?: string;
 }
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
@@ -49,13 +46,13 @@ const MovieList = () => {
     {
       field: "title",
       headerName: "Title",
-      width: 200,
+      width: 300,
       editable: true,
     },
     {
       field: "cost",
       headerName: "Cost",
-      width: 150,
+      width: 200,
       align: "right",
       valueFormatter: ({ value }) => currencyFormatter.format(value),
       editable: true,
@@ -64,37 +61,20 @@ const MovieList = () => {
       field: "yearReleased",
       headerName: "Year Released",
       sortable: false,
-      width: 150,
+      width: 200,
       align: "center",
-    },
-    {
-      field: "banner",
-      headerName: "Banner",
-      width: 150,
-      align: "center",
-      sortable: false,
-      renderCell: (params) => {
-        return (
-          <Avatar
-            variant="square"
-            alt="Image Banner"
-            src={params.row.movieLink.banner}
-            sx={{ width: 50, height: 50 }}
-          />
-        );
-      },
     },
     {
       field: "catalogue",
       headerName: "Catalogue",
-      width: 150,
+      width: 200,
       align: "center",
       sortable: false,
       renderCell: (params) => {
         return (
           <Avatar
             variant="square"
-            alt="Image Banner"
+            alt="Image Catalogue"
             src={params.row.movieLink.catalogue}
             sx={{ width: 50, height: 50 }}
           />
@@ -104,7 +84,7 @@ const MovieList = () => {
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      width: 200,
       sortable: false,
       renderCell: (params) => {
         const onClickEdit = () => {

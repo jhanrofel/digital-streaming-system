@@ -18,7 +18,7 @@ const Welcome = () => {
     id: movies.id,
     title: movies.title,
     subtitle: movies.yearReleased,
-    url: movies.movieLink.banner,
+    url: movies.movieLink.catalogue,
   }));
 
   React.useEffect(() => {

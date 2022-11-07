@@ -15,12 +15,7 @@ interface ActorDataOne {
 }
 
 interface LinkClass {
-  banner: string;
   catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
-  trailer?: string;
 }
 
 interface Movies {

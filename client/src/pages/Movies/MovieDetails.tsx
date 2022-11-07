@@ -6,6 +6,7 @@ import { categoriesList } from "../../utilities/slice/categorySlice";
 import {
   moviesOne,
   moviesReviewsApproved,
+  moviesRating,
 } from "../../utilities/slice/movieSlice";
 import { reviewsPost, myMovieReview } from "../../utilities/slice/reviewSlice";
 import MovieDetailsForm from "../../components/Movie/MovieDetailsForm";
@@ -38,6 +39,7 @@ const MovieDetails = () => {
   const { state } = useLocation();
   const movieId = state;
   const movie = useAppSelector((state) => state.movies.dataGetOne);
+  const movieRating = useAppSelector((state) => state.movies.dataRating);
   const categories = useAppSelector((state) => state.categories.data);
   const reviews = useAppSelector((state) => state.movies.dataReviews);
   const myReview = useAppSelector((state) => state.reviews.dataOne);
@@ -59,6 +61,7 @@ const MovieDetails = () => {
     dispatch(moviesOne(movieId));
     dispatch(categoriesList());
     dispatch(moviesReviewsApproved(movieId));
+    dispatch(moviesRating(movieId));
     if (isLogged()) {
       dispatch(myMovieReview(movieId));
     }
@@ -142,6 +145,7 @@ const MovieDetails = () => {
       categories={categories}
       reviews={reviews}
       myReview={myReview}
+      movieRating={movieRating}
       onChange={onChangeHandler}
       onChangeRating={onChangeRatingHandler}
       onClick={onClickSubmitHandler}

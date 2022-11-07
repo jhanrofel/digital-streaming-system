@@ -24,11 +24,7 @@ interface FormValues {
   firstName: string;
   lastName: string;
   gender: string;
-  banner: string;
   catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
   alert: AlertData;
 }
 
@@ -37,11 +33,7 @@ interface FormErrors {
   lastName: string;
   gender: string;
   birthday: string;
-  banner: string;
   catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
 }
 
 interface AlertData {
@@ -106,40 +98,11 @@ const ActorAddForm = ({
       </Divider>
       <Box sx={{ width: 600 }}>
         <FormText
-          name="banner"
-          value={formValues.banner}
-          label="Banner"
-          type="search"
-          error={formErrors.banner}
-          onChange={onChange}
-        />
-        <FormText
           name="catalogue"
           value={formValues.catalogue}
           label="Catalogue"
           type="search"
           error={formErrors.catalogue}
-          onChange={onChange}
-        />
-        <FormText
-          name="facebook"
-          value={formValues.facebook}
-          label="Faceboook"
-          type="search"
-          onChange={onChange}
-        />
-        <FormText
-          name="instagram"
-          value={formValues.instagram}
-          label="Instagram"
-          type="search"
-          onChange={onChange}
-        />
-        <FormText
-          name="youtube"
-          value={formValues.youtube}
-          label="Youtube Channel"
-          type="search"
           onChange={onChange}
         />
       </Box>

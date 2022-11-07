@@ -11,12 +11,7 @@ interface FormValues {
   lastName: string;
   gender: string;
   link: string;
-  banner: string;
   catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
-  trailer?: string;
   alert: AlertData;
 }
 
@@ -25,12 +20,7 @@ interface FormErrors {
   lastName: string;
   gender: string;
   birthday: string;
-  banner: string;
   catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
-  trailer?: string;
 }
 
 interface AlertData {
@@ -50,12 +40,7 @@ interface ActorPostValue {
 }
 
 interface ActorLink {
-  banner: string;
   catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
-  trailer?: string;
 }
 
 const ActorEdit = () => {
@@ -69,12 +54,7 @@ const ActorEdit = () => {
     lastName: actor.lastName || "",
     gender: actor.gender || "",
     link: actor.link || "",
-    banner: "",
     catalogue: "",
-    facebook: "",
-    instagram: "",
-    youtube: "",
-    trailer: "",
     alert: {
       open: false,
       message: "",
@@ -86,7 +66,6 @@ const ActorEdit = () => {
     lastName: "",
     gender: "",
     birthday: "",
-    banner: "",
     catalogue: "",
   });
 
@@ -105,11 +84,7 @@ const ActorEdit = () => {
       lastName: actor.lastName || "",
       gender: actor.gender || "",
       link: actor.link || "",
-      banner: actor.actorLink ? actor.actorLink.banner : "",
       catalogue: actor.actorLink ? actor.actorLink.catalogue : "",
-      facebook: actor.actorLink ? actor.actorLink.facebook : "",
-      instagram: actor.actorLink ? actor.actorLink.instagram : "",
-      youtube: actor.actorLink ? actor.actorLink.youtube : "",
     }));
 
     setBirthday(dayjs(actor.birthday));
@@ -128,25 +103,9 @@ const ActorEdit = () => {
         setFormValues((state) => ({ ...state, lastName: value }));
         setFormErrors((state) => ({ ...state, lastName: "" }));
         break;
-      case "banner":
-        setFormValues((state) => ({ ...state, banner: value }));
-        setFormErrors((state) => ({ ...state, banner: "" }));
-        break;
       case "catalogue":
         setFormValues((state) => ({ ...state, catalogue: value }));
         setFormErrors((state) => ({ ...state, catalogue: "" }));
-        break;
-      case "facebook":
-        setFormValues((state) => ({ ...state, facebook: value }));
-        break;
-      case "instagram":
-        setFormValues((state) => ({ ...state, instagram: value }));
-        break;
-      case "youtube":
-        setFormValues((state) => ({ ...state, youtube: value }));
-        break;
-      case "trailer":
-        setFormValues((state) => ({ ...state, trailer: value }));
         break;
       default:
         break;
@@ -171,12 +130,7 @@ const ActorEdit = () => {
         birthday: birthday ? birthday.toString() : "",
         link: formValues.link,
         actorLink: {
-          banner: formValues.banner,
           catalogue: formValues.catalogue,
-          facebook: formValues.facebook,
-          instagram: formValues.instagram,
-          youtube: formValues.youtube,
-          trailer: formValues.trailer,
         },
       };
 
@@ -224,11 +178,6 @@ const ActorEdit = () => {
         ...state,
         birthday: "Birthday is required.",
       }));
-    if (formValues.banner === "")
-      setFormErrors((state) => ({
-        ...state,
-        banner: "Banner is required.",
-      }));
     if (formValues.catalogue === "")
       setFormErrors((state) => ({
         ...state,
@@ -240,7 +189,6 @@ const ActorEdit = () => {
       formValues.lastName !== "" &&
       formValues.gender !== "" &&
       birthday !== null &&
-      formValues.banner !== "" &&
       formValues.catalogue !== ""
     ) {
       valid = true;

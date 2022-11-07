@@ -23,6 +23,7 @@ type AppProps = {
   categories: any;
   reviews: any;
   myReview: any;
+  movieRating: any;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onChangeRating: (
     event: Event | React.SyntheticEvent<Element, Event>,
@@ -56,6 +57,7 @@ const MovieDetailsForm = ({
   categories,
   reviews,
   myReview,
+  movieRating,
   onChange,
   onChangeRating,
   onClick,
@@ -79,6 +81,19 @@ const MovieDetailsForm = ({
             height={"400"}
             loading="lazy"
           />
+          <Box sx={{ display: "flex", maxWidth: "100%" }}>
+            <FormRating
+              name={"movieRating"}
+              value={movieRating.length ? movieRating[0].average : null}
+              error={""}
+            />
+            <Typography sx={{ fontSize: 16, paddingLeft: 1 }}>
+              {movieRating.length ? `${movieRating[0].average}/5` : "0/5"}
+            </Typography>
+          </Box>
+          <Typography sx={{ fontSize: 16, paddingLeft: 1 }}>
+            {movieRating.length ? `${movieRating[0].count} reviews` : ""}
+          </Typography>
           <Typography variant="h4">{movie.title}</Typography>
           <Typography>{movie.yearReleased}</Typography>
           <Typography>

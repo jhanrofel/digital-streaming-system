@@ -22,7 +22,6 @@ interface MoviesClass {
 }
 
 interface LinkClass {
-  banner: string;
   catalogue: string;
 }
 
@@ -38,7 +37,7 @@ const ActorMovies = ({ actor, movies }: AppProps) => {
       </Divider>
       <Box sx={{ display: "flex" }}>
         {movies?.map((movie, i) => (
-          <FormCard key={i} title={movie.title} link={movie.movieLink.banner} />
+          <FormCard key={i} title={movie.title} link={movie.movieLink.catalogue} />
         ))}
       </Box>
       <Box sx={{ width: 300 }}>

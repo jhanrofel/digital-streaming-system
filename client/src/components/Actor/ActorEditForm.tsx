@@ -26,11 +26,7 @@ interface FormValues {
   firstName: string;
   lastName: string;
   gender: string;
-  banner: string;
   catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
   alert: AlertData;
 }
 
@@ -39,11 +35,7 @@ interface FormErrors {
   lastName: string;
   gender: string;
   birthday: string;
-  banner: string;
   catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
 }
 
 interface AlertData {
@@ -110,22 +102,6 @@ const ActorEditForm = ({
       </Divider>
       <Box sx={{ display: "flex", width: 600 }}>
         <FormText
-          name="banner"
-          value={formValues.banner}
-          label="Banner"
-          type="search"
-          error={formErrors.banner}
-          onChange={onChange}
-        />
-        <Avatar
-          variant="square"
-          alt="Image Banner"
-          src={formValues.banner}
-          sx={{ width: 65, height: 65 }}
-        />
-      </Box>
-      <Box sx={{ display: "flex", width: 600 }}>
-        <FormText
           name="catalogue"
           value={formValues.catalogue}
           label="Catalogue"
@@ -138,29 +114,6 @@ const ActorEditForm = ({
           alt="Image Catalogue"
           src={formValues.catalogue}
           sx={{ width: 65, height: 65 }}
-        />
-      </Box>
-      <Box sx={{ width: 600 }}>
-        <FormText
-          name="facebook"
-          value={formValues.facebook}
-          label="Facebook"
-          type="search"
-          onChange={onChange}
-        />
-        <FormText
-          name="instagram"
-          value={formValues.instagram}
-          label="Instagram"
-          type="search"
-          onChange={onChange}
-        />
-        <FormText
-          name="youtube"
-          value={formValues.youtube}
-          label="Youtube Channel"
-          type="search"
-          onChange={onChange}
         />
       </Box>
       <Box sx={{ display: "flex", width: 600 }}>

@@ -23,7 +23,6 @@ export const MoviesPatchSchema: SchemaObject = {
       required: ['banner', 'catalogue'],
       properties: {
         id: {type: 'string'},
-        banner: {type: 'string'},
         catalogue: {type: 'string'},
         picture: {type: 'array', default: []},
         facebook: {type: 'string'},

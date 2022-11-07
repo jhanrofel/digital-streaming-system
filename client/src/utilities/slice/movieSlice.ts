@@ -32,7 +32,7 @@ export const moviesSearch = createAsyncThunk(
     return axios({
       url: `/movies/search`,
       method: "post",
-      data: {search:search},
+      data: { search: search },
     })
       .then((res) => res.data)
       .catch((err) => err);
@@ -51,17 +51,14 @@ export const moviesLatestUploads = createAsyncThunk(
   }
 );
 
-export const moviesFeatured = createAsyncThunk(
-  "movies/featured",
-  async () => {
-    return axios({
-      url: `/movies/featured`,
-      method: "get",
-    })
-      .then((res) => res.data)
-      .catch((err) => err);
-  }
-);
+export const moviesFeatured = createAsyncThunk("movies/featured", async () => {
+  return axios({
+    url: `/movies/featured`,
+    method: "get",
+  })
+    .then((res) => res.data)
+    .catch((err) => err);
+});
 
 export const moviesComingSoon = createAsyncThunk(
   "movies/coming-soon",
@@ -77,9 +74,21 @@ export const moviesComingSoon = createAsyncThunk(
 
 export const moviesReviewsApproved = createAsyncThunk(
   "movies/reviews-approved",
-  async (movieId:string) => {
+  async (movieId: string) => {
     return axios({
       url: `/movies/${movieId}/reviews-approved`,
+      method: "get",
+    })
+      .then((res) => res.data)
+      .catch((err) => err);
+  }
+);
+
+export const moviesRating = createAsyncThunk(
+  "movies/rating",
+  async (movieId: string) => {
+    return axios({
+      url: `/movies/${movieId}/rating`,
       method: "get",
     })
       .then((res) => res.data)
@@ -159,15 +168,19 @@ interface MoviesData {
   dataReviews: ReviewsDataOne[] | [];
   dataOne: MoviesDataOne;
   dataGetOne: any;
+  dataRating: RatingData | [];
 }
 
 interface MovieLink {
-  banner: string;
   catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
   trailer?: string;
+}
+
+interface RatingData {
+  _id: string | null;
+  count: number;
+  total: number;
+  average: number;
 }
 
 const initialState = {
@@ -178,6 +191,7 @@ const initialState = {
   dataOne: {},
   dataGetOne: [],
   dataReviews: [],
+  dataRating: [],
 } as MoviesData;
 
 export const moviesSlice = createSlice({
@@ -218,6 +232,9 @@ export const moviesSlice = createSlice({
     });
     builder.addCase(moviesReviewsApproved.fulfilled, (state, action) => {
       state.dataReviews = action.payload;
+    });
+    builder.addCase(moviesRating.fulfilled, (state, action) => {
+      state.dataRating = action.payload;
     });
   },
 });

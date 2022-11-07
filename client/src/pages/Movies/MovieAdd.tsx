@@ -13,11 +13,7 @@ interface FormValues {
   comingSoon: string;
   featured: string;
   categories: OptionClass[];
-  banner: string;
   catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
   trailer?: string;
   actors: OptionClass[];
   alert: AlertData;
@@ -27,7 +23,6 @@ interface FormErrors {
   title: string;
   cost: string;
   yearReleased: string;
-  banner: string;
   catalogue: string;
   actors: string;
 }
@@ -57,11 +52,7 @@ interface PostMovieValue {
 }
 
 interface MovieLink {
-  banner: string;
   catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
   trailer?: string;
 }
 
@@ -90,11 +81,7 @@ const MovieAdd = () => {
     comingSoon: "False",
     featured: "False",
     categories: [],
-    banner: "",
     catalogue: "",
-    facebook: "",
-    instagram: "",
-    youtube: "",
     trailer: "",
     actors: [],
     alert: {
@@ -107,7 +94,6 @@ const MovieAdd = () => {
     title: "",
     cost: "",
     yearReleased: "",
-    banner: "",
     catalogue: "",
     actors: "",
   });
@@ -142,22 +128,9 @@ const MovieAdd = () => {
         setFormValues((state) => ({ ...state, yearReleased: parseInt(value) }));
         setFormErrors((state) => ({ ...state, yearReleased: "" }));
         break;
-      case "banner":
-        setFormValues((state) => ({ ...state, banner: value }));
-        setFormErrors((state) => ({ ...state, banner: "" }));
-        break;
       case "catalogue":
         setFormValues((state) => ({ ...state, catalogue: value }));
         setFormErrors((state) => ({ ...state, catalogue: "" }));
-        break;
-      case "facebook":
-        setFormValues((state) => ({ ...state, facebook: value }));
-        break;
-      case "instagram":
-        setFormValues((state) => ({ ...state, instagram: value }));
-        break;
-      case "youtube":
-        setFormValues((state) => ({ ...state, youtube: value }));
         break;
       case "trailer":
         setFormValues((state) => ({ ...state, trailer: value }));
@@ -202,10 +175,7 @@ const MovieAdd = () => {
         actors: actorsValue,
         categories: categoriesValue,
         movieLink: {
-          banner: formValues.banner,
           catalogue: formValues.catalogue,
-          facebook: formValues.facebook,
-          instagram: formValues.instagram,
           trailer: formValues.trailer,
         },
       };
@@ -219,7 +189,6 @@ const MovieAdd = () => {
             yearReleased: 2022,
             comingSoon: "False",
             featured: "False",
-            banner: "",
             catalogue: "",
             facebook: "",
             instagram: "",
@@ -277,11 +246,6 @@ const MovieAdd = () => {
         ...state,
         gender: "Year released is required.",
       }));
-    if (formValues.banner === "")
-      setFormErrors((state) => ({
-        ...state,
-        banner: "Banner is required.",
-      }));
     if (formValues.catalogue === "")
       setFormErrors((state) => ({
         ...state,
@@ -296,7 +260,6 @@ const MovieAdd = () => {
       formValues.title !== "" &&
       formValues.cost > 0 &&
       formValues.yearReleased > 0 &&
-      formValues.banner !== "" &&
       formValues.catalogue !== ""
     ) {
       valid = true;

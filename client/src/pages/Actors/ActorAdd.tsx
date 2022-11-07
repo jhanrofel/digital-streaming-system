@@ -9,11 +9,7 @@ interface FormValues {
   firstName: string;
   lastName: string;
   gender: string;
-  banner: string;
   catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
   alert: AlertData;
 }
 
@@ -22,11 +18,7 @@ interface FormErrors {
   lastName: string;
   gender: string;
   birthday: string;
-  banner: string;
   catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
 }
 
 interface AlertData {
@@ -46,7 +38,6 @@ interface PostActorValue {
 }
 
 interface ActorLink {
-  banner: string;
   catalogue: string;
   facebook?: string;
   instagram?: string;
@@ -60,11 +51,7 @@ const ActorAdd = () => {
     firstName: "",
     lastName: "",
     gender: "",
-    banner: "",
     catalogue: "",
-    facebook: "",
-    instagram: "",
-    youtube: "",
     alert: {
       open: false,
       message: "string",
@@ -76,7 +63,6 @@ const ActorAdd = () => {
     lastName: "",
     gender: "",
     birthday: "",
-    banner: "",
     catalogue: "",
   });
 
@@ -97,22 +83,9 @@ const ActorAdd = () => {
         setFormValues((state) => ({ ...state, lastName: value }));
         setFormErrors((state) => ({ ...state, lastName: "" }));
         break;
-      case "banner":
-        setFormValues((state) => ({ ...state, banner: value }));
-        setFormErrors((state) => ({ ...state, banner: "" }));
-        break;
       case "catalogue":
         setFormValues((state) => ({ ...state, catalogue: value }));
         setFormErrors((state) => ({ ...state, catalogue: "" }));
-        break;
-      case "facebook":
-        setFormValues((state) => ({ ...state, facebook: value }));
-        break;
-      case "instagram":
-        setFormValues((state) => ({ ...state, instagram: value }));
-        break;
-      case "youtube":
-        setFormValues((state) => ({ ...state, youtube: value }));
         break;
       default:
         break;
@@ -135,11 +108,7 @@ const ActorAdd = () => {
         gender: formValues.gender,
         birthday: birthday ? birthday.toString() : "",
         actorLink: {
-          banner: formValues.banner,
           catalogue: formValues.catalogue,
-          facebook: formValues.facebook,
-          instagram: formValues.instagram,
-          youtube: formValues.youtube,
         },
       };
 
@@ -152,11 +121,7 @@ const ActorAdd = () => {
             firstName: "",
             lastName: "",
             gender: "",
-            banner: "",
             catalogue: "",
-            facebook: "",
-            instagram: "",
-            youtube: "",
           }));
           setBirthday(null);
           setFormValues((state) => ({
@@ -199,11 +164,6 @@ const ActorAdd = () => {
         ...state,
         birthday: "Birthday is required.",
       }));
-    if (formValues.banner === "")
-      setFormErrors((state) => ({
-        ...state,
-        banner: "Banner is required.",
-      }));
     if (formValues.catalogue === "")
       setFormErrors((state) => ({
         ...state,
@@ -215,7 +175,6 @@ const ActorAdd = () => {
       formValues.lastName !== "" &&
       formValues.gender !== "" &&
       birthday !== null &&
-      formValues.banner !== "" &&
       formValues.catalogue !== ""
     ) {
       valid = true;

@@ -17,7 +17,7 @@ const MoviesAll = () => {
     id: movies.id,
     title: movies.title,
     subtitle: movies.yearReleased,
-    url: movies.movieLink.banner,
+    url: movies.movieLink.catalogue,
   }));
   const moviesDataFeatured = useAppSelector(
     (state) => state.movies.dataFeatured
@@ -26,7 +26,7 @@ const MoviesAll = () => {
     id: movies.id,
     title: movies.title,
     subtitle: movies.yearReleased,
-    url: movies.movieLink.banner,
+    url: movies.movieLink.catalogue,
   }));
   const moviesDataComingSoon = useAppSelector(
     (state) => state.movies.dataComingSoon
@@ -35,7 +35,7 @@ const MoviesAll = () => {
     id: movies.id,
     title: movies.title,
     subtitle: movies.yearReleased,
-    url: movies.movieLink.banner,
+    url: movies.movieLink.catalogue,
   }));
 
   React.useEffect(() => {
@@ -47,21 +47,21 @@ const MoviesAll = () => {
   return (
     <React.Fragment>
       <Box sx={{ width: "100%" }}>
-        {movieDataLatestUploads.length && (
+        {movieDataLatestUploads.length > 0 && (
           <FormImageList
             header="LATEST UPLOADS"
             page="movies-details"
             movieData={movieDataLatestUploads}
           />
         )}
-        {movieDataFeatured.length && (
+        {movieDataFeatured.length > 0 && (
           <FormImageList
             header="FEATURED MOVIES"
             page="movies-details"
             movieData={movieDataFeatured}
           />
         )}
-        {movieDataComingSoon.length && (
+        {movieDataComingSoon.length > 0 && (
           <FormImageList
             header="COMING SOON"
             page="movies-details"

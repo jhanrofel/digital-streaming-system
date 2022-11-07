@@ -28,7 +28,6 @@ interface RowValues {
 }
 
 interface ActorLink {
-  banner: string;
   catalogue: string;
   facebook?: string;
   instagram?: string;
@@ -66,22 +65,6 @@ const ActorList = () => {
       width: 150,
       valueGetter: (params: GridValueGetterParams) =>
         `${params.row.birthday.substring(0, 10)}`,
-    },
-    {
-      field: "banner",
-      headerName: "Banner",
-      sortable: false,
-      width: 150,
-      renderCell: (params) => {
-        return (
-          <Avatar
-            variant="square"
-            alt="Image Banner"
-            src={params.row.actorLink.banner}
-            sx={{ width: 50, height: 50 }}
-          />
-        );
-      },
     },
     {
       field: "catalogue",

@@ -32,11 +32,7 @@ interface FormValues {
   comingSoon: string;
   featured: string;
   categories: OptionClass[];
-  banner: string;
   catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
   trailer?: string;
   actors: OptionClass[];
   alert: AlertData;
@@ -46,7 +42,6 @@ interface FormErrors {
   title: string;
   cost: string;
   yearReleased: string;
-  banner: string;
   catalogue: string;
   actors: string;
 }
@@ -131,20 +126,6 @@ const MovieEditForm = ({
       </Divider>
       <Box sx={{ display: "flex", maxWidth: 800 }}>
         <FormText
-          name="banner"
-          value={formValues.banner}
-          label="Banner"
-          type="search"
-          error={formErrors.banner}
-          onChange={onChange}
-        />
-        <Avatar
-          variant="square"
-          alt="Image Banner"
-          src={formValues.banner}
-          sx={{ width: 65, height: 65 }}
-        />
-        <FormText
           name="catalogue"
           value={formValues.catalogue}
           label="Catalogue"
@@ -154,35 +135,12 @@ const MovieEditForm = ({
         />
         <Avatar
           variant="square"
-          alt="Image Banner"
+          alt="Image Catalogue"
           src={formValues.catalogue}
           sx={{ width: 65, height: 65 }}
         />
       </Box>
       <Box sx={{ display: "flex", maxWidth: 800 }}>
-        <FormText
-          name="facebook"
-          value={formValues.facebook}
-          label="Faceboook"
-          type="search"
-          onChange={onChange}
-        />
-        <FormText
-          name="instagram"
-          value={formValues.instagram}
-          label="Instagram"
-          type="search"
-          onChange={onChange}
-        />
-      </Box>
-      <Box sx={{ display: "flex", maxWidth: 800 }}>
-        <FormText
-          name="youtube"
-          value={formValues.youtube}
-          label="Youtube Channel"
-          type="search"
-          onChange={onChange}
-        />
         <FormText
           name="trailer"
           value={formValues.trailer}

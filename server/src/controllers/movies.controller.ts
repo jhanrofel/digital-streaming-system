@@ -15,6 +15,7 @@ import {
   MoviesRepository,
   MovieActorRepository,
   LinksRepository,
+  ReviewsRepository,
 } from '../repositories';
 import {
   MoviesPatchSchema,
@@ -39,7 +40,6 @@ class MovieClass {
 }
 
 class LinkClass {
-  banner: string;
   catalogue: string;
   picture?: string[];
   facebook?: string;
@@ -70,6 +70,8 @@ export class MoviesController {
     public linksRepository: LinksRepository,
     @repository(MovieActorRepository)
     public movieActorRepository: MovieActorRepository,
+    @repository(ReviewsRepository)
+    public reviewsRepository: ReviewsRepository,
   ) {}
 
   @authenticate('jwt')
@@ -244,25 +246,45 @@ export class MoviesController {
     },
   })
   async movieReviews(@param.path.string('id') id: string): Promise<Reviews[]> {
-    return this.moviesRepository
-      .movieReviews(id)
-      .find({include: ['reviewUser'], where: {approval: 'approved'}, order: ['createdAt DESC']});
+    return this.moviesRepository.movieReviews(id).find({
+      include: ['reviewUser'],
+      where: {approval: 'approved'},
+      order: ['createdAt DESC'],
+    });
   }
 
-  // @get('/movies/{id}/rating')
-  // @response(200, {
-  //   description: 'Movies model instance',
-  //   content: {
-  //     'application/json': {
-  //       schema: getModelSchemaRef(Movies, {includeRelations: true}),
-  //     },
-  //   },
-  // })
-  // async movieReviews(@param.path.string('id') id: string): Promise<number|undefined> {
-  //   return this.moviesRepository
-  //     .movieReviews(id)
-  //     .find();
-  // }
+  @get('/movies/{id}/rating')
+  @response(200, {
+    description: 'Movies model instance',
+    content: {
+      'application/json': {
+        schema: getModelSchemaRef(Movies, {includeRelations: true}),
+      },
+    },
+  })
+  async movieRating(@param.path.string('id') id: string): Promise<any> {
+    const reviewCollections = (
+      this.reviewsRepository.dataSource.connector as any
+    ).collection('Reviews');
+    return await reviewCollections
+      .aggregate([
+        {
+          $match: {
+            $expr: {$eq: ['$movie', {$toObjectId: id}]},
+            approval: 'approved',
+          },
+        },
+        {
+          $group: {
+            _id: '$group',
+            count: {$sum: 1},
+            total: {$sum: '$rating'},
+            average: {$avg: {$sum: ['$rating']}},
+          },
+        },
+      ])
+      .get();
+  }
 
   @authenticate('jwt')
   @authorize({allowedRoles: ['ADMIN']})

@@ -17,7 +17,7 @@ const Search = () => {
     id: movie.id,
     title: movie.title,
     subtitle: movie.yearReleased,
-    url: movie.movieLink.banner,
+    url: movie.movieLink.catalogue,
   }));
   const moviesLatest = useAppSelector(
     (state) => state.movies.dataLatestUploads
@@ -26,7 +26,7 @@ const Search = () => {
     id: movies.id,
     title: movies.title,
     subtitle: movies.yearReleased,
-    url: movies.movieLink.banner,
+    url: movies.movieLink.catalogue,
   }));
 
   React.useEffect(() => {

@@ -30,7 +30,6 @@ class ActorClass {
 }
 
 class LinkClass {
-  banner: string;
   catalogue: string;
   picture?: string[];
   facebook?: string;
@@ -112,6 +111,7 @@ export class ActorsController {
         {relation: 'actorLink', scope: {fields: {id: false}}},
         {relation: 'actorMovies'},
       ],
+      order: ["firstName","lastName"]
     });
   }
 

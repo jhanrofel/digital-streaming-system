@@ -38,10 +38,10 @@ export class Movies extends Entity {
   categories?: string[];
 
   @property({
-    type: 'array',
-    itemType: 'string',
+    type: 'string',
+    default: "",
   })
-  hashTags?: string[];
+  hashTags?: string;
 
   @property({
     type: 'boolean',

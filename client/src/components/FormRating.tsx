@@ -28,7 +28,7 @@ export default function BasicRating({
       {onChange ? (
         <Rating name={name} value={value} onChange={onChange} />
       ) : (
-        <Rating name={name} value={value} readOnly />
+        <Rating name={name} value={value} precision={0.1} readOnly />
       )}
 
       {error ? (

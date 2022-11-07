@@ -14,11 +14,7 @@ interface FormValues {
   comingSoon: string;
   featured: string;
   categories: OptionClass[];
-  banner: string;
   catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
   trailer?: string;
   actors: OptionClass[];
   alert: AlertData;
@@ -28,7 +24,6 @@ interface FormErrors {
   title: string;
   cost: string;
   yearReleased: string;
-  banner: string;
   catalogue: string;
   actors: string;
 }
@@ -59,11 +54,7 @@ interface PostMovieValue {
 }
 
 interface MovieLink {
-  banner: string;
   catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
   trailer?: string;
 }
 
@@ -102,11 +93,7 @@ const MovieEdit = () => {
     comingSoon: movie.comingSoon ? "True" : "False",
     featured: movie.featured ? "True" : "False",
     categories: [],
-    banner: movie.movieLink?.banner || "",
     catalogue: movie.movieLink?.catalogue || "",
-    facebook: movie.movieLink?.facebook || "",
-    instagram: movie.movieLink?.instagram || "",
-    youtube: movie.movieLink?.youtube || "",
     trailer: movie.movieLink?.trailer || "",
     actors: [],
     alert: {
@@ -119,7 +106,6 @@ const MovieEdit = () => {
     title: "",
     cost: "",
     yearReleased: "",
-    banner: "",
     catalogue: "",
     actors: "",
   });
@@ -139,11 +125,7 @@ const MovieEdit = () => {
       comingSoon: movie.comingSoon ? "True" : "False",
       featured: movie.featured ? "True" : "False",
       categories: [],
-      banner: movie.movieLink?.banner || "",
       catalogue: movie.movieLink?.catalogue || "",
-      facebook: movie.movieLink?.facebook || "",
-      instagram: movie.movieLink?.instagram || "",
-      youtube: movie.movieLink?.youtube || "",
       trailer: movie.movieLink?.trailer || "",
       actors: [],
     }));
@@ -210,22 +192,9 @@ const MovieEdit = () => {
         setFormValues((state) => ({ ...state, yearReleased: parseInt(value) }));
         setFormErrors((state) => ({ ...state, yearReleased: "" }));
         break;
-      case "banner":
-        setFormValues((state) => ({ ...state, banner: value }));
-        setFormErrors((state) => ({ ...state, banner: "" }));
-        break;
       case "catalogue":
         setFormValues((state) => ({ ...state, catalogue: value }));
         setFormErrors((state) => ({ ...state, catalogue: "" }));
-        break;
-      case "facebook":
-        setFormValues((state) => ({ ...state, facebook: value }));
-        break;
-      case "instagram":
-        setFormValues((state) => ({ ...state, instagram: value }));
-        break;
-      case "youtube":
-        setFormValues((state) => ({ ...state, youtube: value }));
         break;
       case "trailer":
         setFormValues((state) => ({ ...state, trailer: value }));
@@ -272,11 +241,7 @@ const MovieEdit = () => {
         actors: actorsValue,
         categories: categoriesValue,
         movieLink: {
-          banner: formValues.banner,
           catalogue: formValues.catalogue,
-          facebook: formValues.facebook,
-          instagram: formValues.instagram,
-          youtube: formValues.youtube,
           trailer: formValues.trailer,
         },
         movieActors: [],
@@ -327,11 +292,6 @@ const MovieEdit = () => {
         ...state,
         gender: "Year released is required.",
       }));
-    if (formValues.banner === "")
-      setFormErrors((state) => ({
-        ...state,
-        banner: "Banner is required.",
-      }));
     if (formValues.catalogue === "")
       setFormErrors((state) => ({
         ...state,
@@ -346,7 +306,6 @@ const MovieEdit = () => {
       formValues.title !== "" &&
       formValues.cost > 0 &&
       formValues.yearReleased > 0 &&
-      formValues.banner !== "" &&
       formValues.catalogue !== ""
     ) {
       valid = true;
