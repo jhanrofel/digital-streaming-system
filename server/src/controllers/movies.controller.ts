@@ -173,7 +173,7 @@ export class MoviesController {
     });
   }
 
-  @get('/movies/{id}/reviews')
+  @get('/movies/{id}/reviews-approved')
   @response(200, {
     description: 'Movies model instance',
     content: {
@@ -185,7 +185,7 @@ export class MoviesController {
   async movieReviews(@param.path.string('id') id: string): Promise<Reviews[]> {
     return this.moviesRepository
       .movieReviews(id)
-      .find({include: ['reviewUser']});
+      .find({where:{approval:"approved"}},{include: ['reviewUser']});
   }
 
   @authenticate('jwt')

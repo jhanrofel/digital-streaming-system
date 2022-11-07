@@ -30,6 +30,19 @@ export const reviewsApprovalList = createAsyncThunk(
   }
 );
 
+export const myMovieReview = createAsyncThunk(
+  "reviews/me-movie",
+  async (movieId: string) => {
+    return axios({
+      url: `/my-reviews/${movieId}/movies`,
+      method: "get",
+      headers: { Authorization: authenticationToken() },
+    })
+      .then((res) => res.data[0])
+      .catch((err) => err);
+  }
+);
+
 interface PostInput {
   description: string;
   rating: number | null;
@@ -128,14 +141,21 @@ export const reviewsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(reviewsList.fulfilled, (state, action) => {
+      state.data = action.payload;
+    });
     builder.addCase(reviewsApprovalList.fulfilled, (state, action) => {
       state.data = action.payload;
     });
     builder.addCase(reviewsPost.fulfilled, (state, action) => {
-      state.data = [...state.data, action.payload];
+      state.data = [...state.data, { ...action.payload, id: "new_review" }];
+      state.dataOne = { ...action.payload, id: "new_review" };
     });
     builder.addCase(reviewsApproval.fulfilled, (state, action) => {
       state.data = state.data.filter((review) => review.id !== action.payload);
+    });
+    builder.addCase(myMovieReview.fulfilled, (state, action) => {
+      state.dataOne = action.payload;
     });
   },
 });

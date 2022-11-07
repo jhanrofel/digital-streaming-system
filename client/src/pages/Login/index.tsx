@@ -102,7 +102,6 @@ const Login = () => {
   const checkUserRole = async (): Promise<void> => {
     await dispatch(usersData()).then((res) => {
       if (res.type === "users/me/fulfilled") {
-        console.log(res.payload);
         loggedInCreate(res.payload.user);
         if (res.payload.user.role === "ADMIN") {
           navigate("/movies");

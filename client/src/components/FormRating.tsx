@@ -1,21 +1,28 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 import Rating from "@mui/material/Rating";
-import Typography from "@mui/material/Typography";
 
 type AppProps = {
-  rate: number | undefined | null;
-  setRate: (value: number | null) => void;
+  value: number | undefined | null;
+  name: string;
+  error: string;
+  onChange?: (event: Event | React.SyntheticEvent<Element, Event>, newValue: number | null) => void;
 };
 
-export default function BasicRating({ rate, setRate }: AppProps) {
+// onChange={(event, newValue) => {
+//   setRate(newValue);
+// }}
+
+export default function BasicRating({ value, name, error, onChange }: AppProps) {
   return (
-    <Rating
-      name="simple-controlled"
-      value={rate}
-      onChange={(event, newValue) => {
-        setRate(newValue);
-      }}
-    />
+    <FormControl fullWidth sx={{ m: 1 }} variant="filled">
+      <Rating name={name} value={value} onChange={onChange} />
+      {error ? (
+        <FormHelperText error>{error}</FormHelperText>
+      ) : (
+        <FormHelperText></FormHelperText>
+      )}
+    </FormControl>
   );
 }

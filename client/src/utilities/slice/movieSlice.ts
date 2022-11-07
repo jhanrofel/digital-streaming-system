@@ -51,6 +51,18 @@ export const moviesLatestUploads = createAsyncThunk(
   }
 );
 
+export const moviesReviewsApproved = createAsyncThunk(
+  "movies/reviews-approved",
+  async (movieId:string) => {
+    return axios({
+      url: `/movies/${movieId}/reviews-approved`,
+      method: "get",
+    })
+      .then((res) => res.data)
+      .catch((err) => err);
+  }
+);
+
 export const moviesPost = createAsyncThunk(
   "movies/post",
   async (formValues: MoviesDataOne) => {
@@ -98,6 +110,11 @@ export const moviesDelete = createAsyncThunk(
   }
 );
 
+interface ReviewsDataOne {
+  id?: string;
+  description: string;
+}
+
 interface MoviesDataOne {
   id?: string;
   title: string;
@@ -113,6 +130,7 @@ interface MoviesDataOne {
 interface MoviesData {
   data: MoviesDataOne[] | [];
   dataLatestUploads: MoviesDataOne[] | [];
+  dataReviews: ReviewsDataOne[] | [];
   dataOne: MoviesDataOne;
   dataGetOne: any;
 }
@@ -131,6 +149,7 @@ const initialState = {
   dataLatestUploads: [],
   dataOne: {},
   dataGetOne: [],
+  dataReviews: [],
 } as MoviesData;
 
 export const moviesSlice = createSlice({
@@ -162,6 +181,9 @@ export const moviesSlice = createSlice({
     });
     builder.addCase(moviesDelete.fulfilled, (state, action) => {
       state.data = state.data.filter((movie) => movie.id !== action.payload.id);
+    });
+    builder.addCase(moviesReviewsApproved.fulfilled, (state, action) => {
+      state.dataReviews = action.payload;
     });
   },
 });

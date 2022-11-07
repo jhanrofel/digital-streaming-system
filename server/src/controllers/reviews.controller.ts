@@ -78,8 +78,6 @@ export class ReviewsController {
     await this.reviewsRepository.updateById(id, reviews);
   }
 
-  @authenticate('jwt')
-  @authorize({allowedRoles: ['ADMIN']})
   @get('/reviews')
   @response(200, {
     description: 'Array of Reviews model instances',
@@ -130,5 +128,27 @@ export class ReviewsController {
     return this.reviewsRepository.findById(id, {
       include: ['reviewUser', 'reviewMovie'],
     });
+  }
+
+  @authenticate('jwt')
+  @get('/my-reviews/{id}/movies')
+  @response(200, {
+    description: 'Array of Reviews model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(Reviews, {includeRelations: true}),
+        },
+      },
+    },
+  })
+  async myReviewOnMovie(
+    @param.path.string('id') id: string,
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
+  ): Promise<Reviews[] | void> {
+    const userId = currentUserProfile[securityId];
+    return this.reviewsRepository.find({where: {user: userId, movie: id}});
   }
 }
