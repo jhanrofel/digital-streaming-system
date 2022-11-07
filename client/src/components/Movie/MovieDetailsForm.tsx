@@ -1,19 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../../utilities/hooks";
 import { isLogged } from "../../utilities/loggedIn";
 import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
+import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
-import ListSubheader from "@mui/material/ListSubheader";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import StarsIcon from "@mui/icons-material/Stars";
+import ReviewCards from "./ReviewCards";
 import FormButton from "../FormButton";
 import FormImageList from "../FormImageList";
 import FormRating from "../FormRating";
@@ -114,18 +110,27 @@ const MovieDetailsForm = ({
           <Grid container spacing={2}>
             {isLogged() ? (
               <Box sx={{ display: "inline", width: 1, paddingTop: 3 }}>
-                {myReview ? (
-                  <Box sx={{ width: 600 }}>
-                    <Typography variant="h5" padding={1}>
-                      {myReview.description}
-                    </Typography>
-                    <FormRating
-                        name={"rated"}
-                        value={myReview?.rating || null}
+                {myReview && myReview.approval === "pending" && (
+                  <Card sx={{ minWidth: 275, margin: 2 }}>
+                    <CardContent>
+                      <Typography sx={{ fontSize: 18 }}>
+                        {myReview.description}
+                      </Typography>
+                      <Typography sx={{ fontSize: 14 }}>
+                        {myReview.createdAt}
+                      </Typography>
+                      <FormRating
+                        name={"rating"}
+                        value={myReview.rating ? myReview.rating : null}
                         error={""}
                       />
-                  </Box>
-                ) : (
+                      <Typography sx={{ fontSize: 14 }}>
+                        {"For Approval"}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                )}
+                {!myReview && (
                   <>
                     <Box sx={{ width: 600 }}>
                       <FormText
@@ -163,30 +168,18 @@ const MovieDetailsForm = ({
         </Box>
         <Box sx={{ display: "inline", width: 1, padding: 3 }}>
           {reviews.length > 0 ? (
-            <List
-              sx={{ width: "100%", maxWidth: 360 }}
-              component="nav"
-              aria-labelledby="nested-list-subheader"
-              subheader={
-                <ListSubheader component="div" id="nested-list-subheader">
-                  MOVIE REVIEWS
-                </ListSubheader>
-              }
-            >
-              {reviews.map((review: any) => (
-                <ListItemButton key={review.id}>
-                  <IconButton>
-                    {review.rating} <StarsIcon color="primary" />
-                  </IconButton>
-                  <ListItemText primary={review.description} />
-                </ListItemButton>
-              ))}
-            </List>
+            <React.Fragment>
+              <Divider textAlign="left">
+                <Chip label={"MOVIE REVIEWS"} color="primary" />
+              </Divider>
+              <ReviewCards reviews={reviews} />
+            </React.Fragment>
           ) : (
             <Typography variant="h6" gutterBottom>
               No Review for this movie.
             </Typography>
           )}
+          {}
         </Box>
       </Box>
       <SnackAlert

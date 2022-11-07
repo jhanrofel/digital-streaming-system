@@ -1,22 +1,7 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { isLogged } from "../../utilities/loggedIn";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
-import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
-import ListSubheader from "@mui/material/ListSubheader";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import StarsIcon from "@mui/icons-material/Stars";
-import FormButton from "../FormButton";
 import FormImageList from "../FormImageList";
-import FormRating from "../FormRating";
-import FormText from "../FormText";
-import SnackAlert from "../SnackAlert";
 
 type AppProps = {
   actor: any;
@@ -35,7 +20,6 @@ const getAge = (birthday: string): number => {
 };
 
 const ActorDetailsForm = ({ actor, actorMovies }: AppProps) => {
-  const navigate = useNavigate();
   const movieData = actorMovies?.map((movie: any) => ({
     id: movie.id,
     title: movie.title,

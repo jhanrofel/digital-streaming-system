@@ -25,9 +25,6 @@ export default function TitlebarBelowImageList({
   movieData,
 }: AppProps) {
   const navigate = useNavigate();
-  const onClickHandler = () => {
-
-  }
   return (
     <React.Fragment>
       <Divider textAlign="left">

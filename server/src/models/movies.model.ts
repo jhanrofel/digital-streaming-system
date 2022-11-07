@@ -55,7 +55,7 @@ export class Movies extends Entity {
 
   @property({
     type: 'date',
-    default: () => new Date(),
+    default: () => new Date().toLocaleString("en-PH"),
   })
   createdAt?: string;
 

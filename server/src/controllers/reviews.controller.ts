@@ -57,8 +57,8 @@ export class ReviewsController {
     if (review.count) {
       return {status: 500, error: 'You already have review on this movie.'};
     } else {
-      this.reviewsRepository.create({...reviews, user: userId});
-      return {status: 200, message: 'Your review is awaiting for approval.'};
+      const newReview = await this.reviewsRepository.create({...reviews, user: userId});
+      return {status: 200, message: 'Your review is awaiting for approval.', reviews:[newReview]};
     }
   }
 

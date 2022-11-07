@@ -196,7 +196,7 @@ export class MoviesController {
   })
   async movieFeatured(): Promise<Movies[]> {
     return this.moviesRepository.find({
-      where: {featured:true},
+      where: {featured: true},
       order: ['createdAt DESC'],
       limit: 10,
       include: ['movieLink'],
@@ -209,7 +209,7 @@ export class MoviesController {
   })
   async movieComingSoon(): Promise<Movies[]> {
     return this.moviesRepository.find({
-      where: {comingSoon:true},
+      where: {comingSoon: true},
       order: ['createdAt DESC'],
       limit: 10,
       include: ['movieLink'],
@@ -246,7 +246,7 @@ export class MoviesController {
   async movieReviews(@param.path.string('id') id: string): Promise<Reviews[]> {
     return this.moviesRepository
       .movieReviews(id)
-      .find({where: {approval: 'approved'}}, {include: ['reviewUser']});
+      .find({include: ['reviewUser'], where: {approval: 'approved'}, order: ['createdAt DESC']});
   }
 
   @authenticate('jwt')

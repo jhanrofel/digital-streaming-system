@@ -26,7 +26,7 @@ export class Reviews extends Entity {
   @property({
     type: 'date',
     required: true,
-    default: new Date(),
+    default: () => new Date().toLocaleString("en-PH"),
   })
   createdAt: string;
 

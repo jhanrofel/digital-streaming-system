@@ -65,7 +65,7 @@ export const reviewsPost = createAsyncThunk(
     })
       .then((res) => {
         if (res.data.status === 200) {
-          return formValues;
+          return res.data.reviews[0];
         } else {
           console.log(res.data);
           return rejectWithValue(res.data.error);
@@ -148,8 +148,7 @@ export const reviewsSlice = createSlice({
       state.data = action.payload;
     });
     builder.addCase(reviewsPost.fulfilled, (state, action) => {
-      state.data = [...state.data, { ...action.payload, id: "new_review" }];
-      state.dataOne = { ...action.payload, id: "new_review" };
+      state.dataOne =action.payload;
     });
     builder.addCase(reviewsApproval.fulfilled, (state, action) => {
       state.data = state.data.filter((review) => review.id !== action.payload);
