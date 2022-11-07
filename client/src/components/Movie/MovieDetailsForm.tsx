@@ -14,6 +14,7 @@ import FormButton from "../FormButton";
 import FormImageList from "../FormImageList";
 import FormRating from "../FormRating";
 import FormText from "../FormText";
+import FormYoutube from "../FormYoutube";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
@@ -101,6 +102,8 @@ const MovieDetailsForm = ({
           </Typography>
         </Box>
         <Box sx={{ display: "inline", width: 1, padding: 3 }}>
+          {movie.movieLink && movie.movieLink.trailer && <Box sx={{ width: 600 }}><FormYoutube url={movie.movieLink.trailer}/></Box>}
+
           <Box sx={{ width: 600 }}>
             <FormImageList
               header="ACTORS"
