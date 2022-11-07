@@ -1,7 +1,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import Approval from "./Approval";
 
@@ -46,7 +46,7 @@ const Reviews = () => {
   };
 
   return (
-    <div>
+    <React.Fragment>
       <Box sx={{ width: "100%", display: "static", marginTop: "100px" }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs
@@ -61,7 +61,7 @@ const Reviews = () => {
           <Approval />
         </TabPanel>
       </Box>
-    </div>
+    </React.Fragment>
   );
 };
 

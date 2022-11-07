@@ -225,11 +225,9 @@ export class UsersController {
     return this.usersRepository
       .findById(currentUserProfile[securityId])
       .then(res => {
-        console.log(res);
         return {status: 200, message: 'Valid user.', user: res};
       })
       .catch(err => {
-        console.log(err);
         return {status: 500, error: err.message};
       });
   }
