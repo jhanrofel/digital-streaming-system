@@ -38,7 +38,7 @@ const UserEdit = () => {
   const dispatch = useAppDispatch();
   const { state } = useLocation();
   const userId = state;
-  const user = useAppSelector((state) => state.users.dataOne);
+  const user = useAppSelector((stateUser) => stateUser.users.dataOne);
 
   const [formValues, setFormValues] = React.useState<FormValues>({
     role: user.role || "USER",
@@ -64,8 +64,8 @@ const UserEdit = () => {
   }, [dispatch, userId]);
 
   React.useEffect(() => {
-    setFormValues((state) => ({
-      ...state,
+    setFormValues((stateFormValues) => ({
+      ...stateFormValues,
       role: user.role || "",
       email: user.email || "",
       firstName: user.firstName || "",
@@ -79,16 +79,16 @@ const UserEdit = () => {
 
     switch (name) {
       case "email":
-        setFormValues((state) => ({ ...state, email: value }));
-        setFormErrors((state) => ({ ...state, email: "" }));
+        setFormValues((stateEmailForm) => ({ ...stateEmailForm, email: value }));
+        setFormErrors((stateEmailError) => ({ ...stateEmailError, email: "" }));
         break;
       case "firstName":
-        setFormValues((state) => ({ ...state, firstName: value }));
-        setFormErrors((state) => ({ ...state, firstName: "" }));
+        setFormValues((stateFirstNameForm) => ({ ...stateFirstNameForm, firstName: value }));
+        setFormErrors((stateFirstNameError) => ({ ...stateFirstNameError, firstName: "" }));
         break;
       case "lastName":
-        setFormValues((state) => ({ ...state, lastName: value }));
-        setFormErrors((state) => ({ ...state, lastName: "" }));
+        setFormValues((stateLastNameForm) => ({ ...stateLastNameForm, lastName: value }));
+        setFormErrors((stateLastNameError) => ({ ...stateLastNameError, lastName: "" }));
         break;
       default:
         break;
@@ -96,11 +96,11 @@ const UserEdit = () => {
   };
 
   const onChangeSelect = (event: SelectChangeEvent): void => {
-    setFormValues((state) => ({
-      ...state,
+    setFormValues((stateRoleForm) => ({
+      ...stateRoleForm,
       role: event.target.value,
     }));
-    setFormErrors((state) => ({ ...state, role: "" }));
+    setFormErrors((stateRoleError) => ({ ...stateRoleError, role: "" }));
   };
 
   const onClickSubmitHandler = async (): Promise<void> => {
@@ -115,8 +115,8 @@ const UserEdit = () => {
 
       await dispatch(usersUpdate(postUserValue)).then((res) => {
         if (res.type === "users/update/fulfilled") {
-          setFormValues((state) => ({
-            ...state,
+          setFormValues((stateAlertFormFulfilled) => ({
+            ...stateAlertFormFulfilled,
             alert: {
               open: true,
               message: `Users updated.`,
@@ -124,8 +124,8 @@ const UserEdit = () => {
             },
           }));
         } else {
-          setFormValues((state) => ({
-            ...state,
+          setFormValues((stateAlertFormReject) => ({
+            ...stateAlertFormReject,
             alert: { open: true, message: res.payload, severity: "error" },
           }));
         }
@@ -136,23 +136,23 @@ const UserEdit = () => {
   const formValidation = (): boolean => {
     let valid = false;
     if (formValues.role === "")
-      setFormErrors((state) => ({
-        ...state,
+      setFormErrors((stateRoleError) => ({
+        ...stateRoleError,
         role: "Role is required.",
       }));
     if (formValues.email === "")
-      setFormErrors((state) => ({
-        ...state,
+      setFormErrors((stateEmailError) => ({
+        ...stateEmailError,
         email: "Email is required.",
       }));
     if (formValues.firstName === "")
-      setFormErrors((state) => ({
-        ...state,
+      setFormErrors((stateFirstNameError) => ({
+        ...stateFirstNameError,
         firstName: "First name is required.",
       }));
     if (formValues.lastName === "")
-      setFormErrors((state) => ({
-        ...state,
+      setFormErrors((stateLastNameError) => ({
+        ...stateLastNameError,
         lastName: "Last name is required.",
       }));
 
@@ -171,8 +171,8 @@ const UserEdit = () => {
   const onClickCloseAlertHandler = (
     event: Event | React.SyntheticEvent<any, Event>
   ): void => {
-    setFormValues((state) => ({
-      ...state,
+    setFormValues((stateAlertClose) => ({
+      ...stateAlertClose,
       alert: { open: false, message: "", severity: "info" },
     }));
   };

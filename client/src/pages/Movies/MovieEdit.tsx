@@ -68,12 +68,12 @@ const MovieEdit = () => {
   const dispatch = useAppDispatch();
   const { state } = useLocation();
   const movieId = state;
-  const movie = useAppSelector((state) => state.movies.dataGetOne);
-  const actors = useAppSelector((state) => state.actors.data);
+  const movie = useAppSelector((stateMovie) => stateMovie.movies.dataGetOne);
+  const actors = useAppSelector((stateActors) => stateActors.actors.data);
   const [selectedActors, setSelectedActors] = React.useState<
     Array<OptionClass>
   >([]);
-  const categories = useAppSelector((state) => state.categories.data);
+  const categories = useAppSelector((stateCategories) => stateCategories.categories.data);
   const [selectedCategories, setSelectedCategories] = React.useState<
     Array<OptionClass>
   >([]);
@@ -117,8 +117,8 @@ const MovieEdit = () => {
   }, [dispatch, movieId]);
 
   React.useEffect(() => {
-    setFormValues((state) => ({
-      ...state,
+    setFormValues((stateForms) => ({
+      ...stateForms,
       title: movie.title || "",
       cost: movie.cost || 0,
       yearReleased: movie.yearReleased || 2022,
@@ -161,7 +161,7 @@ const MovieEdit = () => {
   }, [movie]);
 
   React.useEffect(() => {
-    setFormValues((state) => ({ ...state, actors: selectedActors }));
+    setFormValues((stateSelectedActors) => ({ ...stateSelectedActors, actors: selectedActors }));
   }, [selectedActors]);
 
   const onChangeCategories = (
@@ -172,7 +172,7 @@ const MovieEdit = () => {
   };
 
   React.useEffect(() => {
-    setFormValues((state) => ({ ...state, categories: selectedCategories }));
+    setFormValues((stateSelectedCategories) => ({ ...stateSelectedCategories, categories: selectedCategories }));
   }, [selectedCategories]);
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>): void => {
@@ -181,23 +181,23 @@ const MovieEdit = () => {
 
     switch (name) {
       case "title":
-        setFormValues((state) => ({ ...state, title: value }));
-        setFormErrors((state) => ({ ...state, title: "" }));
+        setFormValues((stateTitleForm) => ({ ...stateTitleForm, title: value }));
+        setFormErrors((stateTitleError) => ({ ...stateTitleError, title: "" }));
         break;
       case "cost":
-        setFormValues((state) => ({ ...state, cost: parseInt(value) }));
-        setFormErrors((state) => ({ ...state, cost: "" }));
+        setFormValues((stateCostForm) => ({ ...stateCostForm, cost: parseInt(value) }));
+        setFormErrors((stateCostError) => ({ ...stateCostError, cost: "" }));
         break;
       case "yearReleased":
-        setFormValues((state) => ({ ...state, yearReleased: parseInt(value) }));
-        setFormErrors((state) => ({ ...state, yearReleased: "" }));
+        setFormValues((stateYearReleasedForm) => ({ ...stateYearReleasedForm, yearReleased: parseInt(value) }));
+        setFormErrors((stateYearReleasedForm) => ({ ...stateYearReleasedForm, yearReleased: "" }));
         break;
       case "catalogue":
-        setFormValues((state) => ({ ...state, catalogue: value }));
-        setFormErrors((state) => ({ ...state, catalogue: "" }));
+        setFormValues((stateCatalogueForm) => ({ ...stateCatalogueForm, catalogue: value }));
+        setFormErrors((stateCatalogueError) => ({ ...stateCatalogueError, catalogue: "" }));
         break;
       case "trailer":
-        setFormValues((state) => ({ ...state, trailer: value }));
+        setFormValues((stateTrailerError) => ({ ...stateTrailerError, trailer: value }));
         break;
       default:
         break;
@@ -210,14 +210,14 @@ const MovieEdit = () => {
 
     switch (name) {
       case "comingSoon":
-        setFormValues((state) => ({
-          ...state,
+        setFormValues((stateComingSoongForm) => ({
+          ...stateComingSoongForm,
           comingSoon: value,
         }));
         break;
       case "featured":
-        setFormValues((state) => ({
-          ...state,
+        setFormValues((stateFeaturedForm) => ({
+          ...stateFeaturedForm,
           featured: value,
         }));
         break;
@@ -249,8 +249,8 @@ const MovieEdit = () => {
 
       await dispatch(moviesUpdate(postMovieValue)).then((res) => {
         if (res.type === "movies/patch/fulfilled") {
-          setFormValues((state) => ({
-            ...state,
+          setFormValues((stateFormAlertFulfilled) => ({
+            ...stateFormAlertFulfilled,
             alert: {
               open: true,
               message: "Movie updated.",
@@ -258,8 +258,8 @@ const MovieEdit = () => {
             },
           }));
         } else {
-          setFormValues((state) => ({
-            ...state,
+          setFormValues((stateFormAlertReject) => ({
+            ...stateFormAlertReject,
             alert: { open: true, message: res.payload, severity: "error" },
           }));
         }
@@ -272,34 +272,34 @@ const MovieEdit = () => {
     newValue: any
   ) => {
     setSelectedActors(newValue);
-    setFormErrors((state) => ({ ...state, actors: "" }));
+    setFormErrors((stateActorsError) => ({ ...stateActorsError, actors: "" }));
   };
 
   const formValidation = (): boolean => {
     let valid = false;
     if (formValues.title === "")
-      setFormErrors((state) => ({
-        ...state,
+      setFormErrors((stateTitleError) => ({
+        ...stateTitleError,
         title: "Title is required.",
       }));
     if (typeof formValues.cost !== "number" || formValues.cost <= 0)
-      setFormErrors((state) => ({
-        ...state,
+      setFormErrors((stateCostError) => ({
+        ...stateCostError,
         cost: "Cost is required.",
       }));
     if (formValues.yearReleased <= 0)
-      setFormErrors((state) => ({
-        ...state,
+      setFormErrors((stateYearReleasedError) => ({
+        ...stateYearReleasedError,
         gender: "Year released is required.",
       }));
     if (formValues.catalogue === "")
-      setFormErrors((state) => ({
-        ...state,
+      setFormErrors((stateCatalogueError) => ({
+        ...stateCatalogueError,
         catalogue: "Catalogue is required.",
       }));
     if (selectedActors.length === 0)
-      setFormErrors((state) => ({
-        ...state,
+      setFormErrors((stateActorsError) => ({
+        ...stateActorsError,
         actors: "Actors is required.",
       }));
     if (
@@ -317,8 +317,8 @@ const MovieEdit = () => {
   const onClickCloseAlertHandler = (
     event: Event | React.SyntheticEvent<any, Event>
   ): void => {
-    setFormValues((state) => ({
-      ...state,
+    setFormValues((stateAlertForm) => ({
+      ...stateAlertForm,
       alert: { open: false, message: "", severity: "info" },
     }));
   };

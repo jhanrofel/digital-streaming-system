@@ -8,8 +8,8 @@ const ActorMovies = () => {
   const dispatch = useAppDispatch();
   const { state } = useLocation();
   const actorId = state;
-  const actor = useAppSelector((state) => state.actors.dataOne);
-  const movies = useAppSelector((state) => state.actors.dataMovies);
+  const actor = useAppSelector((stateActor) => stateActor.actors.dataOne);
+  const movies = useAppSelector((stateMovies) => stateMovies.actors.dataMovies);
 
   useEffect(() => {
     dispatch(actorsOne(actorId));

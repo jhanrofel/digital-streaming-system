@@ -87,7 +87,7 @@ const MovieEditForm = ({
       <Box sx={{ display: "flex", maxWidth: 600 }}>
         <FormText
           name="cost"
-          value={formValues.cost.toString()}
+          value={formValues.cost?.toString()}
           label="Cost"
           type=""
           error={formErrors.cost}
@@ -95,7 +95,7 @@ const MovieEditForm = ({
         />
         <FormText
           name="yearReleased"
-          value={formValues.yearReleased.toString()}
+          value={formValues.yearReleased?.toString()}
           label="Year Released"
           type=""
           error={formErrors.yearReleased}
