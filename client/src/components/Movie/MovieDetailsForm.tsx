@@ -79,11 +79,10 @@ const MovieDetailsForm = ({
             height={"400"}
             loading="lazy"
           />
-          <Typography variant="h4" gutterBottom>
-            {movie.title}
-          </Typography>
-          <Typography variant="h6" gutterBottom>
-            {movie.yearReleased}
+          <Typography variant="h4">{movie.title}</Typography>
+          <Typography>{movie.yearReleased}</Typography>
+          <Typography>
+            Budget: ${movie.cost?.toLocaleString("en-US")}
           </Typography>
         </Box>
         <Box sx={{ display: "inline", width: 1, padding: 3 }}>
@@ -110,26 +109,30 @@ const MovieDetailsForm = ({
           <Grid container spacing={2}>
             {isLogged() ? (
               <Box sx={{ display: "inline", width: 1, paddingTop: 3 }}>
-                {myReview && myReview.approval === "pending" && (
-                  <Card sx={{ minWidth: 275, margin: 2 }}>
-                    <CardContent>
-                      <Typography sx={{ fontSize: 18 }}>
-                        {myReview.description}
-                      </Typography>
-                      <Typography sx={{ fontSize: 14 }}>
-                        {myReview.createdAt}
-                      </Typography>
-                      <FormRating
-                        name={"rating"}
-                        value={myReview.rating ? myReview.rating : null}
-                        error={""}
-                      />
-                      <Typography sx={{ fontSize: 14 }}>
-                        {"For Approval"}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                )}
+                {myReview &&
+                  (myReview.approval === "pending" ||
+                    myReview.approval === "disapproved") && (
+                    <Card sx={{ minWidth: 275, margin: 2 }}>
+                      <CardContent>
+                        <Typography sx={{ fontSize: 18 }}>
+                          {myReview.description}
+                        </Typography>
+                        <Typography sx={{ fontSize: 14 }}>
+                          {myReview.createdAt}
+                        </Typography>
+                        <FormRating
+                          name={"rating"}
+                          value={myReview.rating ? myReview.rating : null}
+                          error={""}
+                        />
+                        <Typography sx={{ fontSize: 14 }}>
+                          {myReview.approval === "pending"
+                            ? "For Approval"
+                            : "Disapproved"}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  )}
                 {!myReview && (
                   <>
                     <Box sx={{ width: 600 }}>

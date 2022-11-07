@@ -115,6 +115,44 @@ export class ReviewsController {
     });
   }
 
+  @get('/reviews/approved')
+  @response(200, {
+    description: 'Array of Reviews model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(Reviews, {includeRelations: true}),
+        },
+      },
+    },
+  })
+  async findApproved(): Promise<Reviews[]> {
+    return this.reviewsRepository.find({
+      where: {approval: 'approved'},
+      include: ['reviewUser', 'reviewMovie'],
+    });
+  }
+
+  @get('/reviews/disapproved')
+  @response(200, {
+    description: 'Array of Reviews model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(Reviews, {includeRelations: true}),
+        },
+      },
+    },
+  })
+  async findDisapproved(): Promise<Reviews[]> {
+    return this.reviewsRepository.find({
+      where: {approval: 'disapproved'},
+      include: ['reviewUser', 'reviewMovie'],
+    });
+  }
+
   @get('/reviews/{id}')
   @response(200, {
     description: 'Reviews model instance',

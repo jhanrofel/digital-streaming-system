@@ -4,6 +4,8 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import Approval from "./Approval";
+import Approved from "./Approved";
+import Disapproved from "./Disapproved";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -55,10 +57,18 @@ const Reviews = () => {
             aria-label="basic tabs example"
           >
             <Tab label="APPROVAL" {...a11yProps(0)} />
+            <Tab label="APPROVED" {...a11yProps(1)} />
+            <Tab label="DISAPPROVED" {...a11yProps(2)} />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
           <Approval />
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <Approved />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <Disapproved />
         </TabPanel>
       </Box>
     </React.Fragment>
