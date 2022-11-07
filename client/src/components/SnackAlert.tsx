@@ -22,7 +22,7 @@ interface AlertData {
   severity: "error" | "info" | "success" | "warning";
 }
 
-export default function SimpleSnackbar({
+export default function SnackAlert({
   alertData,
   onClickCloseAlert,
 }: AppProps) {

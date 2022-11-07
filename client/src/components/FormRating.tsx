@@ -13,11 +13,7 @@ type AppProps = {
   ) => void;
 };
 
-// onChange={(event, newValue) => {
-//   setRate(newValue);
-// }}
-
-export default function BasicRating({
+export default function FormRating({
   value,
   name,
   error,

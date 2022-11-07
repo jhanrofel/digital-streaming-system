@@ -4,7 +4,7 @@ type AppProps = {
   url: string;
 };
 
-const YoutubeEmbed = ({ url }: AppProps) => {
+const FormYoutube = ({ url }: AppProps) => {
   const embedId: string = url.substring(32);
   return (
     <React.Fragment>
@@ -21,4 +21,4 @@ const YoutubeEmbed = ({ url }: AppProps) => {
   );
 };
 
-export default YoutubeEmbed;
+export default FormYoutube;

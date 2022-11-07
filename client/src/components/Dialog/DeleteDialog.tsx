@@ -4,9 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import DialogContentText from "@mui/material/DialogTitle";
-import { categoriesPost } from "../../utilities/slice/categorySlice";
-import { useAppDispatch } from "../../utilities/hooks";
+import DialogContentText from "@mui/material/DialogContentText";
 
 type AppProps = {
   open: boolean;
@@ -18,7 +16,7 @@ const DeleteDialog = ({ open, setOpen,onConfirmDelete }: AppProps) => {
   const handleClose = () => setOpen(false);
 
   return (
-    <div>
+    <React.Fragment>
       <Dialog fullWidth={true} open={open} onClose={handleClose}>
         <DialogTitle>Confirm Box</DialogTitle>
         <DialogContent>
@@ -31,7 +29,7 @@ const DeleteDialog = ({ open, setOpen,onConfirmDelete }: AppProps) => {
           <Button onClick={onConfirmDelete}>AGREE</Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </React.Fragment>
   );
 };
 

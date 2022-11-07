@@ -8,7 +8,7 @@ import FormText from "../FormText";
 import { categoriesPost } from "../../utilities/slice/categorySlice";
 import { useAppDispatch } from "../../utilities/hooks";
 
-export default function AddCategoryModal() {
+export default function AddCategoryDialogue() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

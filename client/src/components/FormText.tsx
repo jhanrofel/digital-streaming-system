@@ -8,7 +8,7 @@ type AppProps = {
   label: string;
   type: string;
   error?: string;
-  variant?: "filled" | "standard" | "outlined" | undefined;
+  variant?: "filled" | "standard" | "outlined";
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
 };
 

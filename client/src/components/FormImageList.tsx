@@ -19,7 +19,7 @@ interface ImageData {
   url: string;
 }
 
-export default function TitlebarBelowImageList({
+export default function FormImageList({
   header,
   page,
   movieData,

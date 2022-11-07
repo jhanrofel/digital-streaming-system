@@ -86,6 +86,7 @@ const UserAdd = () => {
   };
 
   const onClickSubmitHandler = async (): Promise<void> => {
+    const defaultPassword:string = "12345";
     if (formValidation()) {
       const postUserValue: PostUserValue = {
         role: formValues.role,
@@ -93,7 +94,7 @@ const UserAdd = () => {
         firstName: formValues.firstName,
         lastName: formValues.lastName,
         approval: "approved",
-        password: "12345",
+        password: defaultPassword,
       };
 
       await dispatch(usersRegister(postUserValue)).then((res) => {

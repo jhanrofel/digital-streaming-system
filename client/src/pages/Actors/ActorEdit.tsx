@@ -47,7 +47,7 @@ const ActorEdit = () => {
   const dispatch = useAppDispatch();
   const { state } = useLocation();
   const actorId = state;
-  const actor = useAppSelector((state) => state.actors.dataOne);
+  const actor = useAppSelector((stateActor) => stateActor.actors.dataOne);
   const [birthday, setBirthday] = React.useState<Dayjs | null>(null);
   const [formValues, setFormValues] = React.useState<FormValues>({
     firstName: actor.firstName || "",
@@ -78,8 +78,8 @@ const ActorEdit = () => {
   }, [dispatch, actorId]);
 
   React.useEffect(() => {
-    setFormValues((state) => ({
-      ...state,
+    setFormValues((stateForm) => ({
+      ...stateForm,
       firstName: actor.firstName || "",
       lastName: actor.lastName || "",
       gender: actor.gender || "",
@@ -96,16 +96,16 @@ const ActorEdit = () => {
 
     switch (name) {
       case "firstName":
-        setFormValues((state) => ({ ...state, firstName: value }));
-        setFormErrors((state) => ({ ...state, firstName: "" }));
+        setFormValues((stateFirstNameForm) => ({ ...stateFirstNameForm, firstName: value }));
+        setFormErrors((stateFirstNameError) => ({ ...stateFirstNameError, firstName: "" }));
         break;
       case "lastName":
-        setFormValues((state) => ({ ...state, lastName: value }));
-        setFormErrors((state) => ({ ...state, lastName: "" }));
+        setFormValues((stateLastNameForm) => ({ ...stateLastNameForm, lastName: value }));
+        setFormErrors((stateLastNameError) => ({ ...stateLastNameError, lastName: "" }));
         break;
       case "catalogue":
-        setFormValues((state) => ({ ...state, catalogue: value }));
-        setFormErrors((state) => ({ ...state, catalogue: "" }));
+        setFormValues((stateCatalogueForm) => ({ ...stateCatalogueForm, catalogue: value }));
+        setFormErrors((stateCatalogueError) => ({ ...stateCatalogueError, catalogue: "" }));
         break;
       default:
         break;
@@ -113,11 +113,11 @@ const ActorEdit = () => {
   };
 
   const onChangeSelect = (event: SelectChangeEvent) => {
-    setFormValues((state) => ({
+    setFormValues((stateOnChange) => ({
       ...state,
       gender: event.target.value,
     }));
-    setFormErrors((state) => ({ ...state, gender: "" }));
+    setFormErrors((stateGenderError) => ({ ...stateGenderError, gender: "" }));
   };
 
   const onClickSubmitHandler = async (): Promise<void> => {
@@ -138,8 +138,8 @@ const ActorEdit = () => {
 
       await dispatch(actorsUpdate(postUserValue)).then((res) => {
         if (res.type === "actors/update/fulfilled") {
-          setFormValues((state) => ({
-            ...state,
+          setFormValues((stateAlertFulfill) => ({
+            ...stateAlertFulfill,
             alert: {
               open: true,
               message: `${actorGender} updated.`,
@@ -147,8 +147,8 @@ const ActorEdit = () => {
             },
           }));
         } else {
-          setFormValues((state) => ({
-            ...state,
+          setFormValues((stateAlertReject) => ({
+            ...stateAlertReject,
             alert: { open: true, message: res.payload, severity: "error" },
           }));
         }
@@ -159,28 +159,28 @@ const ActorEdit = () => {
   const formValidation = (): boolean => {
     let valid = false;
     if (formValues.firstName === "")
-      setFormErrors((state) => ({
-        ...state,
+      setFormErrors((stateFirstNameError) => ({
+        ...stateFirstNameError,
         firstName: "First name is required.",
       }));
     if (formValues.lastName === "")
-      setFormErrors((state) => ({
-        ...state,
+      setFormErrors((stateLastNameError) => ({
+        ...stateLastNameError,
         lastName: "Last name is required.",
       }));
     if (formValues.gender === "")
-      setFormErrors((state) => ({
-        ...state,
+      setFormErrors((stateGenderError) => ({
+        ...stateGenderError,
         gender: "Gender is required.",
       }));
     if (birthday === null)
-      setFormErrors((state) => ({
-        ...state,
+      setFormErrors((stateBirthdayError) => ({
+        ...stateBirthdayError,
         birthday: "Birthday is required.",
       }));
     if (formValues.catalogue === "")
-      setFormErrors((state) => ({
-        ...state,
+      setFormErrors((stateCatalogueError) => ({
+        ...stateCatalogueError,
         catalogue: "Catalogue is required.",
       }));
 
@@ -200,8 +200,8 @@ const ActorEdit = () => {
   const onClickCloseAlertHandler = (
     event: Event | React.SyntheticEvent<any, Event>
   ): void => {
-    setFormValues((state) => ({
-      ...state,
+    setFormValues((stateOnClose) => ({
+      ...stateOnClose,
       alert: { open: false, message: "", severity: "info" },
     }));
   };

@@ -32,7 +32,7 @@ export default function FormAutoComplete({
         value={value}
         options={options}
         getOptionLabel={(option) => option.label}
-        isOptionEqualToValue={(option, value) => option.id === value.id}
+        isOptionEqualToValue={(option, newValue) => option.id === newValue.id}
         renderInput={(params) => (
           <TextField {...params} variant="standard" label={label} />
         )}

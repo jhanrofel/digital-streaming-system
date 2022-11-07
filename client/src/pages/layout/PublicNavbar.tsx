@@ -66,7 +66,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-function AppAppBar() {
+function PublicNavbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [search, setSearch] = React.useState<string>("");
@@ -186,4 +186,4 @@ function AppAppBar() {
   );
 }
 
-export default AppAppBar;
+export default PublicNavbar;

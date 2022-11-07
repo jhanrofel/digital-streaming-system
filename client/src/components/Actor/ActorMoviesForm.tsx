@@ -25,7 +25,7 @@ interface LinkClass {
   catalogue: string;
 }
 
-const ActorMovies = ({ actor, movies }: AppProps) => {
+const ActorMoviesForm = ({ actor, movies }: AppProps) => {
   const navigate = useNavigate();
   return (
     <React.Fragment>
@@ -52,4 +52,4 @@ const ActorMovies = ({ actor, movies }: AppProps) => {
   );
 };
 
-export default ActorMovies;
+export default ActorMoviesForm;

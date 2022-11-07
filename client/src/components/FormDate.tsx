@@ -13,7 +13,7 @@ type AppProps = {
   setNewValue: any;
 };
 
-const FormSelect = ({ label, error, value, setNewValue }: AppProps) => {
+const FormDate = ({ label, error, value, setNewValue }: AppProps) => {
   return (
     <FormControl fullWidth sx={{ m: 1 }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -35,4 +35,4 @@ const FormSelect = ({ label, error, value, setNewValue }: AppProps) => {
   );
 };
 
-export default FormSelect;
+export default FormDate;

@@ -19,7 +19,7 @@ import { clearMovies } from "../../utilities/slice/movieSlice";
 import { clearReviews } from "../../utilities/slice/reviewSlice";
 
 const pages = ["Movies", "Actors", "Users", "Reviews"];
-const NavigationBar: React.FC = () => {
+const AdminNavBar: React.FC = () => {
   const loggedIn = loggedInData();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -110,4 +110,4 @@ const NavigationBar: React.FC = () => {
   );
 };
 
-export default NavigationBar;
+export default AdminNavBar;
