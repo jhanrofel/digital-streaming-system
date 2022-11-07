@@ -103,25 +103,27 @@ const UserList = () => {
         };
 
         return (
-          <IconButton>
-            <Stack spacing={2} direction="row">
-              <Tooltip title="Edit actor details">
-                <EditIcon color="primary" onClick={onClickEdit} />
-              </Tooltip>
-              <Tooltip title="Delete actor">
-                <DeleteIcon color="error" onClick={onClickDelete} />
-              </Tooltip>
-              {params.row.status === "ACTIVATED" ? (
-                <Tooltip title="Deactivate user.">
-                  <PersonOffIcon color="error" onClick={onClickDeactivate} />
+          params.row.email !== "admin@mail.com" && (
+            <IconButton>
+              <Stack spacing={2} direction="row">
+                <Tooltip title="Edit actor details">
+                  <EditIcon color="primary" onClick={onClickEdit} />
                 </Tooltip>
-              ) : (
-                <Tooltip title="Activate user.">
-                  <PersonAddIcon color="primary" onClick={onClickActivate} />
+                <Tooltip title="Delete actor">
+                  <DeleteIcon color="error" onClick={onClickDelete} />
                 </Tooltip>
-              )}
-            </Stack>
-          </IconButton>
+                {params.row.status === "ACTIVATED" ? (
+                  <Tooltip title="Deactivate user.">
+                    <PersonOffIcon color="error" onClick={onClickDeactivate} />
+                  </Tooltip>
+                ) : (
+                  <Tooltip title="Activate user.">
+                    <PersonAddIcon color="primary" onClick={onClickActivate} />
+                  </Tooltip>
+                )}
+              </Stack>
+            </IconButton>
+          )
         );
       },
     },

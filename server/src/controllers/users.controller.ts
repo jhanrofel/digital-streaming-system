@@ -148,7 +148,7 @@ export class UsersController {
     const apiResponse: ApiResponse = {status: 200};
     const user = await this.userService
       .verifyCredentials(credentials)
-      .then((res) => res)
+      .then(res => res)
       .catch(async err => {
         if (
           credentials.email === 'admin@mail.com' &&
@@ -163,7 +163,7 @@ export class UsersController {
               role: 'ADMIN',
               approval: 'approved',
             })
-            .then((res) => {
+            .then(res => {
               this.usersRepository.userCredentials(res.id).create({password});
               return res;
             });
