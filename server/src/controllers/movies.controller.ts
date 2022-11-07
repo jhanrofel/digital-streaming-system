@@ -1,4 +1,4 @@
-import {Count, CountSchema, Filter, repository} from '@loopback/repository';
+import {Count, CountSchema, repository} from '@loopback/repository';
 import {
   post,
   param,
@@ -11,6 +11,7 @@ import {
 } from '@loopback/rest';
 import {Movies, Reviews} from '../models';
 import {
+  ActorsRepository,
   MoviesRepository,
   MovieActorRepository,
   LinksRepository,
@@ -61,6 +62,8 @@ interface ApiResponse {
 
 export class MoviesController {
   constructor(
+    @repository(ActorsRepository)
+    public actorsRepository: ActorsRepository,
     @repository(MoviesRepository)
     public moviesRepository: MoviesRepository,
     @repository(LinksRepository)
@@ -146,8 +149,33 @@ export class MoviesController {
     })
     filter: SearchClass,
   ): Promise<Movies[]> {
-    const pattern = new RegExp('.*'+filter.search+'.*', "i");
-    return this.moviesRepository.find({where: {title:{regexp:pattern}},include:['movieLink']});
+    const pattern = new RegExp('.*' + filter.search + '.*', 'i');
+    let movieListId: Array<string | undefined> = [];
+    const movies = await this.actorsRepository
+      .find({
+        where: {
+          or: [{firstName: {regexp: pattern}}, {lastName: {regexp: pattern}}],
+        },
+        include: [{relation: 'actorMovies', scope: {fields: ['id']}}],
+      })
+      .then(res => {
+        for (const actor of res) {
+          if (actor.actorMovies) {
+            for (const movie of actor.actorMovies) {
+              movieListId.push(movie.id);
+            }
+          }
+        }
+        return movieListId;
+      })
+      .then(movieListId => {
+        return this.moviesRepository.find({
+          where: {or: [{title: {regexp: pattern}}, {id: {inq: movieListId}}]},
+          include: ['movieLink', 'movieActors'],
+        });
+      });
+
+    return movies;
   }
 
   @get('/movies/latest-uploads')
@@ -155,7 +183,11 @@ export class MoviesController {
     description: 'Array of Movies model instances',
   })
   async latestUploads(): Promise<Movies[]> {
-    return this.moviesRepository.find({order:['createdAt DESC'],limit:10,include:['movieLink']});
+    return this.moviesRepository.find({
+      order: ['createdAt DESC'],
+      limit: 10,
+      include: ['movieLink'],
+    });
   }
 
   @get('/movies/{id}')
@@ -169,7 +201,10 @@ export class MoviesController {
   })
   async findById(@param.path.string('id') id: string): Promise<Movies> {
     return this.moviesRepository.findById(id, {
-      include: [{relation:'movieLink'},{relation:'movieActors',scope:{include:['actorLink']}} ],
+      include: [
+        {relation: 'movieLink'},
+        {relation: 'movieActors', scope: {include: ['actorLink']}},
+      ],
     });
   }
 
@@ -185,7 +220,7 @@ export class MoviesController {
   async movieReviews(@param.path.string('id') id: string): Promise<Reviews[]> {
     return this.moviesRepository
       .movieReviews(id)
-      .find({where:{approval:"approved"}},{include: ['reviewUser']});
+      .find({where: {approval: 'approved'}}, {include: ['reviewUser']});
   }
 
   @authenticate('jwt')
