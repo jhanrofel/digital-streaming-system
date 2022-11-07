@@ -190,6 +190,32 @@ export class MoviesController {
     });
   }
 
+  @get('/movies/featured')
+  @response(200, {
+    description: 'Array of Movies model instances',
+  })
+  async movieFeatured(): Promise<Movies[]> {
+    return this.moviesRepository.find({
+      where: {featured:true},
+      order: ['createdAt DESC'],
+      limit: 10,
+      include: ['movieLink'],
+    });
+  }
+
+  @get('/movies/coming-soon')
+  @response(200, {
+    description: 'Array of Movies model instances',
+  })
+  async movieComingSoon(): Promise<Movies[]> {
+    return this.moviesRepository.find({
+      where: {comingSoon:true},
+      order: ['createdAt DESC'],
+      limit: 10,
+      include: ['movieLink'],
+    });
+  }
+
   @get('/movies/{id}')
   @response(200, {
     description: 'Movies model instance',

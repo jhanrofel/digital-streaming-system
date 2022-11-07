@@ -51,6 +51,30 @@ export const moviesLatestUploads = createAsyncThunk(
   }
 );
 
+export const moviesFeatured = createAsyncThunk(
+  "movies/featured",
+  async () => {
+    return axios({
+      url: `/movies/featured`,
+      method: "get",
+    })
+      .then((res) => res.data)
+      .catch((err) => err);
+  }
+);
+
+export const moviesComingSoon = createAsyncThunk(
+  "movies/coming-soon",
+  async () => {
+    return axios({
+      url: `/movies/coming-soon`,
+      method: "get",
+    })
+      .then((res) => res.data)
+      .catch((err) => err);
+  }
+);
+
 export const moviesReviewsApproved = createAsyncThunk(
   "movies/reviews-approved",
   async (movieId:string) => {
@@ -130,6 +154,8 @@ interface MoviesDataOne {
 interface MoviesData {
   data: MoviesDataOne[] | [];
   dataLatestUploads: MoviesDataOne[] | [];
+  dataFeatured: MoviesDataOne[] | [];
+  dataComingSoon: MoviesDataOne[] | [];
   dataReviews: ReviewsDataOne[] | [];
   dataOne: MoviesDataOne;
   dataGetOne: any;
@@ -147,6 +173,8 @@ interface MovieLink {
 const initialState = {
   data: [],
   dataLatestUploads: [],
+  dataFeatured: [],
+  dataComingSoon: [],
   dataOne: {},
   dataGetOne: [],
   dataReviews: [],
@@ -172,6 +200,12 @@ export const moviesSlice = createSlice({
     });
     builder.addCase(moviesLatestUploads.fulfilled, (state, action) => {
       state.dataLatestUploads = action.payload;
+    });
+    builder.addCase(moviesFeatured.fulfilled, (state, action) => {
+      state.dataFeatured = action.payload;
+    });
+    builder.addCase(moviesComingSoon.fulfilled, (state, action) => {
+      state.dataComingSoon = action.payload;
     });
     builder.addCase(moviesOne.fulfilled, (state, action) => {
       state.dataGetOne = action.payload;

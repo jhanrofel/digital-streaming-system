@@ -4,6 +4,7 @@ import ActorEdit from "./pages/Actors/ActorEdit";
 import ActorMovies from "./pages/Actors/ActorMovies";
 import Dashboard from "./pages/Dashboard";
 import Movies from "./pages/Movies";
+import MoviesAll from "./pages/Movies/MoviesAll";
 import MovieEdit from "./pages/Movies/MovieEdit";
 import MovieDetails from "./pages/Movies/MovieDetails";
 import Reviews from "./pages/Reviews";
@@ -28,6 +29,7 @@ function App() {
           <Route path="/login" element={<Login />}></Route>
           <Route path="/*" element={<PageNotFound />}></Route>
           <Route path="/movies-details" element={<MovieDetails />}></Route>
+          <Route path="/movies-all" element={<MoviesAll />}></Route>
         </Route>
         <Route path="/" element={<PrivateLayout />}>
           <Route path="/actors" element={<Actors />}></Route>

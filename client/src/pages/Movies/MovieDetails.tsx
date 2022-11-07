@@ -1,12 +1,13 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { isLogged } from "../../utilities/loggedIn";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { categoriesList } from "../../utilities/slice/categorySlice";
 import {
   moviesOne,
   moviesReviewsApproved,
 } from "../../utilities/slice/movieSlice";
-import { reviewsPost,myMovieReview } from "../../utilities/slice/reviewSlice";
+import { reviewsPost, myMovieReview } from "../../utilities/slice/reviewSlice";
 import MovieDetailsForm from "../../components/Movie/MovieDetailsForm";
 
 interface FormValues {
@@ -58,7 +59,9 @@ const MovieDetails = () => {
     dispatch(moviesOne(movieId));
     dispatch(categoriesList());
     dispatch(moviesReviewsApproved(movieId));
-    dispatch(myMovieReview(movieId));
+    if (isLogged()) {
+      dispatch(myMovieReview(movieId));
+    }
   }, [dispatch, movieId]);
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>): void => {

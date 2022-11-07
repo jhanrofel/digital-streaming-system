@@ -8,6 +8,7 @@ import ImageListItemBar from "@mui/material/ImageListItemBar";
 
 type AppProps = {
   header: string;
+  page: string;
   movieData: ImageData[];
 };
 
@@ -20,27 +21,30 @@ interface ImageData {
 
 export default function TitlebarBelowImageList({
   header,
+  page,
   movieData,
 }: AppProps) {
   const navigate = useNavigate();
+  const onClickHandler = () => {
+
+  }
   return (
-    <>
+    <React.Fragment>
       <Divider textAlign="left">
         <Chip label={header} color="primary" />
       </Divider>
       <ImageList
         sx={{
           gridAutoFlow: "column",
-          gridTemplateColumns: "repeat(auto-fill,minmax(150px,1fr)) !important",
-          gridAutoColumns: "minmax(160px, 1fr)",
+          gridTemplateColumns: "repeat(auto-fill,minmax(120px,1fr)) !important",
         }}
       >
         {movieData.map((movie) => (
           <ImageListItem key={movie.id}>
             <img
-              src={`${movie.url}?w=248&fit=crop&auto=format`}
+              src={`${movie.url}`}
               alt={movie.title}
-              onClick={() => navigate("../movies-details", { state: movie.id })}
+              onClick={() => navigate(`../${page}`, { state: movie.id })}
             />
             <ImageListItemBar
               title={movie.title}
@@ -50,6 +54,6 @@ export default function TitlebarBelowImageList({
           </ImageListItem>
         ))}
       </ImageList>
-    </>
+    </React.Fragment>
   );
 }

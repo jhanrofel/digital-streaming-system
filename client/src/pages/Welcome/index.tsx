@@ -4,14 +4,12 @@ import { moviesLatestUploads } from "../../utilities/slice/movieSlice";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import FormImageList from "../../components/FormImageList";
-import FormImageQuilted from "../../components/Welcome/FormImageQuilted";
 import FormSearch from "../../components/Welcome/FormSearch";
 
 const Welcome = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [search, setSearch] = React.useState<string>("");
-  const [error, setError] = React.useState<string>("");
 
   const moviesLatest = useAppSelector(
     (state) => state.movies.dataLatestUploads
@@ -34,7 +32,7 @@ const Welcome = () => {
 
   const onClickSubmitHandler = async (): Promise<void> => {
     if (search === "") {
-      setError("Input here to search.");
+      navigate("../movies-all");
     } else {
       navigate("../search", { state: { search: search } });
     }
@@ -46,7 +44,7 @@ const Welcome = () => {
         <Box sx={{ width: 1, display: "inline", padding: 5 }}>
           <Box sx={{ width: 600 }}>
             <FormSearch
-              error={error}
+              error={""}
               search={search}
               onChange={onChangeHandler}
               onClick={onClickSubmitHandler}
@@ -55,6 +53,7 @@ const Welcome = () => {
           <Box sx={{ width: 1, paddingTop: 5 }}>
             <FormImageList
               header="LATEST UPLOADS"
+              page="movies-details"
               movieData={movieDataLatestUploads}
             />
           </Box>

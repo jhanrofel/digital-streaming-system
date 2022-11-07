@@ -39,15 +39,21 @@ const Search = () => {
       <Box sx={{ width: "100%" }}>
         {movieData.length > 0 ? (
           <>
-            <FormImageList header="SEARCH RESULTS" movieData={movieData} />
+            <FormImageList
+              page="movies-details"
+              header="SEARCH RESULTS"
+              movieData={movieData}
+            />
             <FormImageList
               header="LATEST UPLOADS"
+              page="movies-details"
               movieData={movieDataLatestUploads}
             />
           </>
         ) : (
           <FormImageList
             header="0 SEARCH RESULTS, CHECK THESE MOVIES"
+            page="movies-details"
             movieData={movieDataLatestUploads}
           />
         )}

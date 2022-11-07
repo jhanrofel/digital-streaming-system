@@ -94,6 +94,7 @@ const MovieDetailsForm = ({
           <Box sx={{ width: 600 }}>
             <FormImageList
               header="ACTORS"
+              page="actors-details"
               movieData={actorData ? actorData : []}
             />
           </Box>

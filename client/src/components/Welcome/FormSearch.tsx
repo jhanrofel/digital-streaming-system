@@ -20,14 +20,14 @@ const FormSearch = ({
 }: AppProps) => {
   return (
     <>
-      <Box sx={{ width: 600, display: "inline", margin: 10 }}>
+      <Box sx={{ width: 600 }}>
         <Typography variant="h3" gutterBottom>
           FREE MOVIE STREAMING
         </Typography>
         <Typography variant="h4" gutterBottom>
           Watch anywhere. Latest movies.
         </Typography>
-        <FormControl sx={{ m: 1, width: "100%" }} variant="outlined">
+        <FormControl sx={{width: 1 }}>
           <FormText
             name={"search"}
             value={search}
