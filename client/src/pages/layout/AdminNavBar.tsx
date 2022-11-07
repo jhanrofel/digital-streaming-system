@@ -9,49 +9,29 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { clearCategories } from "../../utilities/slice/categorySlice";
 import { clearActor } from "../../utilities/slice/actorSlice";
 import { clearMovies } from "../../utilities/slice/movieSlice";
 import { clearReviews } from "../../utilities/slice/reviewSlice";
 
 const pages = ["Movies", "Actors", "Users", "Reviews"];
-const settings = [ "Admin Dashboard", "Logout"];
 const NavigationBar: React.FC = () => {
   const loggedIn = loggedInData();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-  const handleCloseUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    switch ((event.target as HTMLInputElement).innerText) {
-      case "Logout":
-        dispatch(clearActor());
-        dispatch(clearCategories());
-        dispatch(clearMovies());
-        dispatch(clearReviews());
-        dispatch(clearUser());
-        loggedInRemove();
-        cookiesRemove();
-        navigate("/");
-        break;
-      case "Admin Dashboard":
-        navigate("/movies");
-        break;
-      default:
-        navigate("/movies");
-        break;
-    }
-    setAnchorElUser(null);
+  const onClickLogoutHandler = (event: React.MouseEvent<HTMLElement>) => {
+    dispatch(clearActor());
+    dispatch(clearCategories());
+    dispatch(clearMovies());
+    dispatch(clearReviews());
+    dispatch(clearUser());
+    loggedInRemove();
+    cookiesRemove();
+    navigate("/");
   };
 
   const onClickMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -118,33 +98,11 @@ const NavigationBar: React.FC = () => {
             >
               Hi! {loggedIn.firstName}
             </Typography>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <AccountCircleIcon />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+              <Tooltip title="Logout">
+                <IconButton sx={{ p: 0 }} onClick={onClickLogoutHandler}>
+                  <LogoutIcon />
+                </IconButton>
+              </Tooltip>
           </Box>
         </Toolbar>
       </Container>

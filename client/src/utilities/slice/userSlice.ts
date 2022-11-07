@@ -157,7 +157,6 @@ interface ApproveFormValues {
   id: string | number;
   approval: string;
   role: string;
-  form: string;
 }
 
 export const usersApprove = createAsyncThunk(

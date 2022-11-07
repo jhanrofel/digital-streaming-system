@@ -9,6 +9,21 @@ interface FormValues {
   lastName: string;
   password: string;
   confirm: string;
+  alert: AlertData;
+}
+
+interface FormErrors {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  confirm: string;
+}
+
+interface AlertData {
+  open: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
 }
 
 const Register = () => {
@@ -19,8 +34,13 @@ const Register = () => {
     lastName: "",
     password: "",
     confirm: "",
+    alert: {
+      open: false,
+      message: "",
+      severity: "info",
+    },
   });
-  const [formErrors, setFormErrors] = useState<FormValues>({
+  const [formErrors, setFormErrors] = useState<FormErrors>({
     email: "",
     firstName: "",
     lastName: "",
@@ -82,6 +102,11 @@ const Register = () => {
             lastName: "",
             password: "",
             confirm: "",
+            alert: {
+              open: true,
+              message: "Registration awaits in approval.",
+              severity: "success",
+            },
           });
         } else {
           setFormErrors((state) => ({
@@ -149,12 +174,22 @@ const Register = () => {
     return valid;
   };
 
+  const onClickCloseAlertHandler = (
+    event: Event | React.SyntheticEvent<any, Event>
+  ): void => {
+    setFormValues((state) => ({
+      ...state,
+      alert: { open: false, message: "", severity: "info" },
+    }));
+  };
+
   return (
     <RegistrationForm
       formValues={formValues}
       formErrors={formErrors}
       onChange={onChangeHandler}
       onClick={onClickSubmitHandler}
+      onClickCloseAlert={onClickCloseAlertHandler}
     />
   );
 };

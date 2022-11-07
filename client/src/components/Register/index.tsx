@@ -3,12 +3,14 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import FormButton from "../FormButton";
 import FormText from "../FormText";
+import SnackAlert from "../SnackAlert";
 
 type AppProps = {
   formValues: FormValues;
-  formErrors: FormValues;
+  formErrors: FormErrors;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 };
 
 interface FormValues {
@@ -17,6 +19,21 @@ interface FormValues {
   lastName: string;
   password: string;
   confirm: string;
+  alert: AlertData;
+}
+
+interface FormErrors {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  confirm: string;
+}
+
+interface AlertData {
+  open: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
 }
 
 const RegistrationForm = ({
@@ -24,6 +41,7 @@ const RegistrationForm = ({
   formErrors,
   onClick,
   onChange,
+  onClickCloseAlert,
 }: AppProps) => {
   return (
     <React.Fragment>
@@ -75,6 +93,10 @@ const RegistrationForm = ({
           <FormButton label="Create Account" onClick={onClick} />
         </Box>
       </Container>
+      <SnackAlert
+        alertData={formValues.alert}
+        onClickCloseAlert={onClickCloseAlert}
+      />
     </React.Fragment>
   );
 };

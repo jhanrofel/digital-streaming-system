@@ -21,7 +21,6 @@ interface ApproveFormValues {
   id: string;
   approval: string;
   role: string;
-  form: string;
 }
 
 const ApprovalList = () => {
@@ -56,7 +55,6 @@ const ApprovalList = () => {
             id: params.row.id,
             approval: "approved",
             role: "ADMIN",
-            form: "approval",
           };
           await dispatch(usersApprove(formValues));
         };
@@ -66,7 +64,6 @@ const ApprovalList = () => {
             id: params.row.id,
             approval: "approved",
             role: "USER",
-            form: "approval",
           };
           await dispatch(usersApprove(formValues));
         };
@@ -76,7 +73,6 @@ const ApprovalList = () => {
             id: params.row.id,
             approval: "disapproved",
             role: "USER",
-            form: "approval",
           };
           await dispatch(usersApprove(formValues));
         };

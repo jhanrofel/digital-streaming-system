@@ -13,10 +13,10 @@ import InputBase from "@mui/material/InputBase";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
-import Typography from "@mui/material/Typography";
-import SearchIcon from "@mui/icons-material/Search";
 import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 import LogoutIcon from "@mui/icons-material/Logout";
+import SearchIcon from "@mui/icons-material/Search";
 
 const rightLink = {
   fontSize: 16,

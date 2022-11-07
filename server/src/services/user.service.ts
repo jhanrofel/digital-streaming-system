@@ -32,19 +32,25 @@ export class CustomUserService implements UserService<Users, Credentials> {
       where: {email: credentials.email},
     });
 
-    if (foundUser?.approval === 'pending') {
-      throw new HttpErrors.Unauthorized(
-        'Account registration is pending for approval.',
-      );
-    }
-
-    if (foundUser?.approval === 'disapproved' || foundUser?.approval !== 'approved') {
-      throw new HttpErrors.Unauthorized(
-        'Account registration is disapproved. Try to register new account.',
-      );
-    }
-
-    if (!foundUser) {
+    if (foundUser) {
+      if (foundUser?.approval === 'pending') {
+        throw new HttpErrors.Unauthorized(
+          'Account registration is pending for approval.',
+        );
+      }
+  
+      if (foundUser?.approval === 'disapproved' || foundUser?.approval !== 'approved') {
+        throw new HttpErrors.Unauthorized(
+          'Account registration is disapproved. Try to register new account.',
+        );
+      }
+  
+      if (foundUser?.status === 'DEACTIVATED') {
+        throw new HttpErrors.Unauthorized(
+          'Account is currently deactivated.',
+        );
+      }
+    } else {
       throw new HttpErrors.Unauthorized(invalidCredentialsError);
     }
 

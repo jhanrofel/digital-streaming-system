@@ -249,6 +249,21 @@ export class MoviesController {
       .find({include: ['reviewUser'], where: {approval: 'approved'}, order: ['createdAt DESC']});
   }
 
+  // @get('/movies/{id}/rating')
+  // @response(200, {
+  //   description: 'Movies model instance',
+  //   content: {
+  //     'application/json': {
+  //       schema: getModelSchemaRef(Movies, {includeRelations: true}),
+  //     },
+  //   },
+  // })
+  // async movieReviews(@param.path.string('id') id: string): Promise<number|undefined> {
+  //   return this.moviesRepository
+  //     .movieReviews(id)
+  //     .find();
+  // }
+
   @authenticate('jwt')
   @authorize({allowedRoles: ['ADMIN']})
   @patch('/movies/{id}')

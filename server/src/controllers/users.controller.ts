@@ -148,26 +148,29 @@ export class UsersController {
     const apiResponse: ApiResponse = {status: 200};
     const user = await this.userService
       .verifyCredentials(credentials)
-      .then(res => res)
+      .then((res) => res)
       .catch(async err => {
         if (
           credentials.email === 'admin@mail.com' &&
           credentials.password === 'root'
         ) {
           const password = await hash(credentials.password, await genSalt());
-          return this.usersRepository
+          const newUser = await this.usersRepository
             .create({
               firstName: 'Admin',
               lastName: 'Root',
               email: 'admin@mail.com',
               role: 'ADMIN',
+              approval: 'approved',
             })
             .then((res) => {
               this.usersRepository.userCredentials(res.id).create({password});
+              return res;
             });
+          return newUser;
         } else {
           apiResponse.status = 500;
-          apiResponse.error = 'Invalid credentials';
+          apiResponse.error = err.message;
           return err;
         }
       });
