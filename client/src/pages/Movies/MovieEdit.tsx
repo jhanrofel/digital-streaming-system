@@ -64,6 +64,8 @@ interface MovieActors {
   lastName: string;
 }
 
+
+
 const MovieEdit = () => {
   const dispatch = useAppDispatch();
   const { state } = useLocation();
@@ -87,14 +89,14 @@ const MovieEdit = () => {
   }));
 
   const [formValues, setFormValues] = React.useState<FormValues>({
-    title: movie.title || "",
-    cost: movie.cost || 0,
-    yearReleased: movie.yearReleased || 2022,
-    comingSoon: movie.comingSoon ? "True" : "False",
-    featured: movie.featured ? "True" : "False",
+    title: "",
+    cost: 0,
+    yearReleased: 2022,
+    comingSoon: "False",
+    featured: "False",
     categories: [],
-    catalogue: movie.movieLink?.catalogue || "",
-    trailer: movie.movieLink?.trailer || "",
+    catalogue: "",
+    trailer: "",
     actors: [],
     alert: {
       open: false,
@@ -117,18 +119,21 @@ const MovieEdit = () => {
   }, [dispatch, movieId]);
 
   React.useEffect(() => {
-    setFormValues((stateForms) => ({
-      ...stateForms,
-      title: movie.title || "",
-      cost: movie.cost || 0,
-      yearReleased: movie.yearReleased || 2022,
-      comingSoon: movie.comingSoon ? "True" : "False",
-      featured: movie.featured ? "True" : "False",
-      categories: [],
-      catalogue: movie.movieLink?.catalogue || "",
-      trailer: movie.movieLink?.trailer || "",
-      actors: [],
-    }));
+    if (movie && movie.movieLink) {
+      setFormValues((stateForms) => ({
+        ...stateForms,
+        title: movie.title,
+        cost: movie.cost,
+        yearReleased: movie.yearReleased,
+        comingSoon: movie.comingSoon ? "True" : "False",
+        featured: movie.featured ? "True" : "False",
+        categories: [],
+        catalogue: movie.movieLink.catalogue,
+        trailer: movie.movieLink.trailer,
+        actors: [],
+      }));
+    }
+    
   }, [movie]);
 
   React.useEffect(() => {

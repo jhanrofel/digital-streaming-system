@@ -113,7 +113,7 @@ const MovieDetails = () => {
     if (formValues.review === "")
       setFormErrors((stateReviewError) => ({ ...stateReviewError, review: "Review is required." }));
     if (formValues.rating === null)
-      setFormErrors((stateRatingError) => ({ ...state, stateRatingError: "Rating is required." }));
+      setFormErrors((stateRatingError) => ({ ...stateRatingError, rating: "Rating is required." }));
     if (formValues.review !== "" && formValues.rating !== null) {
       valid = true;
     }

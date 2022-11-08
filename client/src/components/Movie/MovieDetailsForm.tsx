@@ -102,7 +102,11 @@ const MovieDetailsForm = ({
           </Typography>
         </Box>
         <Box sx={{ display: "inline", width: 1, padding: 3 }}>
-          {movie.movieLink && movie.movieLink.trailer && <Box sx={{ width: 600 }}><FormYoutube url={movie.movieLink.trailer}/></Box>}
+          {movie.movieLink && movie.movieLink.trailer && (
+            <Box sx={{ width: 600 }}>
+              <FormYoutube url={movie.movieLink.trailer} />
+            </Box>
+          )}
 
           <Box sx={{ width: 600 }}>
             <FormImageList
@@ -124,68 +128,68 @@ const MovieDetailsForm = ({
               />
             ))}
           </Stack>
-          <Grid container spacing={2}>
-            {isLogged() ? (
-              <Box sx={{ display: "inline", width: 1, paddingTop: 3 }}>
-                {myReview &&
-                  (myReview.approval === "pending" ||
-                    myReview.approval === "disapproved") && (
-                    <Card sx={{ minWidth: 275, margin: 2 }}>
-                      <CardContent>
-                        <Typography sx={{ fontSize: 18 }}>
-                          {myReview.description}
-                        </Typography>
-                        <Typography sx={{ fontSize: 14 }}>
-                          {myReview.createdAt}
-                        </Typography>
-                        <FormRating
-                          name={"rating"}
-                          value={myReview.rating ? myReview.rating : null}
-                          error={""}
-                        />
-                        <Typography sx={{ fontSize: 14 }}>
-                          {myReview.approval === "pending"
-                            ? "For Approval"
-                            : "Disapproved"}
-                        </Typography>
-                      </CardContent>
-                    </Card>
+          {/* <Grid container spacing={2}> */}
+
+          {isLogged() === 1 && myReview && myReview.approval !== "approved" && (
+            <Box sx={{ display: "inline", width: 1, paddingTop: 3 }}>
+              <Card sx={{ minWidth: 275, margin: 2 }}>
+                <CardContent>
+                  <Typography sx={{ fontSize: 18 }}>
+                    {myReview.description}
+                  </Typography>
+                  <Typography sx={{ fontSize: 14 }}>
+                    {myReview.createdAt}
+                  </Typography>
+                  <FormRating
+                    name={"rating"}
+                    value={myReview.rating ? myReview.rating : null}
+                    error={""}
+                  />
+                  {myReview.approval === "pending" && (
+                    <Typography sx={{ fontSize: 14 }}>For Approval</Typography>
                   )}
-                {!myReview && (
-                  <>
-                    <Box sx={{ width: 600 }}>
-                      <FormText
-                        name="review"
-                        value={formValues.review}
-                        label={"What can you say about this movie?."}
-                        type={"search"}
-                        error={formErrors.review}
-                        onChange={onChange}
-                      />
-                    </Box>
-                    <Box sx={{ width: 200 }}>
-                      <FormRating
-                        name={"rating"}
-                        value={formValues.rating}
-                        error={formErrors.rating}
-                        onChange={onChangeRating}
-                      />
-                    </Box>
-                    <Box sx={{ width: 200 }}>
-                      <FormButton label="Send Review" onClick={onClick} />
-                    </Box>
-                  </>
-                )}
-              </Box>
-            ) : (
-              <Grid item xs={4}>
-                <FormButton
-                  label={"Login to Rate"}
-                  onClick={() => navigate("../login")}
+                  {myReview.approval === "disapproved" && (
+                    <Typography sx={{ fontSize: 14 }}>Disapproved</Typography>
+                  )}
+                </CardContent>
+              </Card>
+            </Box>
+          )}
+
+          {isLogged() === 1 && !myReview && (
+            <React.Fragment>
+              <Box sx={{ width: 600 }}>
+                <FormText
+                  name="review"
+                  value={formValues.review}
+                  label={"What can you say about this movie?."}
+                  type={"search"}
+                  error={formErrors.review}
+                  onChange={onChange}
                 />
-              </Grid>
-            )}
-          </Grid>
+              </Box>
+              <Box sx={{ width: 200 }}>
+                <FormRating
+                  name={"rating"}
+                  value={formValues.rating}
+                  error={formErrors.rating}
+                  onChange={onChangeRating}
+                />
+              </Box>
+              <Box sx={{ width: 200 }}>
+                <FormButton label="Send Review" onClick={onClick} />
+              </Box>
+            </React.Fragment>
+          )}
+
+          {isLogged() === 0 && (
+            <Grid item xs={4}>
+              <FormButton
+                label={"Login to Rate"}
+                onClick={() => navigate("../login")}
+              />
+            </Grid>
+          )}
         </Box>
         <Box sx={{ display: "inline", width: 1, padding: 3 }}>
           {reviews.length > 0 ? (

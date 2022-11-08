@@ -12,7 +12,7 @@ const Search = () => {
   const dispatch = useAppDispatch();
   const { state } = useLocation();
   const search = state.search;
-  const movies = useAppSelector((state) => state.movies.data);
+  const movies = useAppSelector((stateMovies) => stateMovies.movies.data);
   const movieData: any = movies.map((movie) => ({
     id: movie.id,
     title: movie.title,
@@ -20,13 +20,13 @@ const Search = () => {
     url: movie.movieLink.catalogue,
   }));
   const moviesLatest = useAppSelector(
-    (state) => state.movies.dataLatestUploads
+    (stateMovieLatest) => stateMovieLatest.movies.dataLatestUploads
   );
-  const movieDataLatestUploads: any = moviesLatest.map((movies) => ({
-    id: movies.id,
-    title: movies.title,
-    subtitle: movies.yearReleased,
-    url: movies.movieLink.catalogue,
+  const movieDataLatestUploads: any = moviesLatest.map((movieDataLatest) => ({
+    id: movieDataLatest.id,
+    title: movieDataLatest.title,
+    subtitle: movieDataLatest.yearReleased,
+    url: movieDataLatest.movieLink.catalogue,
   }));
 
   React.useEffect(() => {

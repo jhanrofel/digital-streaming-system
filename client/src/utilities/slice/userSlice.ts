@@ -145,10 +145,8 @@ export const usersDelete = createAsyncThunk(
       },
     })
       .then(() => userId)
-      .catch((error) => {
-        if (error.response.data.error.name === "UnauthorizedError")
-          unauthorize();
-        return error;
+      .catch((err) => {
+        return err;
       });
   }
 );
@@ -171,10 +169,8 @@ export const usersApprove = createAsyncThunk(
       },
     })
       .then(() => formValues)
-      .catch((error) => {
-        if (error.response.data.error.name === "UnauthorizedError")
-          unauthorize();
-        return error;
+      .catch((err) => {
+        return err;
       });
   }
 );

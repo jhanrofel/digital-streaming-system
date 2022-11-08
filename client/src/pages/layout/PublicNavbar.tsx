@@ -97,7 +97,7 @@ function PublicNavbar() {
   };
 
   return (
-    <div>
+    <React.Fragment>
       <AppBar position="fixed">
         <Toolbar sx={{ justifyContent: "space-between" }}>
           {location.pathname !== "/login" && location.pathname !== "/register" && (
@@ -130,36 +130,7 @@ function PublicNavbar() {
               {"DIGITAL STREAMING SYSTEM"}
             </Link>
           </Box>
-          {!isLogged() ? (
-            <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
-              {location.pathname === "/login" ? (
-                ""
-              ) : (
-                <Link
-                  color="inherit"
-                  variant="h6"
-                  underline="none"
-                  href="/login"
-                  sx={rightLink}
-                >
-                  {"Login"}
-                </Link>
-              )}
-
-              {location.pathname === "/register" ? (
-                ""
-              ) : (
-                <Link
-                  variant="h6"
-                  underline="none"
-                  href="/register"
-                  sx={rightLink}
-                >
-                  {"Register"}
-                </Link>
-              )}
-            </Box>
-          ) : (
+          {isLogged() === 1 && (
             <Box sx={{ display: "flex", flexGrow: 0 }}>
               <Typography
                 sx={{
@@ -179,10 +150,38 @@ function PublicNavbar() {
               </Tooltip>
             </Box>
           )}
+
+          {isLogged() === 0 && location.pathname === "/login" && (
+            <Link variant="h6" underline="none" href="/register" sx={rightLink}>
+              {"Register"}
+            </Link>
+          )}
+
+          {isLogged() === 0 && location.pathname === "/register" && (
+            <Link variant="h6" underline="none" href="/login" sx={rightLink}>
+              {"Login"}
+            </Link>
+          )}
+
+          {isLogged() === 0 && location.pathname === "/" && (
+            <React.Fragment>
+              <Link variant="h6" underline="none" href="/login" sx={rightLink}>
+                {"Login"}
+              </Link>
+              <Link
+                variant="h6"
+                underline="none"
+                href="/register"
+                sx={rightLink}
+              >
+                {"Register"}
+              </Link>
+            </React.Fragment>
+          )}
         </Toolbar>
       </AppBar>
       <Toolbar />
-    </div>
+    </React.Fragment>
   );
 }
 
