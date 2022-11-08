@@ -73,7 +73,7 @@ const AdminNavBar: React.FC = () => {
               textDecoration: "none",
             }}
           >
-            LOGO - DDS
+            DSS
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
