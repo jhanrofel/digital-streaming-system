@@ -84,12 +84,12 @@ const Login = () => {
     if (formValues.email === "")
       setFormErrors((state) => ({
         ...state,
-        email: "Required.",
+        email: "Email is required.",
       }));
     if (formValues.password === "")
       setFormErrors((state) => ({
         ...state,
-        password: "Required.",
+        password: "Password is requried.",
       }));
 
     if (formValues.email !== "" && formValues.password !== "") {

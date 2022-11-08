@@ -123,22 +123,22 @@ const Register = () => {
     if (formValues.email === "")
       setFormErrors((state) => ({
         ...state,
-        email: "Required.",
+        email: "Email is required.",
       }));
     if (formValues.firstName === "")
       setFormErrors((state) => ({
         ...state,
-        firstName: "Required.",
+        firstName: "First name is required.",
       }));
     if (formValues.lastName === "")
       setFormErrors((state) => ({
         ...state,
-        lastName: "Required.",
+        lastName: "Last name is required.",
       }));
     if (formValues.password === "")
       setFormErrors((state) => ({
         ...state,
-        password: "Required.",
+        password: "Password is required.",
       }));
     if (formValues.confirm === "")
       setFormErrors((state) => ({
