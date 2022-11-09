@@ -4,7 +4,7 @@ import FormTable from "../../components/FormTable";
 
 interface TableTabInfo {
   label: string;
-  formPages: any;
+  formPages: JSX.Element;
 }
 
 const tableTab: TableTabInfo[] = [
