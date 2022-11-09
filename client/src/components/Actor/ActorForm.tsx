@@ -13,6 +13,7 @@ import FormDate from "../../components/FormDate";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
+  formName: string;
   formValues: IActorFormValues;
   formErrors: IActorFormErrors;
   birthday: Dayjs | null;
@@ -25,7 +26,8 @@ type AppProps = {
 
 const genderData = ["Male", "Female"];
 
-const ActorEditForm = ({
+const ActorForm = ({
+  formName,
   formErrors,
   formValues,
   birthday,
@@ -36,10 +38,11 @@ const ActorEditForm = ({
   onClickCloseAlert,
 }: AppProps) => {
   const navigate = useNavigate();
+  const marginTopValue = formName === "EditForm" ? 10 : 0;
 
   return (
     <React.Fragment>
-      <Box sx={{ display: "flex", width: 600, marginTop: 10 }}>
+      <Box sx={{ display: "flex", width: 600, marginTop: marginTopValue }}>
         <FormText
           name="firstName"
           value={formValues.firstName}
@@ -96,10 +99,12 @@ const ActorEditForm = ({
         />
       </Box>
       <Box sx={{ display: "flex", width: 600 }}>
-        <FormButton
-          label="Back to List"
-          onClick={() => navigate("../actors")}
-        />
+        {formName === "EditForm" && (
+          <FormButton
+            label="Back to List"
+            onClick={() => navigate("../actors")}
+          />
+        )}
         <FormButton label="Save" onClick={onClick} />
         <SnackAlert
           alertData={formValues.alert}
@@ -110,4 +115,4 @@ const ActorEditForm = ({
   );
 };
 
-export default ActorEditForm;
+export default ActorForm;

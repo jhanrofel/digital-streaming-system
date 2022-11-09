@@ -5,6 +5,7 @@ import {
   IMovieFormErrors,
   IMovieFormValues,
 } from "../../utilities/types";
+import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import { SelectChangeEvent } from "@mui/material/Select";
@@ -17,12 +18,13 @@ import FormSelect from "../FormSelect";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
+  formName: string;
   formValues: IMovieFormValues;
   formErrors: IMovieFormErrors;
   actorsOption: IAutoCompleteOption[];
   categoriesOption: IAutoCompleteOption[];
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
   onChangeSelect: (event: SelectChangeEvent) => void;
   onChangeActors: any;
   onChangeCategories: any;
@@ -31,7 +33,8 @@ type AppProps = {
 
 const optionData = ["True", "False"];
 
-const MovieAddForm = ({
+const MovieForm = ({
+  formName,
   formErrors,
   formValues,
   actorsOption,
@@ -44,9 +47,10 @@ const MovieAddForm = ({
   onClickCloseAlert,
 }: AppProps) => {
   const navigate = useNavigate();
+  const marginTopValue = formName === "EditForm" ? 10 : 0;
   return (
     <React.Fragment>
-      <Box sx={{ display: "flex", maxWidth: 600 }}>
+      <Box sx={{ display: "flex", maxWidth: 600, marginTop: marginTopValue }}>
         <FormText
           name="title"
           value={formValues.title}
@@ -59,7 +63,7 @@ const MovieAddForm = ({
       <Box sx={{ display: "flex", maxWidth: 600 }}>
         <FormText
           name="cost"
-          value={formValues.cost.toString()}
+          value={formValues.cost?.toString()}
           label="Cost"
           type=""
           error={formErrors.cost}
@@ -67,7 +71,7 @@ const MovieAddForm = ({
         />
         <FormText
           name="yearReleased"
-          value={formValues.yearReleased.toString()}
+          value={formValues.yearReleased?.toString()}
           label="Year Released"
           type=""
           error={formErrors.yearReleased}
@@ -105,6 +109,12 @@ const MovieAddForm = ({
           error={formErrors.catalogue}
           onChange={onChange}
         />
+        <Avatar
+          variant="square"
+          alt="Image Catalogue"
+          src={formValues.catalogue}
+          sx={{ width: 65, height: 65 }}
+        />
       </Box>
       <Box sx={{ display: "flex", maxWidth: 800 }}>
         <FormText
@@ -138,7 +148,13 @@ const MovieAddForm = ({
           onChange={onChangeCategories}
         />
       </Box>
-      <Box sx={{ width: 200 }}>
+      <Box sx={{ display: "flex", width: 400 }}>
+        {formName === "EditForm" && (
+          <FormButton
+            label="Back to List"
+            onClick={() => navigate("../movies")}
+          />
+        )}
         <FormButton label="Save" onClick={onClick} />
       </Box>
       <SnackAlert
@@ -149,4 +165,4 @@ const MovieAddForm = ({
   );
 };
 
-export default MovieAddForm;
+export default MovieForm;

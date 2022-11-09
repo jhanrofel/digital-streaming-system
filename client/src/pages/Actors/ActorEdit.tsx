@@ -9,7 +9,7 @@ import {
 } from "../../utilities/types";
 import dayjs, { Dayjs } from "dayjs";
 import { SelectChangeEvent } from "@mui/material/Select";
-import ActorEditForm from "../../components/Actor/ActorEditForm";
+import ActorForm from "../../components/Actor/ActorForm";
 
 const ActorEdit = () => {
   const dispatch = useAppDispatch();
@@ -193,7 +193,8 @@ const ActorEdit = () => {
   };
 
   return (
-    <ActorEditForm
+    <ActorForm
+      formName={"EditForm"}
       formErrors={formErrors}
       formValues={formValues}
       birthday={birthday}

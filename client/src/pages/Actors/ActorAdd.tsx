@@ -8,7 +8,7 @@ import {
 } from "../../utilities/types";
 import { Dayjs } from "dayjs";
 import { SelectChangeEvent } from "@mui/material/Select";
-import ActorAddForm from "../../components/Actor/ActorAddForm";
+import ActorForm from "../../components/Actor/ActorForm";
 
 const ActorAdd = () => {
   const dispatch = useAppDispatch();
@@ -159,7 +159,8 @@ const ActorAdd = () => {
   };
 
   return (
-    <ActorAddForm
+    <ActorForm
+      formName={"AddForm"}
       formErrors={formErrors}
       formValues={formValues}
       birthday={birthday}

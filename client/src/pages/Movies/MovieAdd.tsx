@@ -3,9 +3,14 @@ import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { actorsList } from "../../utilities/slice/actorSlice";
 import { categoriesList } from "../../utilities/slice/categorySlice";
 import { moviesPost } from "../../utilities/slice/movieSlice";
-import { IAutoCompleteOption, IMovieFormErrors, IMovieFormValues,IMovieFormPost } from "../../utilities/types";
+import {
+  IAutoCompleteOption,
+  IMovieFormErrors,
+  IMovieFormValues,
+  IMovieFormPost,
+} from "../../utilities/types";
 import { SelectChangeEvent } from "@mui/material/Select";
-import MovieAddForm from "../../components/Movie/MovieAddForm";
+import MovieForm from "../../components/Movie/MovieForm";
 
 const MovieAdd = () => {
   const dispatch = useAppDispatch();
@@ -231,7 +236,8 @@ const MovieAdd = () => {
   };
 
   return (
-    <MovieAddForm
+    <MovieForm
+      formName={"AddForm"}
       formValues={formValues}
       formErrors={formErrors}
       actorsOption={actorsOption}

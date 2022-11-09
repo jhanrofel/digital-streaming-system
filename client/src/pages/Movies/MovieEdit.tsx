@@ -11,7 +11,7 @@ import {
   IMovieFormPatch,
 } from "../../utilities/types";
 import { SelectChangeEvent } from "@mui/material/Select";
-import MovieEditForm from "../../components/Movie/MovieEditForm";
+import MovieEditForm from "../../components/Movie/MovieForm";
 
 const MovieEdit = () => {
   const dispatch = useAppDispatch();
@@ -307,6 +307,7 @@ const MovieEdit = () => {
 
   return (
     <MovieEditForm
+      formName={"EditForm"}
       formErrors={formErrors}
       formValues={formValues}
       actorsOption={actorsOption}
