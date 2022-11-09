@@ -139,8 +139,6 @@ const UserList = () => {
     await dispatch(usersDelete(user.id ? user.id : "")).then((res) => {
       if (res.type === "users/delete/fulfilled") {
         setOpen(false);
-      } else {
-        alert(res.payload);
       }
     });
   };

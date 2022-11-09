@@ -15,6 +15,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
+import SnackAlert from "../../components/SnackAlert";
 
 interface RowValues {
   id?: string;
@@ -32,6 +33,12 @@ interface MovieLink {
   trailer?: string;
 }
 
+interface AlertData {
+  open: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
+}
+
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
@@ -41,6 +48,11 @@ const MovieList = () => {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState<boolean>(false);
   const movie = useAppSelector((state) => state.movies.dataOne);
+  const [alert, setAlert] = React.useState<AlertData>({
+    open: false,
+    message: "",
+    severity: "info",
+  });
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 90 },
     {
@@ -124,9 +136,15 @@ const MovieList = () => {
       if (res.type === "movies/delete/fulfilled") {
         setOpen(false);
       } else {
-        alert(res.payload);
+        setAlert({ open: true, message: res.payload, severity: "error" });
       }
     });
+  };
+
+  const onClickCloseAlertHandler = (
+    event: Event | React.SyntheticEvent<any, Event>
+  ): void => {
+    setAlert({ open: false, message: "", severity: "info" });
   };
 
   return (
@@ -152,6 +170,10 @@ const MovieList = () => {
         setOpen={setOpen}
         open={open}
         onConfirmDelete={onConfirmDelete}
+      />
+      <SnackAlert
+        alertData={alert}
+        onClickCloseAlert={onClickCloseAlertHandler}
       />
     </>
   );

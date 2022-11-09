@@ -163,7 +163,7 @@ function PublicNavbar() {
             </Link>
           )}
 
-          {isLogged() === 0 && location.pathname === "/" && (
+          {isLogged() === 0 && location.pathname !== "/register" && location.pathname !== "/login" &&(
             <React.Fragment>
               <Link variant="h6" underline="none" href="/login" sx={rightLink}>
                 {"Login"}

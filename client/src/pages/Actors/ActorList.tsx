@@ -128,8 +128,6 @@ const ActorList = () => {
     await dispatch(actorsDelete(actor.id ? actor.id : "")).then((res) => {
       if (res.type === "actors/delete/fulfilled") {
         setOpen(false);
-      } else {
-        alert(res.payload);
       }
     });
   };

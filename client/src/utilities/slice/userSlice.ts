@@ -227,16 +227,7 @@ export const userSlice = createSlice({
       state.data = action.payload;
     });
     builder.addCase(usersApprove.fulfilled, (state, action) => {
-      if (action.payload.form === "approval")
-        state.data = state.data.filter((user) => user.id !== action.payload.id);
-
-      if (action.payload.form === "list") {
-        state.data = state.data.map((user) =>
-          user.id === action.payload.id
-            ? { ...user, role: action.payload.role }
-            : user
-        );
-      }
+      state.data = state.data.filter((user) => user.id !== action.payload.id);
     });
     builder.addCase(usersApproved.fulfilled, (state, action) => {
       state.data = action.payload;

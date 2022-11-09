@@ -114,7 +114,7 @@ const ActorEdit = () => {
 
   const onChangeSelect = (event: SelectChangeEvent) => {
     setFormValues((stateOnChange) => ({
-      ...state,
+      ...stateOnChange,
       gender: event.target.value,
     }));
     setFormErrors((stateGenderError) => ({ ...stateGenderError, gender: "" }));

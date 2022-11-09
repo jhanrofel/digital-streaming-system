@@ -89,7 +89,7 @@ const MovieDetailsForm = ({
               error={""}
             />
             <Typography sx={{ fontSize: 16, paddingLeft: 1 }}>
-              {movieRating.length ? `${movieRating[0].average}/5` : "0/5"}
+              {movieRating.length ? `${parseFloat((movieRating[0].average).toFixed(2))}/5` : "0/5"}
             </Typography>
           </Box>
           <Typography sx={{ fontSize: 16, paddingLeft: 1 }}>
