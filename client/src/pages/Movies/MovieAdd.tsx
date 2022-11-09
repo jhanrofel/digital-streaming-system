@@ -1,4 +1,5 @@
 import React from "react";
+import { movieFormErrors, movieFormValues } from "../../utilities/formValues";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { actorsList } from "../../utilities/slice/actorSlice";
 import { categoriesList } from "../../utilities/slice/categorySlice";
@@ -32,29 +33,8 @@ const MovieAdd = () => {
       id: category.id ? category.id : "",
     })
   );
-  const [formValues, setFormValues] = React.useState<IMovieFormValues>({
-    title: "",
-    cost: 0,
-    yearReleased: 2022,
-    comingSoon: "False",
-    featured: "False",
-    categories: [],
-    catalogue: "",
-    trailer: "",
-    actors: [],
-    alert: {
-      open: false,
-      message: "",
-      severity: "info",
-    },
-  });
-  const [formErrors, setFormErrors] = React.useState<IMovieFormErrors>({
-    title: "",
-    cost: "",
-    yearReleased: "",
-    catalogue: "",
-    actors: "",
-  });
+  const [formErrors, setFormErrors] = React.useState<IMovieFormErrors>(movieFormErrors);
+  const [formValues, setFormValues] = React.useState<IMovieFormValues>(movieFormValues);
 
   React.useEffect(() => {
     dispatch(actorsList());

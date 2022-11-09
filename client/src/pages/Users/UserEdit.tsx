@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { userFormErrors } from "../../utilities/formValues";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { usersOne, usersUpdate } from "../../utilities/slice/userSlice";
 import {
@@ -28,12 +29,7 @@ const UserEdit = () => {
     },
   });
 
-  const [formErrors, setFormErrors] = React.useState<IUserFormErrors>({
-    role: "",
-    email: "",
-    firstName: "",
-    lastName: "",
-  });
+  const [formErrors, setFormErrors] = React.useState<IUserFormErrors>(userFormErrors);
 
   React.useEffect(() => {
     dispatch(usersOne(userId));

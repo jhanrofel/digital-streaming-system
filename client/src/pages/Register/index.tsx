@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import {
+  registerFormErrors,
+  registerFormValues,
+} from "../../utilities/formValues";
 import { useAppDispatch } from "../../utilities/hooks";
 import { usersRegister } from "../../utilities/slice/userSlice";
 import {
@@ -9,25 +13,10 @@ import RegistrationForm from "../../components/Register";
 
 const Register = () => {
   const dispatch = useAppDispatch();
-  const [formValues, setFormValues] = useState<IRegisterFormValues>({
-    email: "",
-    firstName: "",
-    lastName: "",
-    password: "",
-    confirm: "",
-    alert: {
-      open: false,
-      message: "",
-      severity: "info",
-    },
-  });
-  const [formErrors, setFormErrors] = useState<IRegisterFormErrors>({
-    email: "",
-    firstName: "",
-    lastName: "",
-    password: "",
-    confirm: "",
-  });
+  const [formValues, setFormValues] =
+    useState<IRegisterFormValues>(registerFormValues);
+  const [formErrors, setFormErrors] =
+    useState<IRegisterFormErrors>(registerFormErrors);
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>): void => {
     let name = (event.target as HTMLInputElement).name;

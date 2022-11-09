@@ -1,39 +1,20 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { cookiesCreate } from "../../utilities/cookies";
+import { loginFormErrors, loginFormValues } from "../../utilities/formValues";
 import { useAppDispatch } from "../../utilities/hooks";
 import { loggedInCreate } from "../../utilities/loggedIn";
 import { usersData, usersLogin } from "../../utilities/slice/userSlice";
-import { IAlert } from "../../utilities/types";
+import { ILoginFormErrors, ILoginFormValues } from "../../utilities/types";
 import LoginForm from "../../components/Login";
-
-interface FormValues {
-  email: string;
-  password: string;
-  alert: IAlert;
-}
-
-interface FormErrors {
-  email: string;
-  password: string;
-}
 
 const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [formValues, setFormValues] = React.useState<FormValues>({
-    email: "",
-    password: "",
-    alert: {
-      open: false,
-      message: "",
-      severity: "info",
-    },
-  });
-  const [formErrors, setFormErrors] = React.useState<FormErrors>({
-    email: "",
-    password: "",
-  });
+  const [formErrors, setFormErrors] =
+    React.useState<ILoginFormErrors>(loginFormErrors);
+  const [formValues, setFormValues] =
+    React.useState<ILoginFormValues>(loginFormValues);
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>): void => {
     let name = (event.target as HTMLInputElement).name;
@@ -55,7 +36,7 @@ const Login = () => {
 
   const onClickSubmitHandler = async (): Promise<void> => {
     if (formValidation()) {
-      const postUserValue: FormErrors = {
+      const postUserValue: ILoginFormErrors = {
         email: formValues.email,
         password: formValues.password,
       };

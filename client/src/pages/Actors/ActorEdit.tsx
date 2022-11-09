@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { actorFormErrors } from "../../utilities/formValues";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { actorsOne, actorsUpdate } from "../../utilities/slice/actorSlice";
 import {
@@ -29,13 +30,7 @@ const ActorEdit = () => {
       severity: "info",
     },
   });
-  const [formErrors, setFormErrors] = React.useState<IActorFormErrors>({
-    firstName: "",
-    lastName: "",
-    gender: "",
-    birthday: "",
-    catalogue: "",
-  });
+  const [formErrors, setFormErrors] = React.useState<IActorFormErrors>(actorFormErrors);
 
   React.useEffect(() => {
     formErrors.birthday = ""; // eslint-disable-next-line

@@ -1,7 +1,11 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import { isLogged } from "../../utilities/loggedIn";
+import {
+  movieDetailsFormErrors,
+  movieDetailsFormValues,
+} from "../../utilities/formValues";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
+import { isLogged } from "../../utilities/loggedIn";
 import { categoriesList } from "../../utilities/slice/categorySlice";
 import {
   moviesOne,
@@ -33,19 +37,12 @@ const MovieDetails = () => {
   const myReview = useAppSelector(
     (stateMyReview) => stateMyReview.reviews.dataOne
   );
-  const [formValues, setFormValues] = React.useState<IMovieDetailsFormValues>({
-    review: "",
-    rating: null,
-    alert: {
-      open: false,
-      message: "",
-      severity: "info",
-    },
-  });
-  const [formErrors, setFormErrors] = React.useState<IMovieDetailsFormErrors>({
-    review: "",
-    rating: "",
-  });
+  const [formValues, setFormValues] = React.useState<IMovieDetailsFormValues>(
+    movieDetailsFormValues
+  );
+  const [formErrors, setFormErrors] = React.useState<IMovieDetailsFormErrors>(
+    movieDetailsFormErrors
+  );
 
   React.useEffect(() => {
     dispatch(moviesOne(movieId));

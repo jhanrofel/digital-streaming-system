@@ -1,4 +1,5 @@
 import React from "react";
+import { actorFormErrors,actorFormValues } from "../../utilities/formValues";
 import { useAppDispatch } from "../../utilities/hooks";
 import { actorsPost } from "../../utilities/slice/actorSlice";
 import {
@@ -13,24 +14,8 @@ import ActorForm from "../../components/Actor/ActorForm";
 const ActorAdd = () => {
   const dispatch = useAppDispatch();
   const [birthday, setBirthday] = React.useState<Dayjs | null>(null);
-  const [formValues, setFormValues] = React.useState<IActorFormValues>({
-    firstName: "",
-    lastName: "",
-    gender: "",
-    catalogue: "",
-    alert: {
-      open: false,
-      message: "string",
-      severity: "info",
-    },
-  });
-  const [formErrors, setFormErrors] = React.useState<IActorFormErrors>({
-    firstName: "",
-    lastName: "",
-    gender: "",
-    birthday: "",
-    catalogue: "",
-  });
+  const [formErrors, setFormErrors] = React.useState<IActorFormErrors>(actorFormErrors);
+  const [formValues, setFormValues] = React.useState<IActorFormValues>(actorFormValues);
 
   React.useEffect(() => {
     formErrors.birthday = ""; // eslint-disable-next-line
