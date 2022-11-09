@@ -2,6 +2,7 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { actorsOne, actorsUpdate } from "../../utilities/slice/actorSlice";
+import { IAlert } from "../../utilities/types";
 import dayjs, { Dayjs } from "dayjs";
 import { SelectChangeEvent } from "@mui/material/Select";
 import ActorEditForm from "../../components/Actor/ActorEditForm";
@@ -12,7 +13,7 @@ interface FormValues {
   gender: string;
   link: string;
   catalogue: string;
-  alert: AlertData;
+  alert: IAlert;
 }
 
 interface FormErrors {
@@ -21,12 +22,6 @@ interface FormErrors {
   gender: string;
   birthday: string;
   catalogue: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
 }
 
 interface ActorPostValue {

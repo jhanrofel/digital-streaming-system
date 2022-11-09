@@ -1,13 +1,9 @@
+import { ITableTabInfo } from "../../utilities/types";
 import ActorAdd from "./ActorAdd";
 import ActorList from "./ActorList";
 import FormTable from "../../components/FormTable";
 
-interface TableTabInfo {
-  label: string;
-  formPages: JSX.Element;
-}
-
-const tableTab: TableTabInfo[] = [
+const tableTab: ITableTabInfo[] = [
   { label: "ACTORS", formPages: <ActorList /> },
   { label: "ADD", formPages: <ActorAdd /> },
 ];

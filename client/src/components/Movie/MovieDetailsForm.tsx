@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { isLogged } from "../../utilities/loggedIn";
+import { IAlert } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -37,18 +38,12 @@ type AppProps = {
 interface FormValues {
   review: string;
   rating: number | null;
-  alert: AlertData;
+  alert: IAlert;
 }
 
 interface FormErrors {
   review: string;
   rating: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
 }
 
 const MovieDetailsForm = ({

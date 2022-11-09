@@ -1,4 +1,5 @@
 import React from "react";
+import { IAlert } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import FormButton from "../FormButton";
@@ -16,18 +17,12 @@ type AppProps = {
 interface FormValues {
   email: string;
   password: string;
-  alert: AlertData;
+  alert: IAlert;
 }
 
 interface FormErrors {
   email: string;
   password: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
 }
 
 const LoginForm = ({

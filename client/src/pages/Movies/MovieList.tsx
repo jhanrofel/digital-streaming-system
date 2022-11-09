@@ -6,6 +6,7 @@ import {
   moviesDelete,
   selectMovies,
 } from "../../utilities/slice/movieSlice";
+import { IAlert } from "../../utilities/types";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -33,12 +34,6 @@ interface MovieLink {
   trailer?: string;
 }
 
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-}
-
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
@@ -48,7 +43,7 @@ const MovieList = () => {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState<boolean>(false);
   const movie = useAppSelector((state) => state.movies.dataOne);
-  const [alert, setAlert] = React.useState<AlertData>({
+  const [alert, setAlert] = React.useState<IAlert>({
     open: false,
     message: "",
     severity: "info",
@@ -137,6 +132,7 @@ const MovieList = () => {
         setOpen(false);
       } else {
         setAlert({ open: true, message: res.payload, severity: "error" });
+        setOpen(false);
       }
     });
   };

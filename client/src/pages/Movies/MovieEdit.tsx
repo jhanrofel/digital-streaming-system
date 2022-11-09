@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { actorsList } from "../../utilities/slice/actorSlice";
 import { categoriesList } from "../../utilities/slice/categorySlice";
 import { moviesUpdate, moviesOne } from "../../utilities/slice/movieSlice";
+import { IAlert, IAutoCompleteOption } from "../../utilities/types";
 import { SelectChangeEvent } from "@mui/material/Select";
 import MovieEditForm from "../../components/Movie/MovieEditForm";
 
@@ -13,11 +14,11 @@ interface FormValues {
   yearReleased: number;
   comingSoon: string;
   featured: string;
-  categories: OptionClass[];
+  categories: IAutoCompleteOption[];
   catalogue: string;
   trailer?: string;
-  actors: OptionClass[];
-  alert: AlertData;
+  actors: IAutoCompleteOption[];
+  alert: IAlert;
 }
 
 interface FormErrors {
@@ -26,17 +27,6 @@ interface FormErrors {
   yearReleased: string;
   catalogue: string;
   actors: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-}
-
-interface OptionClass {
-  label: string;
-  id: string;
 }
 
 interface PostMovieValue {
@@ -64,8 +54,6 @@ interface MovieActors {
   lastName: string;
 }
 
-
-
 const MovieEdit = () => {
   const dispatch = useAppDispatch();
   const { state } = useLocation();
@@ -73,20 +61,24 @@ const MovieEdit = () => {
   const movie = useAppSelector((stateMovie) => stateMovie.movies.dataGetOne);
   const actors = useAppSelector((stateActors) => stateActors.actors.data);
   const [selectedActors, setSelectedActors] = React.useState<
-    Array<OptionClass>
+    Array<IAutoCompleteOption>
   >([]);
-  const categories = useAppSelector((stateCategories) => stateCategories.categories.data);
+  const categories = useAppSelector(
+    (stateCategories) => stateCategories.categories.data
+  );
   const [selectedCategories, setSelectedCategories] = React.useState<
-    Array<OptionClass>
+    Array<IAutoCompleteOption>
   >([]);
-  const actorsOption: OptionClass[] = actors.map((actor) => ({
+  const actorsOption: IAutoCompleteOption[] = actors.map((actor) => ({
     label: `${actor.firstName} ${actor.lastName}`,
     id: actor.id ? actor.id : "",
   }));
-  const categoriesOption: OptionClass[] = categories.map((category) => ({
-    label: category.name,
-    id: category.id ? category.id : "",
-  }));
+  const categoriesOption: IAutoCompleteOption[] = categories.map(
+    (category) => ({
+      label: category.name,
+      id: category.id ? category.id : "",
+    })
+  );
 
   const [formValues, setFormValues] = React.useState<FormValues>({
     title: "",
@@ -133,7 +125,6 @@ const MovieEdit = () => {
         actors: [],
       }));
     }
-    
   }, [movie]);
 
   React.useEffect(() => {
@@ -153,7 +144,7 @@ const MovieEdit = () => {
       movie.categories.length > 0 &&
       categoriesOption.length > 0
     ) {
-      const movieCategories: OptionClass[] = movie.categories.map(
+      const movieCategories: IAutoCompleteOption[] = movie.categories.map(
         (categoryId: string) => {
           return categoriesOption.find(
             (category) => category.id === categoryId
@@ -166,7 +157,10 @@ const MovieEdit = () => {
   }, [movie]);
 
   React.useEffect(() => {
-    setFormValues((stateSelectedActors) => ({ ...stateSelectedActors, actors: selectedActors }));
+    setFormValues((stateSelectedActors) => ({
+      ...stateSelectedActors,
+      actors: selectedActors,
+    }));
   }, [selectedActors]);
 
   const onChangeCategories = (
@@ -177,7 +171,10 @@ const MovieEdit = () => {
   };
 
   React.useEffect(() => {
-    setFormValues((stateSelectedCategories) => ({ ...stateSelectedCategories, categories: selectedCategories }));
+    setFormValues((stateSelectedCategories) => ({
+      ...stateSelectedCategories,
+      categories: selectedCategories,
+    }));
   }, [selectedCategories]);
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>): void => {
@@ -186,23 +183,44 @@ const MovieEdit = () => {
 
     switch (name) {
       case "title":
-        setFormValues((stateTitleForm) => ({ ...stateTitleForm, title: value }));
+        setFormValues((stateTitleForm) => ({
+          ...stateTitleForm,
+          title: value,
+        }));
         setFormErrors((stateTitleError) => ({ ...stateTitleError, title: "" }));
         break;
       case "cost":
-        setFormValues((stateCostForm) => ({ ...stateCostForm, cost: parseInt(value) }));
+        setFormValues((stateCostForm) => ({
+          ...stateCostForm,
+          cost: parseInt(value),
+        }));
         setFormErrors((stateCostError) => ({ ...stateCostError, cost: "" }));
         break;
       case "yearReleased":
-        setFormValues((stateYearReleasedForm) => ({ ...stateYearReleasedForm, yearReleased: parseInt(value) }));
-        setFormErrors((stateYearReleasedForm) => ({ ...stateYearReleasedForm, yearReleased: "" }));
+        setFormValues((stateYearReleasedForm) => ({
+          ...stateYearReleasedForm,
+          yearReleased: parseInt(value),
+        }));
+        setFormErrors((stateYearReleasedForm) => ({
+          ...stateYearReleasedForm,
+          yearReleased: "",
+        }));
         break;
       case "catalogue":
-        setFormValues((stateCatalogueForm) => ({ ...stateCatalogueForm, catalogue: value }));
-        setFormErrors((stateCatalogueError) => ({ ...stateCatalogueError, catalogue: "" }));
+        setFormValues((stateCatalogueForm) => ({
+          ...stateCatalogueForm,
+          catalogue: value,
+        }));
+        setFormErrors((stateCatalogueError) => ({
+          ...stateCatalogueError,
+          catalogue: "",
+        }));
         break;
       case "trailer":
-        setFormValues((stateTrailerError) => ({ ...stateTrailerError, trailer: value }));
+        setFormValues((stateTrailerError) => ({
+          ...stateTrailerError,
+          trailer: value,
+        }));
         break;
       default:
         break;

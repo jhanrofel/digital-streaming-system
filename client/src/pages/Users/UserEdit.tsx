@@ -2,6 +2,7 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { usersOne, usersUpdate } from "../../utilities/slice/userSlice";
+import { IAlert } from "../../utilities/types";
 import { SelectChangeEvent } from "@mui/material/Select";
 import UserEditForm from "../../components/User/UserEditForm";
 
@@ -10,7 +11,7 @@ interface FormValues {
   email: string;
   firstName: string;
   lastName: string;
-  alert: AlertData;
+  alert: IAlert;
 }
 
 interface FormErrors {
@@ -18,12 +19,6 @@ interface FormErrors {
   email: string;
   firstName: string;
   lastName: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
 }
 
 interface PostUserValue {

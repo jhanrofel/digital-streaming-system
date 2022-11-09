@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { IAlert,IAutoCompleteOption } from "../../utilities/types";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -15,8 +16,8 @@ import SnackAlert from "../SnackAlert";
 type AppProps = {
   formValues: FormValues;
   formErrors: FormErrors;
-  actorsOption: OptionClass[];
-  categoriesOption: OptionClass[];
+  actorsOption: IAutoCompleteOption[];
+  categoriesOption: IAutoCompleteOption[];
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onChangeSelect: (event: SelectChangeEvent) => void;
@@ -31,11 +32,11 @@ interface FormValues {
   yearReleased: number;
   comingSoon: string;
   featured: string;
-  categories: OptionClass[];
+  categories: IAutoCompleteOption[];
   catalogue: string;
   trailer?: string;
-  actors: OptionClass[];
-  alert: AlertData;
+  actors: IAutoCompleteOption[];
+  alert: IAlert;
 }
 
 interface FormErrors {
@@ -46,18 +47,7 @@ interface FormErrors {
   actors: string;
 }
 
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-}
-
 const optionData = ["True", "False"];
-
-interface OptionClass {
-  label: string;
-  id: string;
-}
 
 const MovieEditForm = ({
   formErrors,

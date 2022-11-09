@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { IAlert } from "../../utilities/types";
 import { Dayjs } from "dayjs";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -27,7 +28,7 @@ interface FormValues {
   lastName: string;
   gender: string;
   catalogue: string;
-  alert: AlertData;
+  alert: IAlert;
 }
 
 interface FormErrors {
@@ -36,12 +37,6 @@ interface FormErrors {
   gender: string;
   birthday: string;
   catalogue: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
 }
 
 const genderData = ["Male", "Female"];

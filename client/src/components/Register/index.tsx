@@ -1,4 +1,5 @@
 import React from "react";
+import { IAlert } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import FormButton from "../FormButton";
@@ -19,7 +20,7 @@ interface FormValues {
   lastName: string;
   password: string;
   confirm: string;
-  alert: AlertData;
+  alert: IAlert;
 }
 
 interface FormErrors {
@@ -28,12 +29,6 @@ interface FormErrors {
   lastName: string;
   password: string;
   confirm: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
 }
 
 const RegistrationForm = ({

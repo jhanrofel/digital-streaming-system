@@ -4,23 +4,18 @@ import { cookiesCreate } from "../../utilities/cookies";
 import { useAppDispatch } from "../../utilities/hooks";
 import { loggedInCreate } from "../../utilities/loggedIn";
 import { usersData, usersLogin } from "../../utilities/slice/userSlice";
+import { IAlert } from "../../utilities/types";
 import LoginForm from "../../components/Login";
 
 interface FormValues {
   email: string;
   password: string;
-  alert: AlertData;
+  alert: IAlert;
 }
 
 interface FormErrors {
   email: string;
   password: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
 }
 
 const Login = () => {

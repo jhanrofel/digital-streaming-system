@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { actorsList } from "../../utilities/slice/actorSlice";
 import { categoriesList } from "../../utilities/slice/categorySlice";
 import { moviesPost } from "../../utilities/slice/movieSlice";
+import { IAlert, IAutoCompleteOption } from "../../utilities/types";
 import { SelectChangeEvent } from "@mui/material/Select";
 import MovieAddForm from "../../components/Movie/MovieAddForm";
 
@@ -12,11 +13,11 @@ interface FormValues {
   yearReleased: number;
   comingSoon: string;
   featured: string;
-  categories: OptionClass[];
+  categories: IAutoCompleteOption[];
   catalogue: string;
   trailer?: string;
-  actors: OptionClass[];
-  alert: AlertData;
+  actors: IAutoCompleteOption[];
+  alert: IAlert;
 }
 
 interface FormErrors {
@@ -25,17 +26,6 @@ interface FormErrors {
   yearReleased: string;
   catalogue: string;
   actors: string;
-}
-
-interface OptionClass {
-  label: string;
-  id: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
 }
 
 interface PostMovieValue {
@@ -60,20 +50,22 @@ const MovieAdd = () => {
   const dispatch = useAppDispatch();
   const actors = useAppSelector((state) => state.actors.data);
   const [selectedActors, setSelectedActors] = React.useState<
-    Array<OptionClass>
+    Array<IAutoCompleteOption>
   >([]);
   const categories = useAppSelector((state) => state.categories.data);
   const [selectedCategories, setSelectedCategories] = React.useState<
-    Array<OptionClass>
+    Array<IAutoCompleteOption>
   >([]);
-  const actorsOption: OptionClass[] = actors.map((actor) => ({
+  const actorsOption: IAutoCompleteOption[] = actors.map((actor) => ({
     label: `${actor.firstName} ${actor.lastName}`,
     id: actor.id ? actor.id : "",
   }));
-  const categoriesOption: OptionClass[] = categories.map((category) => ({
-    label: category.name,
-    id: category.id ? category.id : "",
-  }));
+  const categoriesOption: IAutoCompleteOption[] = categories.map(
+    (category) => ({
+      label: category.name,
+      id: category.id ? category.id : "",
+    })
+  );
   const [formValues, setFormValues] = React.useState<FormValues>({
     title: "",
     cost: 0,
@@ -101,11 +93,11 @@ const MovieAdd = () => {
   React.useEffect(() => {
     dispatch(actorsList());
     dispatch(categoriesList());
-  }, [dispatch]);  
+  }, [dispatch]);
 
   React.useEffect(() => {
     setFormValues((state) => ({ ...state, actors: selectedActors }));
-  }, [selectedActors]);  
+  }, [selectedActors]);
 
   React.useEffect(() => {
     setFormValues((state) => ({ ...state, categories: selectedCategories }));
@@ -200,7 +192,7 @@ const MovieAdd = () => {
               open: true,
               message: "Movie added.",
               severity: "success",
-            }
+            },
           }));
           setSelectedActors([]);
           setSelectedCategories([]);

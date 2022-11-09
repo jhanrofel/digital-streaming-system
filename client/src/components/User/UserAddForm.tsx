@@ -1,4 +1,5 @@
 import React from "react";
+import { IAlert } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import { SelectChangeEvent } from "@mui/material/Select";
 import FormButton from "../FormButton";
@@ -20,7 +21,7 @@ interface FormValues {
   email: string;
   firstName: string;
   lastName: string;
-  alert: AlertData;
+  alert: IAlert;
 }
 
 interface FormErrors {
@@ -30,11 +31,6 @@ interface FormErrors {
   lastName: string;
 }
 
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-}
 const roleData = ["USER", "ADMIN"];
 
 const UserAddForm = ({

@@ -29,9 +29,6 @@ interface RowValues {
 
 interface ActorLink {
   catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
 }
 
 const ActorList = () => {

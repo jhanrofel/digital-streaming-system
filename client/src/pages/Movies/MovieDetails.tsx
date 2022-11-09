@@ -9,23 +9,18 @@ import {
   moviesRating,
 } from "../../utilities/slice/movieSlice";
 import { reviewsPost, myMovieReview } from "../../utilities/slice/reviewSlice";
+import { IAlert } from "../../utilities/types";
 import MovieDetailsForm from "../../components/Movie/MovieDetailsForm";
 
 interface FormValues {
   review: string;
   rating: number | null;
-  alert: AlertData;
+  alert: IAlert;
 }
 
 interface FormErrors {
   review: string;
   rating: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
 }
 
 interface PostReviewPost {
@@ -39,10 +34,18 @@ const MovieDetails = () => {
   const { state } = useLocation();
   const movieId = state;
   const movie = useAppSelector((stateMovie) => stateMovie.movies.dataGetOne);
-  const movieRating = useAppSelector((stateMovieRating) => stateMovieRating.movies.dataRating);
-  const categories = useAppSelector((stateCategories) => stateCategories.categories.data);
-  const reviews = useAppSelector((stateReviews) => stateReviews.movies.dataReviews);
-  const myReview = useAppSelector((stateMyReview) => stateMyReview.reviews.dataOne);
+  const movieRating = useAppSelector(
+    (stateMovieRating) => stateMovieRating.movies.dataRating
+  );
+  const categories = useAppSelector(
+    (stateCategories) => stateCategories.categories.data
+  );
+  const reviews = useAppSelector(
+    (stateReviews) => stateReviews.movies.dataReviews
+  );
+  const myReview = useAppSelector(
+    (stateMyReview) => stateMyReview.reviews.dataOne
+  );
   const [formValues, setFormValues] = React.useState<FormValues>({
     review: "",
     rating: null,
@@ -71,8 +74,14 @@ const MovieDetails = () => {
     let name = (event.target as HTMLInputElement).name;
     let value = (event.target as HTMLInputElement).value;
     if (name === "review") {
-      setFormValues((stateReviewForm) => ({ ...stateReviewForm, review: value }));
-      setFormErrors((stateReviewError) => ({ ...stateReviewError, review: "" }));
+      setFormValues((stateReviewForm) => ({
+        ...stateReviewForm,
+        review: value,
+      }));
+      setFormErrors((stateReviewError) => ({
+        ...stateReviewError,
+        review: "",
+      }));
     }
   };
 
@@ -93,7 +102,11 @@ const MovieDetails = () => {
               severity: "success",
             },
           }));
-          setFormValues((stateRatingValue) => ({ ...stateRatingValue, review: "", rating: null }));
+          setFormValues((stateRatingValue) => ({
+            ...stateRatingValue,
+            review: "",
+            rating: null,
+          }));
         } else {
           setFormValues((stateAlertReject) => ({
             ...stateAlertReject,
@@ -111,9 +124,15 @@ const MovieDetails = () => {
   const formValidation = (): boolean => {
     let valid = false;
     if (formValues.review === "")
-      setFormErrors((stateReviewError) => ({ ...stateReviewError, review: "Review is required." }));
+      setFormErrors((stateReviewError) => ({
+        ...stateReviewError,
+        review: "Review is required.",
+      }));
     if (formValues.rating === null)
-      setFormErrors((stateRatingError) => ({ ...stateRatingError, rating: "Rating is required." }));
+      setFormErrors((stateRatingError) => ({
+        ...stateRatingError,
+        rating: "Rating is required.",
+      }));
     if (formValues.review !== "" && formValues.rating !== null) {
       valid = true;
     }
@@ -134,7 +153,10 @@ const MovieDetails = () => {
     event: Event | React.SyntheticEvent<Element, Event>,
     newValue: number | null
   ): void => {
-    setFormValues((stateRatingForm) => ({ ...stateRatingForm, rating: newValue }));
+    setFormValues((stateRatingForm) => ({
+      ...stateRatingForm,
+      rating: newValue,
+    }));
   };
 
   return (

@@ -1,4 +1,5 @@
 import React from "react";
+import { IAlert } from "../../utilities/types";
 import { Dayjs } from "dayjs";
 import Box from "@mui/material/Box";
 import { SelectChangeEvent } from "@mui/material/Select";
@@ -25,7 +26,7 @@ interface FormValues {
   lastName: string;
   gender: string;
   catalogue: string;
-  alert: AlertData;
+  alert: IAlert;
 }
 
 interface FormErrors {
@@ -34,12 +35,6 @@ interface FormErrors {
   gender: string;
   birthday: string;
   catalogue: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
 }
 
 const genderData = ["Male", "Female"];

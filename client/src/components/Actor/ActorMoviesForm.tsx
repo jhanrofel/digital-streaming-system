@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { ILink } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import FormButton from "../../components/FormButton";
@@ -18,11 +19,7 @@ interface FormValue {
 interface MoviesClass {
   title: string;
   link: string;
-  movieLink: LinkClass;
-}
-
-interface LinkClass {
-  catalogue: string;
+  movieLink: ILink;
 }
 
 const ActorMoviesForm = ({ actor, movies }: AppProps) => {

@@ -1,6 +1,7 @@
 import React from "react";
 import { useAppDispatch } from "../../utilities/hooks";
 import { actorsPost } from "../../utilities/slice/actorSlice";
+import { IAlert } from "../../utilities/types";
 import { Dayjs } from "dayjs";
 import { SelectChangeEvent } from "@mui/material/Select";
 import ActorAddForm from "../../components/Actor/ActorAddForm";
@@ -10,7 +11,7 @@ interface FormValues {
   lastName: string;
   gender: string;
   catalogue: string;
-  alert: AlertData;
+  alert: IAlert;
 }
 
 interface FormErrors {
@@ -19,12 +20,6 @@ interface FormErrors {
   gender: string;
   birthday: string;
   catalogue: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
 }
 
 interface PostActorValue {

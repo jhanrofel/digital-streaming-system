@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAppDispatch } from "../../utilities/hooks";
 import { usersRegister } from "../../utilities/slice/userSlice";
+import { IAlert } from "../../utilities/types";
 import RegistrationForm from "../../components/Register";
 
 interface FormValues {
@@ -9,7 +10,7 @@ interface FormValues {
   lastName: string;
   password: string;
   confirm: string;
-  alert: AlertData;
+  alert: IAlert;
 }
 
 interface FormErrors {
@@ -18,12 +19,6 @@ interface FormErrors {
   lastName: string;
   password: string;
   confirm: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
 }
 
 const Register = () => {
