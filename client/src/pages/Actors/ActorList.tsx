@@ -1,9 +1,8 @@
 import React from "react";
-import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { useNavigate } from "react-router-dom";
 import {
@@ -17,24 +16,22 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import TheatersIcon from "@mui/icons-material/Theaters";
 import Avatar from "@mui/material/Avatar";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
+import FormList from "../../components/FormList";
 
 const ActorList = () => {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState<boolean>(false);
   const actor = useAppSelector((state) => state.actors.dataOne);
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 90 },
     {
       field: "firstName",
       headerName: "First name",
       width: 200,
-      editable: true,
     },
     {
       field: "lastName",
       headerName: "Last Name",
       width: 200,
-      editable: true,
     },
     {
       field: "gender",
@@ -108,7 +105,7 @@ const ActorList = () => {
   ];
   const dispatch = useAppDispatch();
   const rows: IActorFormPost[] = useAppSelector((state) => state.actors.data);
-  const onConfirmDelete = async () => {
+  const onConfirmDelete = async (): Promise<void> => {
     await dispatch(actorsDelete(actor.id ? actor.id : "")).then((res) => {
       if (res.type === "actors/delete/fulfilled") {
         setOpen(false);
@@ -121,30 +118,18 @@ const ActorList = () => {
   }, [dispatch]);
 
   return (
-    <>
-      <Box sx={{ height: 600, width: "100%" }}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          pageSize={10}
-          rowsPerPageOptions={[10]}
-          disableSelectionOnClick
-          experimentalFeatures={{ newEditingApi: true }}
-          initialState={{
-            columns: {
-              columnVisibilityModel: {
-                id: false,
-              },
-            },
-          }}
-        />
-      </Box>
+    <React.Fragment>
+      <FormList
+        rows={rows}
+        columns={columns}
+      />
+
       <DeleteDialogue
         setOpen={setOpen}
         open={open}
         onConfirmDelete={onConfirmDelete}
       />
-    </>
+    </React.Fragment>
   );
 };
 

@@ -6,16 +6,16 @@ import {
   moviesDelete,
   selectMovies,
 } from "../../utilities/slice/movieSlice";
-import { IAlert,IMovieFormPost } from "../../utilities/types";
+import { IAlert, IMovieFormPost } from "../../utilities/types";
 import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
+import FormList from "../../components/FormList";
 import SnackAlert from "../../components/SnackAlert";
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
@@ -128,24 +128,8 @@ const MovieList = () => {
   };
 
   return (
-    <>
-      <Box sx={{ height: 600, width: "100%" }}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          pageSize={10}
-          rowsPerPageOptions={[10]}
-          disableSelectionOnClick
-          experimentalFeatures={{ newEditingApi: true }}
-          initialState={{
-            columns: {
-              columnVisibilityModel: {
-                id: false,
-              },
-            },
-          }}
-        />
-      </Box>
+    <React.Fragment>
+      <FormList rows={rows} columns={columns} />
       <DeleteDialogue
         setOpen={setOpen}
         open={open}
@@ -155,7 +139,7 @@ const MovieList = () => {
         alertData={alert}
         onClickCloseAlert={onClickCloseAlertHandler}
       />
-    </>
+    </React.Fragment>
   );
 };
 
