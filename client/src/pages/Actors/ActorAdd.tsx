@@ -1,48 +1,19 @@
 import React from "react";
 import { useAppDispatch } from "../../utilities/hooks";
 import { actorsPost } from "../../utilities/slice/actorSlice";
-import { IAlert } from "../../utilities/types";
+import {
+  IActorFormErrors,
+  IActorFormValues,
+  IActorFormPost,
+} from "../../utilities/types";
 import { Dayjs } from "dayjs";
 import { SelectChangeEvent } from "@mui/material/Select";
 import ActorAddForm from "../../components/Actor/ActorAddForm";
 
-interface FormValues {
-  firstName: string;
-  lastName: string;
-  gender: string;
-  catalogue: string;
-  alert: IAlert;
-}
-
-interface FormErrors {
-  firstName: string;
-  lastName: string;
-  gender: string;
-  birthday: string;
-  catalogue: string;
-}
-
-interface PostActorValue {
-  id?: string;
-  firstName: string;
-  lastName: string;
-  gender: string;
-  birthday: string;
-  link?: string;
-  actorLink: ActorLink;
-}
-
-interface ActorLink {
-  catalogue: string;
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
-}
-
 const ActorAdd = () => {
   const dispatch = useAppDispatch();
   const [birthday, setBirthday] = React.useState<Dayjs | null>(null);
-  const [formValues, setFormValues] = React.useState<FormValues>({
+  const [formValues, setFormValues] = React.useState<IActorFormValues>({
     firstName: "",
     lastName: "",
     gender: "",
@@ -53,7 +24,7 @@ const ActorAdd = () => {
       severity: "info",
     },
   });
-  const [formErrors, setFormErrors] = React.useState<FormErrors>({
+  const [formErrors, setFormErrors] = React.useState<IActorFormErrors>({
     firstName: "",
     lastName: "",
     gender: "",
@@ -97,7 +68,7 @@ const ActorAdd = () => {
 
   const onClickSubmitHandler = async (): Promise<void> => {
     if (formValidation()) {
-      const postUserValue: PostActorValue = {
+      const postUserValue: IActorFormPost = {
         firstName: formValues.firstName,
         lastName: formValues.lastName,
         gender: formValues.gender,

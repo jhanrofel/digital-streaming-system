@@ -1,6 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { IAlert,IAutoCompleteOption } from "../../utilities/types";
+import {
+  IAutoCompleteOption,
+  IMovieFormErrors,
+  IMovieFormValues,
+} from "../../utilities/types";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import { SelectChangeEvent } from "@mui/material/Select";
@@ -13,8 +17,8 @@ import FormSelect from "../FormSelect";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
-  formValues: FormValues;
-  formErrors: FormErrors;
+  formValues: IMovieFormValues;
+  formErrors: IMovieFormErrors;
   actorsOption: IAutoCompleteOption[];
   categoriesOption: IAutoCompleteOption[];
   onChange: React.ChangeEventHandler<HTMLInputElement>;
@@ -24,27 +28,6 @@ type AppProps = {
   onChangeCategories: any;
   onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 };
-
-interface FormValues {
-  title: string;
-  cost: number;
-  yearReleased: number;
-  comingSoon: string;
-  featured: string;
-  categories: IAutoCompleteOption[];
-  catalogue: string;
-  trailer?: string;
-  actors: IAutoCompleteOption[];
-  alert: IAlert;
-}
-
-interface FormErrors {
-  title: string;
-  cost: string;
-  yearReleased: string;
-  catalogue: string;
-  actors: string;
-}
 
 const optionData = ["True", "False"];
 

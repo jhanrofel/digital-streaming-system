@@ -5,6 +5,7 @@ import {
   categoriesDelete,
   selectCategories,
 } from "../../utilities/slice/categorySlice";
+import { ICategory } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
@@ -15,10 +16,6 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import AddCategoryDialogue from "../../components/Dialog/AddCategoryDialogue";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
 
-interface RowValues {
-  id?: string;
-  name: string;
-}
 
 const Categories = () => {
   const columns: GridColDef[] = [
@@ -56,7 +53,7 @@ const Categories = () => {
     },
   ];
   const dispatch = useAppDispatch();
-  const rows: RowValues[] = useAppSelector((state) => state.categories.data);
+  const rows: ICategory[] = useAppSelector((state) => state.categories.data);
   const [open, setOpen] = React.useState<boolean>(false);
   const category = useAppSelector((state) => state.categories.dataOne);
 

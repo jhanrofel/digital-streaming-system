@@ -11,25 +11,12 @@ import {
   actorsDelete,
   selectActors,
 } from "../../utilities/slice/actorSlice";
+import { IActorFormPost } from "../../utilities/types";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TheatersIcon from "@mui/icons-material/Theaters";
 import Avatar from "@mui/material/Avatar";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
-
-interface RowValues {
-  id?: string;
-  firstName: string;
-  lastName: string;
-  gender: string;
-  birthday: string;
-  link?: string;
-  actorLink: ActorLink;
-}
-
-interface ActorLink {
-  catalogue: string;
-}
 
 const ActorList = () => {
   const navigate = useNavigate();
@@ -120,7 +107,7 @@ const ActorList = () => {
     },
   ];
   const dispatch = useAppDispatch();
-  const rows: RowValues[] = useAppSelector((state) => state.actors.data);
+  const rows: IActorFormPost[] = useAppSelector((state) => state.actors.data);
   const onConfirmDelete = async () => {
     await dispatch(actorsDelete(actor.id ? actor.id : "")).then((res) => {
       if (res.type === "actors/delete/fulfilled") {

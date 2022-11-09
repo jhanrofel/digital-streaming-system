@@ -6,7 +6,7 @@ import {
   moviesDelete,
   selectMovies,
 } from "../../utilities/slice/movieSlice";
-import { IAlert } from "../../utilities/types";
+import { IAlert,IMovieFormPost } from "../../utilities/types";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -17,22 +17,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
 import SnackAlert from "../../components/SnackAlert";
-
-interface RowValues {
-  id?: string;
-  title: string;
-  cost: number;
-  yearReleased: number;
-  categories: string[];
-  actors: string[];
-  link?: string;
-  movieLink: MovieLink;
-}
-
-interface MovieLink {
-  catalogue: string;
-  trailer?: string;
-}
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -120,7 +104,7 @@ const MovieList = () => {
     },
   ];
   const dispatch = useAppDispatch();
-  const rows: RowValues[] = useAppSelector((state) => state.movies.data);
+  const rows: IMovieFormPost[] = useAppSelector((state) => state.movies.data);
 
   React.useEffect(() => {
     dispatch(moviesList());

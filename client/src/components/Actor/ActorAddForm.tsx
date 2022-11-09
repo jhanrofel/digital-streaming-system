@@ -1,5 +1,5 @@
 import React from "react";
-import { IAlert } from "../../utilities/types";
+import { IActorFormErrors, IActorFormValues } from "../../utilities/types";
 import { Dayjs } from "dayjs";
 import Box from "@mui/material/Box";
 import { SelectChangeEvent } from "@mui/material/Select";
@@ -11,8 +11,8 @@ import FormDate from "../../components/FormDate";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
-  formValues: FormValues;
-  formErrors: FormErrors;
+  formValues: IActorFormValues;
+  formErrors: IActorFormErrors;
   birthday: Dayjs | null;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
@@ -20,22 +20,6 @@ type AppProps = {
   setBirthday: any;
   onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 };
-
-interface FormValues {
-  firstName: string;
-  lastName: string;
-  gender: string;
-  catalogue: string;
-  alert: IAlert;
-}
-
-interface FormErrors {
-  firstName: string;
-  lastName: string;
-  gender: string;
-  birthday: string;
-  catalogue: string;
-}
 
 const genderData = ["Male", "Female"];
 

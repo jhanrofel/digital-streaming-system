@@ -1,5 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authenticationToken } from "../authentication";
+import {
+  IReviewFormPost,
+  IReviewFormApprovePost,
+  IReviewInitialState,
+} from "../types";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3001";
 
@@ -11,12 +16,6 @@ export const reviewsList = createAsyncThunk("reviews/list", async () => {
     .then((res) => res.data)
     .catch((err) => err);
 });
-
-interface PostInput {
-  description: string;
-  rating: number | null;
-  movie: string;
-}
 
 export const reviewsApprovalList = createAsyncThunk(
   "reviews/approval-list",
@@ -67,20 +66,9 @@ export const myMovieReview = createAsyncThunk(
   }
 );
 
-interface PostInput {
-  description: string;
-  rating: number | null;
-  movie: string;
-}
-
-interface ApprovalInput {
-  id: string;
-  approval: string;
-}
-
 export const reviewsPost = createAsyncThunk(
   "reviews/post",
-  async (formValues: PostInput, { rejectWithValue }) => {
+  async (formValues: IReviewFormPost, { rejectWithValue }) => {
     return axios({
       url: `/reviews`,
       method: "post",
@@ -101,7 +89,7 @@ export const reviewsPost = createAsyncThunk(
 
 export const reviewsApproval = createAsyncThunk(
   "reviews",
-  async (formValues: ApprovalInput) => {
+  async (formValues: IReviewFormApprovePost) => {
     return axios({
       url: `/reviews/${formValues.id}/approval`,
       method: "patch",
@@ -126,32 +114,10 @@ export const reviewsDelete = createAsyncThunk(
   }
 );
 
-interface ReviewsDataOne {
-  id: string;
-  description: string;
-  rating: number;
-  createdAt: string;
-  reviewMovie: ReviewMovie;
-  reviewUser: ReviewUser;
-}
-
-interface ReviewMovie {
-  title: string;
-}
-
-interface ReviewUser {
-  email: string;
-}
-
-interface ReviewsData {
-  data: ReviewsDataOne[] | [];
-  dataOne: ReviewsDataOne;
-}
-
 const initialState = {
   data: [],
   dataOne: {},
-} as ReviewsData;
+} as IReviewInitialState;
 
 export const reviewsSlice = createSlice({
   name: "reviews",
@@ -178,7 +144,7 @@ export const reviewsSlice = createSlice({
       state.data = action.payload;
     });
     builder.addCase(reviewsPost.fulfilled, (state, action) => {
-      state.dataOne =action.payload;
+      state.dataOne = action.payload;
     });
     builder.addCase(reviewsApproval.fulfilled, (state, action) => {
       state.data = state.data.filter((review) => review.id !== action.payload);

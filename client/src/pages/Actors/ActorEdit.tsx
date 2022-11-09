@@ -2,41 +2,14 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { actorsOne, actorsUpdate } from "../../utilities/slice/actorSlice";
-import { IAlert } from "../../utilities/types";
+import {
+  IActorFormErrors,
+  IActorFormValues,
+  IActorFormPost,
+} from "../../utilities/types";
 import dayjs, { Dayjs } from "dayjs";
 import { SelectChangeEvent } from "@mui/material/Select";
 import ActorEditForm from "../../components/Actor/ActorEditForm";
-
-interface FormValues {
-  firstName: string;
-  lastName: string;
-  gender: string;
-  link: string;
-  catalogue: string;
-  alert: IAlert;
-}
-
-interface FormErrors {
-  firstName: string;
-  lastName: string;
-  gender: string;
-  birthday: string;
-  catalogue: string;
-}
-
-interface ActorPostValue {
-  id?: string;
-  firstName: string;
-  lastName: string;
-  gender: string;
-  birthday: string;
-  link: string;
-  actorLink: ActorLink;
-}
-
-interface ActorLink {
-  catalogue: string;
-}
 
 const ActorEdit = () => {
   const dispatch = useAppDispatch();
@@ -44,7 +17,7 @@ const ActorEdit = () => {
   const actorId = state;
   const actor = useAppSelector((stateActor) => stateActor.actors.dataOne);
   const [birthday, setBirthday] = React.useState<Dayjs | null>(null);
-  const [formValues, setFormValues] = React.useState<FormValues>({
+  const [formValues, setFormValues] = React.useState<IActorFormValues>({
     firstName: actor.firstName || "",
     lastName: actor.lastName || "",
     gender: actor.gender || "",
@@ -56,7 +29,7 @@ const ActorEdit = () => {
       severity: "info",
     },
   });
-  const [formErrors, setFormErrors] = React.useState<FormErrors>({
+  const [formErrors, setFormErrors] = React.useState<IActorFormErrors>({
     firstName: "",
     lastName: "",
     gender: "",
@@ -91,16 +64,34 @@ const ActorEdit = () => {
 
     switch (name) {
       case "firstName":
-        setFormValues((stateFirstNameForm) => ({ ...stateFirstNameForm, firstName: value }));
-        setFormErrors((stateFirstNameError) => ({ ...stateFirstNameError, firstName: "" }));
+        setFormValues((stateFirstNameForm) => ({
+          ...stateFirstNameForm,
+          firstName: value,
+        }));
+        setFormErrors((stateFirstNameError) => ({
+          ...stateFirstNameError,
+          firstName: "",
+        }));
         break;
       case "lastName":
-        setFormValues((stateLastNameForm) => ({ ...stateLastNameForm, lastName: value }));
-        setFormErrors((stateLastNameError) => ({ ...stateLastNameError, lastName: "" }));
+        setFormValues((stateLastNameForm) => ({
+          ...stateLastNameForm,
+          lastName: value,
+        }));
+        setFormErrors((stateLastNameError) => ({
+          ...stateLastNameError,
+          lastName: "",
+        }));
         break;
       case "catalogue":
-        setFormValues((stateCatalogueForm) => ({ ...stateCatalogueForm, catalogue: value }));
-        setFormErrors((stateCatalogueError) => ({ ...stateCatalogueError, catalogue: "" }));
+        setFormValues((stateCatalogueForm) => ({
+          ...stateCatalogueForm,
+          catalogue: value,
+        }));
+        setFormErrors((stateCatalogueError) => ({
+          ...stateCatalogueError,
+          catalogue: "",
+        }));
         break;
       default:
         break;
@@ -117,7 +108,7 @@ const ActorEdit = () => {
 
   const onClickSubmitHandler = async (): Promise<void> => {
     if (formValidation()) {
-      const postUserValue: ActorPostValue = {
+      const postUserValue: IActorFormPost = {
         id: actorId,
         firstName: formValues.firstName,
         lastName: formValues.lastName,

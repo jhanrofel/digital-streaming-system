@@ -7,6 +7,7 @@ import {
   selectUsers,
   usersUpdate,
 } from "../../utilities/slice/userSlice";
+import { IUserFormTable } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
@@ -17,15 +18,6 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonOffIcon from "@mui/icons-material/PersonOff";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
-
-interface RowValues {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-  status: string;
-}
 
 const UserList = () => {
   const navigate = useNavigate();
@@ -80,7 +72,7 @@ const UserList = () => {
           setOpen(true);
         };
         const onClickActivate = async (): Promise<void> => {
-          const formValues: RowValues = {
+          const formValues: IUserFormTable = {
             id: params.row.id,
             role: params.row.role,
             email: params.row.email,
@@ -91,7 +83,7 @@ const UserList = () => {
           await dispatch(usersUpdate(formValues));
         };
         const onClickDeactivate = async (): Promise<void> => {
-          const formValues: RowValues = {
+          const formValues: IUserFormTable = {
             id: params.row.id,
             role: params.row.role,
             email: params.row.email,
@@ -129,7 +121,7 @@ const UserList = () => {
     },
   ];
   const dispatch = useAppDispatch();
-  const rows: RowValues[] = useAppSelector((state) => state.users.data);
+  const rows: IUserFormTable[] = useAppSelector((state) => state.users.data);
 
   React.useEffect(() => {
     dispatch(usersApproved());

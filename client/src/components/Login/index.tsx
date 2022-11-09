@@ -1,5 +1,5 @@
 import React from "react";
-import { IAlert } from "../../utilities/types";
+import { ILoginFormErrors, ILoginFormValues } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import FormButton from "../FormButton";
@@ -7,23 +7,12 @@ import FormText from "../FormText";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
-  formValues: FormValues;
-  formErrors: FormErrors;
+  formValues: ILoginFormValues;
+  formErrors: ILoginFormErrors;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 };
-
-interface FormValues {
-  email: string;
-  password: string;
-  alert: IAlert;
-}
-
-interface FormErrors {
-  email: string;
-  password: string;
-}
 
 const LoginForm = ({
   formValues,

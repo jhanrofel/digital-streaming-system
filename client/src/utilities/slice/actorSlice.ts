@@ -1,32 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authenticationToken } from "../authentication";
+import { IActorFormPost, IActorInitialState } from "../types";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3001";
 
-interface ActorDataOne {
-  id?: string;
-  firstName: string;
-  lastName: string;
-  gender: string;
-  birthday: string;
-  link?: string;
-  actorLink: LinkClass;
-  actorMovies?: Movies[];
-}
-
-interface LinkClass {
-  catalogue: string;
-}
-
-interface Movies {
-  title: string;
-  link: string;
-  movieLink: LinkClass;
-}
-
 export const actorsPost = createAsyncThunk(
   "actors/post",
-  async (formValues: ActorDataOne) => {
+  async (formValues: IActorFormPost) => {
     return axios({
       url: `/actors`,
       method: "post",
@@ -40,7 +20,7 @@ export const actorsPost = createAsyncThunk(
 
 export const actorsUpdate = createAsyncThunk(
   "actors/update",
-  async (formValues: ActorDataOne) => {
+  async (formValues: IActorFormPost) => {
     return axios({
       url: `/actors/${formValues.id}`,
       method: "patch",
@@ -101,19 +81,12 @@ export const actorsMovies = createAsyncThunk(
   }
 );
 
-interface ActorData {
-  logged: boolean;
-  data: ActorDataOne[] | [];
-  dataOne: ActorDataOne;
-  dataMovies: Movies[] | [];
-}
-
 const initialState = {
   logged: false,
   data: [],
   dataOne: {},
   dataMovies: [],
-} as ActorData;
+} as IActorInitialState;
 
 export const actorSlice = createSlice({
   name: "actors",

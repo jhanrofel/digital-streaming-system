@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { IAlert } from "../../utilities/types";
+import { IUserFormErrors, IUserFormValues } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import { SelectChangeEvent } from "@mui/material/Select";
 import FormButton from "../FormButton";
@@ -9,28 +9,13 @@ import FormSelect from "../FormSelect";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
-  formValues: FormValues;
-  formErrors: FormErrors;
+  formValues: IUserFormValues;
+  formErrors: IUserFormErrors;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onChangeSelect: (event: SelectChangeEvent) => void;
   onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 };
-
-interface FormValues {
-  role: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  alert: IAlert;
-}
-
-interface FormErrors {
-  role: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-}
 
 const roleData = ["USER", "ADMIN"];
 

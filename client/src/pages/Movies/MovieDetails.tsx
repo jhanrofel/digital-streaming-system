@@ -9,25 +9,12 @@ import {
   moviesRating,
 } from "../../utilities/slice/movieSlice";
 import { reviewsPost, myMovieReview } from "../../utilities/slice/reviewSlice";
-import { IAlert } from "../../utilities/types";
+import {
+  IMovieDetailsFormErrors,
+  IMovieDetailsFormValues,
+  IReviewFormPost,
+} from "../../utilities/types";
 import MovieDetailsForm from "../../components/Movie/MovieDetailsForm";
-
-interface FormValues {
-  review: string;
-  rating: number | null;
-  alert: IAlert;
-}
-
-interface FormErrors {
-  review: string;
-  rating: string;
-}
-
-interface PostReviewPost {
-  description: string;
-  rating: number | null;
-  movie: string;
-}
 
 const MovieDetails = () => {
   const dispatch = useAppDispatch();
@@ -46,7 +33,7 @@ const MovieDetails = () => {
   const myReview = useAppSelector(
     (stateMyReview) => stateMyReview.reviews.dataOne
   );
-  const [formValues, setFormValues] = React.useState<FormValues>({
+  const [formValues, setFormValues] = React.useState<IMovieDetailsFormValues>({
     review: "",
     rating: null,
     alert: {
@@ -55,7 +42,7 @@ const MovieDetails = () => {
       severity: "info",
     },
   });
-  const [formErrors, setFormErrors] = React.useState<FormErrors>({
+  const [formErrors, setFormErrors] = React.useState<IMovieDetailsFormErrors>({
     review: "",
     rating: "",
   });
@@ -86,7 +73,7 @@ const MovieDetails = () => {
   };
 
   const onClickSubmitHandler = async (): Promise<void> => {
-    const postReviewValue: PostReviewPost = {
+    const postReviewValue: IReviewFormPost = {
       description: formValues.review,
       rating: formValues.rating,
       movie: movieId,

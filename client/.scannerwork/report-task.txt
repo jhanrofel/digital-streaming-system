@@ -2,5 +2,5 @@ projectKey=poc-client
 serverUrl=http://localhost:9000
 serverVersion=8.9.10.61524
 dashboardUrl=http://localhost:9000/dashboard?id=poc-client
-ceTaskId=AYRbHCClXaDPb2DSm4Yv
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYRbHCClXaDPb2DSm4Yv
+ceTaskId=AYRbbkU4XaDPb2DSm4Yw
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYRbbkU4XaDPb2DSm4Yw

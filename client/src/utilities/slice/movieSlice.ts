@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authenticationToken } from "../authentication";
+import { IMovieFormPost, IMovieInitialState } from "../types";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3001";
 
@@ -98,7 +99,7 @@ export const moviesRating = createAsyncThunk(
 
 export const moviesPost = createAsyncThunk(
   "movies/post",
-  async (formValues: MoviesDataOne) => {
+  async (formValues: IMovieFormPost) => {
     return axios({
       url: `/movies`,
       method: "post",
@@ -112,7 +113,7 @@ export const moviesPost = createAsyncThunk(
 
 export const moviesUpdate = createAsyncThunk(
   "movies/patch",
-  async (formValues: MoviesDataOne) => {
+  async (formValues: IMovieFormPost) => {
     return axios({
       url: `/movies/${formValues.id}`,
       method: "patch",
@@ -143,46 +144,6 @@ export const moviesDelete = createAsyncThunk(
   }
 );
 
-interface ReviewsDataOne {
-  id?: string;
-  description: string;
-}
-
-interface MoviesDataOne {
-  id?: string;
-  title: string;
-  cost: number;
-  yearReleased: number;
-  comingSoon: boolean;
-  featured: boolean;
-  categories: string[];
-  actors: string[];
-  movieLink: MovieLink;
-}
-
-interface MoviesData {
-  data: MoviesDataOne[] | [];
-  dataLatestUploads: MoviesDataOne[] | [];
-  dataFeatured: MoviesDataOne[] | [];
-  dataComingSoon: MoviesDataOne[] | [];
-  dataReviews: ReviewsDataOne[] | [];
-  dataOne: MoviesDataOne;
-  dataGetOne: any;
-  dataRating: RatingData | [];
-}
-
-interface MovieLink {
-  catalogue: string;
-  trailer?: string;
-}
-
-interface RatingData {
-  _id: string | null;
-  count: number;
-  total: number;
-  average: number;
-}
-
 const initialState = {
   data: [],
   dataLatestUploads: [],
@@ -192,7 +153,7 @@ const initialState = {
   dataGetOne: [],
   dataReviews: [],
   dataRating: [],
-} as MoviesData;
+} as IMovieInitialState;
 
 export const moviesSlice = createSlice({
   name: "movies",

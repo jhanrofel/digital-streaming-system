@@ -1,7 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { isLogged } from "../../utilities/loggedIn";
-import { IAlert } from "../../utilities/types";
+import {
+  IMovieDetailsFormErrors,
+  IMovieDetailsFormValues,
+} from "../../utilities/types";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -19,8 +22,8 @@ import FormYoutube from "../FormYoutube";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
-  formValues: FormValues;
-  formErrors: FormErrors;
+  formValues: IMovieDetailsFormValues;
+  formErrors: IMovieDetailsFormErrors;
   movie: any;
   categories: any;
   reviews: any;
@@ -34,17 +37,6 @@ type AppProps = {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 };
-
-interface FormValues {
-  review: string;
-  rating: number | null;
-  alert: IAlert;
-}
-
-interface FormErrors {
-  review: string;
-  rating: string;
-}
 
 const MovieDetailsForm = ({
   formValues,
@@ -84,7 +76,9 @@ const MovieDetailsForm = ({
               error={""}
             />
             <Typography sx={{ fontSize: 16, paddingLeft: 1 }}>
-              {movieRating.length ? `${parseFloat((movieRating[0].average).toFixed(2))}/5` : "0/5"}
+              {movieRating.length
+                ? `${parseFloat(movieRating[0].average.toFixed(2))}/5`
+                : "0/5"}
             </Typography>
           </Box>
           <Typography sx={{ fontSize: 16, paddingLeft: 1 }}>

@@ -1,38 +1,13 @@
 import React from "react";
 import { useAppDispatch } from "../../utilities/hooks";
 import { usersRegister } from "../../utilities/slice/userSlice";
-import { IAlert } from "../../utilities/types";
+import { IUserFormErrors,IUserFormValues,IUserFormPost } from "../../utilities/types";
 import { SelectChangeEvent } from "@mui/material/Select";
 import UserAddForm from "../../components/User/UserAddForm";
 
-interface FormValues {
-  role: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  alert: IAlert;
-}
-
-interface FormErrors {
-  role: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-}
-
-interface PostUserValue {
-  id?: string;
-  role: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  approval: string;
-  password: string;
-}
-
 const UserAdd = () => {
   const dispatch = useAppDispatch();
-  const [formValues, setFormValues] = React.useState<FormValues>({
+  const [formValues, setFormValues] = React.useState<IUserFormValues>({
     role: "USER",
     email: "",
     firstName: "",
@@ -43,7 +18,7 @@ const UserAdd = () => {
       severity: "info",
     },
   });
-  const [formErrors, setFormErrors] = React.useState<FormErrors>({
+  const [formErrors, setFormErrors] = React.useState<IUserFormErrors>({
     role: "",
     email: "",
     firstName: "",
@@ -83,7 +58,7 @@ const UserAdd = () => {
   const onClickSubmitHandler = async (): Promise<void> => {
     const defaultPassword:string = "12345";
     if (formValidation()) {
-      const postUserValue: PostUserValue = {
+      const postUserValue: IUserFormPost = {
         role: formValues.role,
         email: formValues.email,
         firstName: formValues.firstName,

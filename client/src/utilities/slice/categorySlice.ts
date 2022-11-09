@@ -13,13 +13,9 @@ export const categoriesList = createAsyncThunk("categories/list", async () => {
     .catch((err) => err);
 });
 
-interface PostInput {
-  name: string;
-}
-
 export const categoriesPost = createAsyncThunk(
   "categories/post",
-  async (formValues: PostInput, { rejectWithValue }) => {
+  async (formValues: {name:string}, { rejectWithValue }) => {
     return axios({
       url: `/categories`,
       method: "post",

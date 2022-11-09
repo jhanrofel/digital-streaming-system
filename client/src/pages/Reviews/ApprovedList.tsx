@@ -10,28 +10,10 @@ import {
   reviewsApproval,
   reviewsApprovedList,
 } from "../../utilities/slice/reviewSlice";
-
-interface RowValues {
-  id: string;
-  description: string;
-  rating: number;
-  createdAt: string;
-  reviewMovie: ReviewMovie;
-  reviewUser: ReviewUser;
-}
-
-interface ReviewMovie {
-  title: string;
-}
-
-interface ReviewUser {
-  email: string;
-}
-
-interface ApproveFormValues {
-  id: string;
-  approval: string;
-}
+import {
+  IReviewFormTable,
+  IReviewFormApprovePost,
+} from "../../utilities/types";
 
 const ApprovedList = () => {
   const columns: GridColDef[] = [
@@ -80,7 +62,7 @@ const ApprovedList = () => {
       renderCell: (params) => {
 
         const onClickDisapproved = async () => {
-          const formValues: ApproveFormValues = {
+          const formValues: IReviewFormApprovePost = {
             id: params.row.id,
             approval: "disapproved",
           };
@@ -100,7 +82,7 @@ const ApprovedList = () => {
     },
   ];
   const dispatch = useAppDispatch();
-  const rows: RowValues[] = useAppSelector((state) => state.reviews.data);
+  const rows: IReviewFormTable[] = useAppSelector((state) => state.reviews.data);
 
   useEffect(() => {
     dispatch(reviewsApprovedList());

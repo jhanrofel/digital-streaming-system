@@ -4,55 +4,14 @@ import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { actorsList } from "../../utilities/slice/actorSlice";
 import { categoriesList } from "../../utilities/slice/categorySlice";
 import { moviesUpdate, moviesOne } from "../../utilities/slice/movieSlice";
-import { IAlert, IAutoCompleteOption } from "../../utilities/types";
+import {
+  IAutoCompleteOption,
+  IMovieFormErrors,
+  IMovieFormValues,
+  IMovieFormPatch,
+} from "../../utilities/types";
 import { SelectChangeEvent } from "@mui/material/Select";
 import MovieEditForm from "../../components/Movie/MovieEditForm";
-
-interface FormValues {
-  title: string;
-  cost: number;
-  yearReleased: number;
-  comingSoon: string;
-  featured: string;
-  categories: IAutoCompleteOption[];
-  catalogue: string;
-  trailer?: string;
-  actors: IAutoCompleteOption[];
-  alert: IAlert;
-}
-
-interface FormErrors {
-  title: string;
-  cost: string;
-  yearReleased: string;
-  catalogue: string;
-  actors: string;
-}
-
-interface PostMovieValue {
-  id?: string;
-  title: string;
-  cost: number;
-  yearReleased: number;
-  comingSoon: boolean;
-  featured: boolean;
-  link?: string;
-  actors: string[];
-  categories: string[];
-  movieLink: MovieLink;
-  movieActors: MovieActors[];
-}
-
-interface MovieLink {
-  catalogue: string;
-  trailer?: string;
-}
-
-interface MovieActors {
-  id: string;
-  firstName: string;
-  lastName: string;
-}
 
 const MovieEdit = () => {
   const dispatch = useAppDispatch();
@@ -80,7 +39,7 @@ const MovieEdit = () => {
     })
   );
 
-  const [formValues, setFormValues] = React.useState<FormValues>({
+  const [formValues, setFormValues] = React.useState<IMovieFormValues>({
     title: "",
     cost: 0,
     yearReleased: 2022,
@@ -96,7 +55,7 @@ const MovieEdit = () => {
       severity: "info",
     },
   });
-  const [formErrors, setFormErrors] = React.useState<FormErrors>({
+  const [formErrors, setFormErrors] = React.useState<IMovieFormErrors>({
     title: "",
     cost: "",
     yearReleased: "",
@@ -253,7 +212,7 @@ const MovieEdit = () => {
     const actorsValue = selectedActors.map((actor) => actor.id);
     const categoriesValue = selectedCategories.map((category) => category.id);
     if (formValidation()) {
-      const postMovieValue: PostMovieValue = {
+      const postMovieValue: IMovieFormPatch = {
         id: movieId,
         link: movie.link,
         title: formValues.title,

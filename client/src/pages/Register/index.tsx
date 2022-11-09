@@ -1,29 +1,15 @@
 import React, { useState } from "react";
 import { useAppDispatch } from "../../utilities/hooks";
 import { usersRegister } from "../../utilities/slice/userSlice";
-import { IAlert } from "../../utilities/types";
+import {
+  IRegisterFormErrors,
+  IRegisterFormValues,
+} from "../../utilities/types";
 import RegistrationForm from "../../components/Register";
-
-interface FormValues {
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-  confirm: string;
-  alert: IAlert;
-}
-
-interface FormErrors {
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-  confirm: string;
-}
 
 const Register = () => {
   const dispatch = useAppDispatch();
-  const [formValues, setFormValues] = useState<FormValues>({
+  const [formValues, setFormValues] = useState<IRegisterFormValues>({
     email: "",
     firstName: "",
     lastName: "",
@@ -35,7 +21,7 @@ const Register = () => {
       severity: "info",
     },
   });
-  const [formErrors, setFormErrors] = useState<FormErrors>({
+  const [formErrors, setFormErrors] = useState<IRegisterFormErrors>({
     email: "",
     firstName: "",
     lastName: "",

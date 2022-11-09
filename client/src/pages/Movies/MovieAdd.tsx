@@ -3,48 +3,9 @@ import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { actorsList } from "../../utilities/slice/actorSlice";
 import { categoriesList } from "../../utilities/slice/categorySlice";
 import { moviesPost } from "../../utilities/slice/movieSlice";
-import { IAlert, IAutoCompleteOption } from "../../utilities/types";
+import { IAutoCompleteOption, IMovieFormErrors, IMovieFormValues,IMovieFormPost } from "../../utilities/types";
 import { SelectChangeEvent } from "@mui/material/Select";
 import MovieAddForm from "../../components/Movie/MovieAddForm";
-
-interface FormValues {
-  title: string;
-  cost: number;
-  yearReleased: number;
-  comingSoon: string;
-  featured: string;
-  categories: IAutoCompleteOption[];
-  catalogue: string;
-  trailer?: string;
-  actors: IAutoCompleteOption[];
-  alert: IAlert;
-}
-
-interface FormErrors {
-  title: string;
-  cost: string;
-  yearReleased: string;
-  catalogue: string;
-  actors: string;
-}
-
-interface PostMovieValue {
-  id?: string;
-  title: string;
-  cost: number;
-  yearReleased: number;
-  comingSoon: boolean;
-  featured: boolean;
-  link?: string;
-  actors: string[];
-  categories: string[];
-  movieLink: MovieLink;
-}
-
-interface MovieLink {
-  catalogue: string;
-  trailer?: string;
-}
 
 const MovieAdd = () => {
   const dispatch = useAppDispatch();
@@ -66,7 +27,7 @@ const MovieAdd = () => {
       id: category.id ? category.id : "",
     })
   );
-  const [formValues, setFormValues] = React.useState<FormValues>({
+  const [formValues, setFormValues] = React.useState<IMovieFormValues>({
     title: "",
     cost: 0,
     yearReleased: 2022,
@@ -82,7 +43,7 @@ const MovieAdd = () => {
       severity: "info",
     },
   });
-  const [formErrors, setFormErrors] = React.useState<FormErrors>({
+  const [formErrors, setFormErrors] = React.useState<IMovieFormErrors>({
     title: "",
     cost: "",
     yearReleased: "",
@@ -158,7 +119,7 @@ const MovieAdd = () => {
     const actorsValue = selectedActors.map((actor) => actor.id);
     const categoriesValue = selectedCategories.map((category) => category.id);
     if (formValidation()) {
-      const postMovieValue: PostMovieValue = {
+      const postMovieValue: IMovieFormPost = {
         title: formValues.title,
         cost: formValues.cost,
         yearReleased: formValues.yearReleased,
