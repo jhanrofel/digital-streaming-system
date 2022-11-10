@@ -11,7 +11,6 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import AddCategoryDialogue from "../../components/Dialog/AddCategoryDialogue";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
@@ -39,9 +38,6 @@ const Categories = () => {
         return (
           <IconButton>
             <Stack spacing={2} direction="row">
-              <Tooltip title="Edit Category">
-                <EditIcon color="primary" />
-              </Tooltip>
               <Tooltip title="Delete Category">
                 <DeleteIcon color="error" onClick={onClickDelete} />
               </Tooltip>
