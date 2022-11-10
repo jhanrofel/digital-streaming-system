@@ -32,6 +32,7 @@ export const actorFormValues: IActorFormValues = {
     severity: "info",
   },
 };
+
 export const loginFormErrors: ILoginFormErrors = {
   email: "",
   password: "",

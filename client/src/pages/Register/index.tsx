@@ -105,15 +105,14 @@ const Register = () => {
         ...state,
         lastName: "Last name is required.",
       }));
-    if (formValues.password === ""){
+    if (formValues.password === "") {
       const fieldName: string = "password";
       setFormErrors((state) => ({
         ...state,
         [fieldName]: "Password is requried.",
       }));
     }
-    
-      
+
     if (formValues.confirm === "")
       setFormErrors((state) => ({
         ...state,

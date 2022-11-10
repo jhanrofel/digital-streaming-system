@@ -1,6 +1,6 @@
 import React from "react";
 import { getAge } from "../../utilities/helpers";
-import { IActorFormPost,IMovieForm } from "../../utilities/types";
+import { IActorFormPost, IMovieForm } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import FormImageList from "../FormImageList";

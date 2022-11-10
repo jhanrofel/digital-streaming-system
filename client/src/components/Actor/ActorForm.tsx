@@ -24,7 +24,7 @@ type AppProps = {
   setBirthday: any;
 };
 
-const genderData = ["Male", "Female"];
+export const genderData = ["Male", "Female"];
 
 const ActorForm = ({
   formName,

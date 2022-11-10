@@ -1,22 +1,22 @@
-import Login from "../../../components/Login";
+import Register from "../../../components/Register";
 import {
-  loginFormErrors,
-  loginFormValues,
+  registerFormErrors,
+  registerFormValues,
 } from "../../../utilities/formValues";
-import { ILoginFormErrors, ILoginFormValues } from "../../../utilities/types";
+import { IRegisterFormErrors, IRegisterFormValues } from "../../../utilities/types";
 import { render, screen } from "@testing-library/react";
 
 interface FormProps {
-  formValues: ILoginFormValues;
-  formErrors: ILoginFormErrors;
+  formValues: IRegisterFormValues;
+  formErrors: IRegisterFormErrors;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 }
 
 const formPropsValues: FormProps = {
-  formValues: loginFormValues,
-  formErrors: loginFormErrors,
+  formValues: registerFormValues,
+  formErrors: registerFormErrors,
   onChange: jest.fn(),
   onClick: jest.fn(),
   onClickCloseAlert: jest.fn(),
@@ -24,7 +24,7 @@ const formPropsValues: FormProps = {
 
 const renderForm = () => {
   return render(
-    <Login
+    <Register
       formValues={formPropsValues.formValues}
       formErrors={formPropsValues.formErrors}
       onChange={formPropsValues.onChange}
@@ -34,10 +34,11 @@ const renderForm = () => {
   );
 };
 
-describe("<Login/>", () => {
+describe("<Register/>", () => {
   test("Should find element by text.", () => {
     renderForm();
-    const loginLabel = screen.getByText("SIGN IN");
-    expect(loginLabel).toBeInTheDocument;
+    const registerLabel = screen.getByText("REGISTRATION");
+    expect(registerLabel).toBeInTheDocument;
   });
+  
 });

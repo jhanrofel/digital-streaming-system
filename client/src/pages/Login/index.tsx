@@ -68,7 +68,7 @@ const Login = () => {
         ...state,
         email: "Email is required.",
       }));
-      
+
     if (formValues.password === "") {
       const fieldName: string = "password";
       setFormErrors((state) => ({
