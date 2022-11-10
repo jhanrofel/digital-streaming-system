@@ -23,11 +23,17 @@ const Login = () => {
     switch (name) {
       case "email":
         setFormValues((state) => ({ ...state, email: value }));
-        setFormErrors((state) => ({ ...state, email: "" }));
+        setFormErrors((state) => ({
+          ...state,
+          [name]: value ? "" : "Email is required",
+        }));
         break;
       case "password":
         setFormValues((state) => ({ ...state, password: value }));
-        setFormErrors((state) => ({ ...state, password: "" }));
+        setFormErrors((state) => ({
+          ...state,
+          [name]: value ? "" : "Password is required",
+        }));
         break;
       default:
         break;
@@ -62,11 +68,14 @@ const Login = () => {
         ...state,
         email: "Email is required.",
       }));
-    if (formValues.password === "")
+      
+    if (formValues.password === "") {
+      const fieldName: string = "password";
       setFormErrors((state) => ({
         ...state,
-        password: "Password is requried.",
+        [fieldName]: "Password is requried.",
       }));
+    }
 
     if (formValues.email !== "" && formValues.password !== "") {
       valid = true;

@@ -1,4 +1,4 @@
-import FormCard from "../FormCard";
+import FormCard from "../../components/FormCard";
 import { render, screen } from "@testing-library/react";
 
 interface FormValues {

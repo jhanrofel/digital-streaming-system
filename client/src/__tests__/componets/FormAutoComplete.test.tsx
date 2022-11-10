@@ -1,5 +1,5 @@
-import FormAutoComplete from "../FormAutoComplete";
-import { fireEvent, render, screen } from "@testing-library/react";
+import FormAutoComplete from "../../components/FormAutoComplete";
+import { render, screen } from "@testing-library/react";
 
 const actorList: OptionsClass[] = [
   { label: "Will Smith", id: "actor_id_01" },

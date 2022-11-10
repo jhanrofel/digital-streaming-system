@@ -3,6 +3,7 @@ import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 
 type AppProps = {
+  testId?: string;
   name: string;
   value?: string;
   label: string;
@@ -12,10 +13,11 @@ type AppProps = {
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
 };
 
-const FormText = ({ name, value, label, type, error, variant, onChange }: AppProps) => {
+const FormText = ({ testId, name, value, label, type, error, variant, onChange }: AppProps) => {
   return (
     <FormControl fullWidth sx={{ m: 1 }} variant="filled">
       <TextField
+        data-testid={testId}
         id={name}
         value={value}
         name={name}

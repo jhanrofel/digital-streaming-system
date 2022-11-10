@@ -1,4 +1,4 @@
-import FormButton from "../FormButton";
+import FormButton from "../../components/FormButton";
 import { fireEvent, render, screen } from "@testing-library/react";
 
 interface FormValues {

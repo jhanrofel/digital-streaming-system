@@ -33,6 +33,7 @@ const LoginForm = ({
             SIGN IN
           </Typography>
           <FormText
+            test-id="email"
             name="email"
             label="Email"
             type="search"
