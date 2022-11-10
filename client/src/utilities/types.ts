@@ -87,7 +87,10 @@ export interface IMovieActorForm {
 }
 
 export interface IMovieForm {
+  id:string;
   title: string;
+  cost: string;
+  yearReleased: string;
   link: string;
   movieLink: ILinkMovie;
 }
