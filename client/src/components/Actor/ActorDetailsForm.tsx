@@ -1,16 +1,17 @@
 import React from "react";
 import { getAge } from "../../utilities/helpers";
+import { IActorFormPost,IMovieForm } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import FormImageList from "../FormImageList";
 
 type AppProps = {
-  actor: any;
-  actorMovies: any;
+  actor: IActorFormPost;
+  actorMovies: IMovieForm[] | [];
 };
 
 const ActorDetailsForm = ({ actor, actorMovies }: AppProps) => {
-  const movieData = actorMovies?.map((movie: any) => ({
+  const movieData = actorMovies?.map((movie: IMovieForm) => ({
     id: movie.id,
     title: movie.title,
     subtitle: movie.yearReleased,
@@ -24,7 +25,7 @@ const ActorDetailsForm = ({ actor, actorMovies }: AppProps) => {
           <Box>
             <img
               src={`${actor.actorLink?.catalogue}`}
-              alt={actor.title}
+              alt={`${actor.firstName} ${actor.lastName}`}
               height={"400"}
               width="100%"
             />
