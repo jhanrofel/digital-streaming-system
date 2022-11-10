@@ -5,6 +5,7 @@ import {
 } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 import FormButton from "../FormButton";
 import FormText from "../FormText";
 import SnackAlert from "../SnackAlert";
@@ -27,8 +28,13 @@ const RegistrationForm = ({
   return (
     <React.Fragment>
       <Container maxWidth="sm">
-        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          <div className="form-header">REGISTRATION</div>
+        <Box>
+          <Typography
+            variant="h5"
+            sx={{ width: 1, display: "flex", justifyContent: "center" }}
+          >
+            REGISTRATION
+          </Typography>
           <FormText
             name="email"
             value={formValues.email}

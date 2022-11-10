@@ -50,112 +50,111 @@ const MovieForm = ({
   const marginTopValue = formName === "EditForm" ? 10 : 0;
   return (
     <React.Fragment>
-      <Box sx={{ display: "flex", maxWidth: 600, marginTop: marginTopValue }}>
-        <FormText
-          name="title"
-          value={formValues.title}
-          label="Title"
-          type="search"
-          error={formErrors.title}
-          onChange={onChange}
-        />
-      </Box>
-      <Box sx={{ display: "flex", maxWidth: 600 }}>
-        <FormText
-          name="cost"
-          value={formValues.cost?.toString()}
-          label="Cost"
-          type=""
-          error={formErrors.cost}
-          onChange={onChange}
-        />
-        <FormText
-          name="yearReleased"
-          value={formValues.yearReleased?.toString()}
-          label="Year Released"
-          type=""
-          error={formErrors.yearReleased}
-          onChange={onChange}
-        />
-      </Box>
-      <Box sx={{ display: "flex", maxWidth: 600 }}>
-        <FormSelect
-          name="comingSoon"
-          value={formValues.comingSoon}
-          label="Coming Soon"
-          options={optionData}
-          onChange={onChangeSelect}
-        />
-        <FormSelect
-          name="featured"
-          value={formValues.featured}
-          label="Featured"
-          options={optionData}
-          onChange={onChangeSelect}
-        />
-      </Box>
-      <Divider
-        sx={{ display: "flex", maxWidth: 800, paddingTop: 1 }}
-        textAlign="left"
-      >
-        LINKS
-      </Divider>
-      <Box sx={{ display: "flex", maxWidth: 800 }}>
-        <FormText
-          name="catalogue"
-          value={formValues.catalogue}
-          label="Catalogue"
-          type="search"
-          error={formErrors.catalogue}
-          onChange={onChange}
-        />
-        <Avatar
-          variant="square"
-          alt="Image Catalogue"
-          src={formValues.catalogue}
-          sx={{ width: 65, height: 65 }}
-        />
-      </Box>
-      <Box sx={{ display: "flex", maxWidth: 800 }}>
-        <FormText
-          name="trailer"
-          value={formValues.trailer}
-          label="Trailer"
-          type="search"
-          onChange={onChange}
-        />
-      </Box>
-      <Box sx={{ display: "flex", width: 800 }}>
-        <FormAutoComplete
-          id="actors"
-          label="Actors"
-          value={formValues.actors}
-          error={formErrors.actors}
-          options={actorsOption}
-          onChange={onChangeActors}
-        />
-        <Tooltip title="Add Actors">
-          <AddBoxIcon color="primary" onClick={() => navigate("../actors")} />
-        </Tooltip>
-      </Box>
+      <Box sx={{ maxWidth: 600, marginTop: marginTopValue }}>
+        <Box sx={{ display: "flex" }}>
+          <FormText
+            name="title"
+            value={formValues.title}
+            label="Title"
+            type="search"
+            error={formErrors.title}
+            onChange={onChange}
+          />
+        </Box>
+        <Box sx={{ display: "flex" }}>
+          <FormText
+            name="cost"
+            value={formValues.cost?.toString()}
+            label="Cost"
+            type=""
+            error={formErrors.cost}
+            onChange={onChange}
+          />
+          <FormText
+            name="yearReleased"
+            value={formValues.yearReleased?.toString()}
+            label="Year Released"
+            type=""
+            error={formErrors.yearReleased}
+            onChange={onChange}
+          />
+        </Box>
+        <Box sx={{ display: "flex" }}>
+          <FormSelect
+            name="comingSoon"
+            value={formValues.comingSoon}
+            label="Coming Soon"
+            options={optionData}
+            onChange={onChangeSelect}
+          />
+          <FormSelect
+            name="featured"
+            value={formValues.featured}
+            label="Featured"
+            options={optionData}
+            onChange={onChangeSelect}
+          />
+        </Box>
+        <Divider sx={{ display: "flex", paddingTop: 1 }} textAlign="left">
+          LINKS
+        </Divider>
+        <Box sx={{ display: "flex" }}>
+          <FormText
+            name="catalogue"
+            value={formValues.catalogue}
+            label="Catalogue"
+            type="search"
+            error={formErrors.catalogue}
+            onChange={onChange}
+          />
+          <Avatar
+            variant="square"
+            alt="Image Catalogue"
+            src={formValues.catalogue}
+            sx={{ width: 65, height: 65 }}
+          />
+        </Box>
+        <Box sx={{ display: "flex" }}>
+          <FormText
+            name="trailer"
+            value={formValues.trailer}
+            label="Trailer"
+            type="search"
+            onChange={onChange}
+          />
+        </Box>
+        <Box sx={{ display: "flex" }}>
+          <FormAutoComplete
+            id="actors"
+            label="Actors"
+            value={formValues.actors}
+            error={formErrors.actors}
+            options={actorsOption}
+            onChange={onChangeActors}
+          />
+          <Tooltip title="Add Actors">
+            <AddBoxIcon color="primary" onClick={() => navigate("../actors")} />
+          </Tooltip>
+        </Box>
       <Box sx={{ width: 800 }}>
-        <FormAutoComplete
-          id="categories"
-          label="Categories"
-          value={formValues.categories}
-          error={""}
-          options={categoriesOption}
-          onChange={onChangeCategories}
-        />
+          <FormAutoComplete
+            id="categories"
+            label="Categories"
+            value={formValues.categories}
+            error={""}
+            options={categoriesOption}
+            onChange={onChangeCategories}
+          />
       </Box>
       <Box sx={{ display: "flex", width: 400 }}>
-        {formName === "EditForm" && (
-          <FormButton
-            label="Back to List"
-            onClick={() => navigate("../movies")}
-          />
-        )}
-        <FormButton label="Save" onClick={onClick} />
+          {formName === "EditForm" && (
+            <FormButton
+              label="Back to List"
+              onClick={() => navigate("../movies")}
+            />
+          )}
+          <FormButton label="Save" onClick={onClick} />
+        </Box>
       </Box>
       <SnackAlert
         alertData={formValues.alert}

@@ -8,7 +8,7 @@ import {
   IUserFormPost,
 } from "../../utilities/types";
 import { SelectChangeEvent } from "@mui/material/Select";
-import UserAddForm from "../../components/User/UserAddForm";
+import UserForm from "../../components/User/UserForm";
 
 const UserAdd = () => {
   const dispatch = useAppDispatch();
@@ -132,7 +132,8 @@ const UserAdd = () => {
   };
 
   return (
-    <UserAddForm
+    <UserForm
+      formName="AddForm"
       formErrors={formErrors}
       formValues={formValues}
       onChange={onChangeHandler}

@@ -24,7 +24,6 @@ const UserList = () => {
   const [open, setOpen] = React.useState<boolean>(false);
   const user = useAppSelector((state) => state.users.dataOne);
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 90 },
     {
       field: "email",
       headerName: "Email",
@@ -137,10 +136,7 @@ const UserList = () => {
 
   return (
     <React.Fragment>
-      <FormList
-        rows={rows}
-        columns={columns}
-      />
+      <FormList rows={rows} columns={columns} />
 
       <DeleteDialogue
         setOpen={setOpen}

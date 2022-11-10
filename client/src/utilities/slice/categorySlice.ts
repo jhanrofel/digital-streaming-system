@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authenticationToken } from "../authentication";
+import { ICategoryInitialState } from "../types";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3001";
 
@@ -15,7 +16,7 @@ export const categoriesList = createAsyncThunk("categories/list", async () => {
 
 export const categoriesPost = createAsyncThunk(
   "categories/post",
-  async (formValues: {name:string}, { rejectWithValue }) => {
+  async (formValues: { name: string }, { rejectWithValue }) => {
     return axios({
       url: `/categories`,
       method: "post",
@@ -35,7 +36,7 @@ export const categoriesPost = createAsyncThunk(
 
 export const categoriesDelete = createAsyncThunk(
   "categories/delete",
-  async (categoryId: string, { rejectWithValue }) => {
+  async (categoryId: string) => {
     return axios({
       url: `/categories/${categoryId}`,
       method: "delete",
@@ -46,20 +47,10 @@ export const categoriesDelete = createAsyncThunk(
   }
 );
 
-interface CategoriesDataOne {
-  id?: string;
-  name: string;
-}
-
-interface CategoriesData {
-  data: CategoriesDataOne[] | [];
-  dataOne: CategoriesDataOne;
-}
-
 const initialState = {
   data: [],
   dataOne: {},
-} as CategoriesData;
+} as ICategoryInitialState;
 
 export const categoriesSlice = createSlice({
   name: "categories",

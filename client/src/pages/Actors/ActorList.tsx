@@ -5,6 +5,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { useNavigate } from "react-router-dom";
+import { getAge } from "../../utilities/helpers";
 import {
   actorsList,
   actorsDelete,
@@ -40,18 +41,20 @@ const ActorList = () => {
       width: 150,
     },
     {
-      field: "birthday",
-      headerName: "Birtday",
+      field: "age",
+      headerName: "Age",
       sortable: false,
-      width: 150,
+      align: "right",
+      width: 100,
       valueGetter: (params: GridValueGetterParams) =>
-        `${params.row.birthday.substring(0, 10)}`,
+        `${getAge(params.row.birthday.substring(0, 10))}`,
     },
     {
       field: "catalogue",
       headerName: "Catalogue",
       sortable: false,
-      width: 150,
+      width: 200,
+      align: "center",
       renderCell: (params) => {
         return (
           <Avatar
@@ -66,7 +69,8 @@ const ActorList = () => {
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      width: 200,
+      align: "center",
       sortable: false,
       renderCell: (params) => {
         const onClickEdit = () => {

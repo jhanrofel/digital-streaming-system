@@ -33,12 +33,10 @@ const MovieList = () => {
     severity: "info",
   });
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 90 },
     {
       field: "title",
       headerName: "Title",
       width: 300,
-      editable: true,
     },
     {
       field: "cost",
@@ -46,7 +44,6 @@ const MovieList = () => {
       width: 200,
       align: "right",
       valueFormatter: ({ value }) => currencyFormatter.format(value),
-      editable: true,
     },
     {
       field: "yearReleased",

@@ -9,7 +9,7 @@ import {
   IUserFormPatch,
 } from "../../utilities/types";
 import { SelectChangeEvent } from "@mui/material/Select";
-import UserEditForm from "../../components/User/UserEditForm";
+import UserForm from "../../components/User/UserForm";
 
 const UserEdit = () => {
   const dispatch = useAppDispatch();
@@ -29,7 +29,8 @@ const UserEdit = () => {
     },
   });
 
-  const [formErrors, setFormErrors] = React.useState<IUserFormErrors>(userFormErrors);
+  const [formErrors, setFormErrors] =
+    React.useState<IUserFormErrors>(userFormErrors);
 
   React.useEffect(() => {
     dispatch(usersOne(userId));
@@ -165,7 +166,8 @@ const UserEdit = () => {
   };
 
   return (
-    <UserEditForm
+    <UserForm
+      formName="EditForm"
       formErrors={formErrors}
       formValues={formValues}
       onChange={onChangeHandler}

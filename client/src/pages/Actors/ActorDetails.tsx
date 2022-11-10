@@ -15,8 +15,7 @@ const ActorDetails = () => {
     dispatch(actorsOne(actorId));
     dispatch(actorsMovies(actorId));
   }, [dispatch, actorId]);
-
-
+  
   return (
     <ActorDetailsForm
       actor={actor}

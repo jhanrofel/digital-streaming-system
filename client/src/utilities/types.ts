@@ -24,6 +24,7 @@ export interface IActorFormPost {
   link?: string;
   actorLink: ILinkActor;
   actorMovies?: IMovieForm;
+  age?: number;
 }
 
 export interface IActorInitialState {
@@ -47,6 +48,11 @@ export interface IAutoCompleteOption {
 export interface ICategory {
   id?: string;
   name: string;
+}
+
+export interface ICategoryInitialState {
+  data: ICategory[] | [];
+  dataOne: ICategory;
 }
 
 export interface ILinkActor {

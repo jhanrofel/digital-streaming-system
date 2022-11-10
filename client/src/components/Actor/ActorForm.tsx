@@ -42,74 +42,73 @@ const ActorForm = ({
 
   return (
     <React.Fragment>
-      <Box sx={{ display: "flex", width: 600, marginTop: marginTopValue }}>
-        <FormText
-          name="firstName"
-          value={formValues.firstName}
-          label="First Name"
-          type="search"
-          error={formErrors.firstName}
-          onChange={onChange}
-        />
-        <FormText
-          name="lastName"
-          value={formValues.lastName}
-          label="Last Name"
-          type="search"
-          error={formErrors.lastName}
-          onChange={onChange}
-        />
-      </Box>
-      <Box sx={{ display: "flex", width: 600 }}>
-        <FormSelect
-          name="gender"
-          value={formValues.gender}
-          label="Gender"
-          error={formErrors.gender}
-          options={genderData}
-          onChange={onChangeSelect}
-        />
-        <FormDate
-          error={formErrors.birthday}
-          label="Birthday"
-          value={birthday}
-          setNewValue={setBirthday}
-        />
-      </Box>
-      <Divider
-        sx={{ display: "flex", width: 600, paddingTop: 5 }}
-        textAlign="left"
-      >
-        LINKS
-      </Divider>
-      <Box sx={{ display: "flex", width: 600 }}>
-        <FormText
-          name="catalogue"
-          value={formValues.catalogue}
-          label="Catalogue"
-          type="search"
-          error={formErrors.catalogue}
-          onChange={onChange}
-        />
-        <Avatar
-          variant="square"
-          alt="Image Catalogue"
-          src={formValues.catalogue}
-          sx={{ width: 65, height: 65 }}
-        />
-      </Box>
-      <Box sx={{ display: "flex", width: 600 }}>
-        {formName === "EditForm" && (
-          <FormButton
-            label="Back to List"
-            onClick={() => navigate("../actors")}
+      <Box sx={{ width: 600, marginTop: marginTopValue }}>
+        <Box sx={{ display: "flex" }}>
+          <FormText
+            name="firstName"
+            value={formValues.firstName}
+            label="First Name"
+            type="search"
+            error={formErrors.firstName}
+            onChange={onChange}
           />
-        )}
-        <FormButton label="Save" onClick={onClick} />
-        <SnackAlert
-          alertData={formValues.alert}
-          onClickCloseAlert={onClickCloseAlert}
-        />
+          <FormText
+            name="lastName"
+            value={formValues.lastName}
+            label="Last Name"
+            type="search"
+            error={formErrors.lastName}
+            onChange={onChange}
+          />
+        </Box>
+        <Box sx={{ display: "flex" }}>
+          <FormSelect
+            name="gender"
+            value={formValues.gender}
+            label="Gender"
+            error={formErrors.gender}
+            options={genderData}
+            onChange={onChangeSelect}
+          />
+          <FormDate
+            error={formErrors.birthday}
+            label="Birthday"
+            value={birthday}
+            setNewValue={setBirthday}
+          />
+        </Box>
+        <Divider sx={{ display: "flex", paddingTop: 1 }} textAlign="left">
+          LINKS
+        </Divider>
+        <Box sx={{ display: "flex" }}>
+          <FormText
+            name="catalogue"
+            value={formValues.catalogue}
+            label="Catalogue"
+            type="search"
+            error={formErrors.catalogue}
+            onChange={onChange}
+          />
+          <Avatar
+            variant="square"
+            alt="Image Catalogue"
+            src={formValues.catalogue}
+            sx={{ width: 65, height: 65 }}
+          />
+        </Box>
+        <Box sx={{ display: "flex" }}>
+          {formName === "EditForm" && (
+            <FormButton
+              label="Back to List"
+              onClick={() => navigate("../actors")}
+            />
+          )}
+          <FormButton label="Save" onClick={onClick} />
+          <SnackAlert
+            alertData={formValues.alert}
+            onClickCloseAlert={onClickCloseAlert}
+          />
+        </Box>
       </Box>
     </React.Fragment>
   );
