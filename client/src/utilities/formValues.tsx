@@ -1,7 +1,5 @@
 import {
-  IActorFormErrors,
-  IActorFormValues,
-  IActorPostForm,
+  IActorForm,
   IAlert,
   ILoginFormErrors,
   ILoginFormValues,
@@ -21,32 +19,12 @@ export const alertDataReset: IAlert = {
   severity: "info",
 };
 
-export const actorFormReset: IActorPostForm = {
+export const actorFormReset: IActorForm = {
   firstName: "",
   lastName: "",
   gender: "",
   birthday: "",
   imageLink: "",
-};
-
-export const actorFormErrors: IActorFormErrors = {
-  firstName: "",
-  lastName: "",
-  gender: "",
-  birthday: "",
-  catalogue: "",
-};
-
-export const actorFormValues: IActorFormValues = {
-  firstName: "",
-  lastName: "",
-  gender: "",
-  catalogue: "",
-  alert: {
-    open: false,
-    message: "string",
-    severity: "info",
-  },
 };
 
 export const loginFormErrors: ILoginFormErrors = {

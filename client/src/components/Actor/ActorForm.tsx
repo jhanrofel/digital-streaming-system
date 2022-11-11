@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { IActorPostForm } from "../../utilities/types";
+import { IActorForm } from "../../utilities/types";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -15,8 +15,8 @@ import Modal from "@mui/material/Modal";
 type AppProps = {
   openActorForm: boolean;
   formName: string;
-  formValues: IActorPostForm;
-  formErrors: IActorPostForm;
+  formValues: IActorForm;
+  formErrors: IActorForm;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onChangeSelect: (event: SelectChangeEvent) => void;

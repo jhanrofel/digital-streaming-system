@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authenticationToken } from "../authentication";
-import { IActorInitialState, IActorPostForm } from "../types";
+import { IActorInitialState, IActorForm } from "../types";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3001";
 
 export const actorsPost = createAsyncThunk(
   "actors/post",
-  async (formValues: IActorPostForm) => {
+  async (formValues: IActorForm) => {
     return axios({
       url: `/actors`,
       method: "post",
@@ -20,7 +20,7 @@ export const actorsPost = createAsyncThunk(
 
 export const actorsUpdate = createAsyncThunk(
   "actors/update",
-  async (formValues: IActorPostForm) => {
+  async (formValues: IActorForm) => {
     return axios({
       url: `/actors/${formValues.id}`,
       method: "patch",
@@ -82,12 +82,10 @@ export const actorsMovies = createAsyncThunk(
 );
 
 const initialState = {
-  logged: false,
-  data: [],
-  dataOne: {},
+  list: [],
   byId: null,
-  dataMovies: [],
-  selectedId: null,
+  movies: [],
+  selected: null,
 } as IActorInitialState;
 
 export const actorSlice = createSlice({
@@ -95,39 +93,42 @@ export const actorSlice = createSlice({
   initialState,
   reducers: {
     clearActor: (state) => {
-      state.data = [];
+      state.list = [];
+      state.byId = null;
+      state.movies = [];
+      state.selected = null;
     },
     selectActors: (state, action) => {
-      state.selectedId = action.payload.id;
+      state.selected = action.payload.id;
     },
-    clearActorOne: (state) => {
+    clearSelected: (state) => {
       state.byId = null;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(actorsPost.fulfilled, (state, action) => {
-      state.data = [...state.data, action.payload];
+      state.list = [...state.list, action.payload];
     });
     builder.addCase(actorsList.fulfilled, (state, action) => {
-      state.data = action.payload;
+      state.list = action.payload;
     });
     builder.addCase(getActorById.fulfilled, (state, action) => {
       state.byId = action.payload;
     });
     builder.addCase(actorsUpdate.fulfilled, (state, action) => {
-      state.data = state.data.map((actor) =>
+      state.list = state.list.map((actor) =>
         actor.id === action.payload.id ? action.payload : actor
       );
       state.byId = null;
     });
     builder.addCase(actorsDelete.fulfilled, (state, action) => {
-      state.data = state.data.filter((actor) => actor.id !== action.payload.id);
+      state.list = state.list.filter((actor) => actor.id !== action.payload.id);
     });
     builder.addCase(actorsMovies.fulfilled, (state, action) => {
-      state.dataMovies = action.payload;
+      state.movies = action.payload;
     });
   },
 });
 
-export const { clearActor, selectActors, clearActorOne } = actorSlice.actions;
+export const { clearActor, clearSelected, selectActors } = actorSlice.actions;
 export default actorSlice.reducer;

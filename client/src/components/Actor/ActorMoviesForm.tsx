@@ -1,13 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { IMovieActorForm, IMovieForm } from "../../utilities/types";
+import { IActorData, IMovieForm } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import FormButton from "../../components/FormButton";
 import FormCard from "../../components/FormCard";
 
 type AppProps = {
-  actor: IMovieActorForm;
+  actor: IActorData | null;
   movies: IMovieForm[];
 };
 
@@ -18,7 +18,7 @@ const ActorMoviesForm = ({ actor, movies }: AppProps) => {
       <Typography
         variant="h4"
         sx={{ display: "flex", width: 600, paddingTop: 10, paddingBottom: 2 }}
-      >{`${actor.firstName} ${actor.lastName}'s MOVIES `}</Typography>
+      >{`${actor?.firstName} ${actor?.lastName}'s MOVIES `}</Typography>
       <Box sx={{ display: "flex" }}>
         {movies?.map((movie, i) => (
           <FormCard

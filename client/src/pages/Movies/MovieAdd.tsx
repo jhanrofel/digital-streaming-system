@@ -15,7 +15,7 @@ import MovieForm from "../../components/Movie/MovieForm";
 
 const MovieAdd = () => {
   const dispatch = useAppDispatch();
-  const actors = useAppSelector((state) => state.actors.data);
+  const actors = useAppSelector((state) => state.actors.list);
   const [selectedActors, setSelectedActors] = React.useState<
     Array<IAutoCompleteOption>
   >([]);
@@ -33,8 +33,10 @@ const MovieAdd = () => {
       id: category.id ? category.id : "",
     })
   );
-  const [formErrors, setFormErrors] = React.useState<IMovieFormErrors>(movieFormErrors);
-  const [formValues, setFormValues] = React.useState<IMovieFormValues>(movieFormValues);
+  const [formErrors, setFormErrors] =
+    React.useState<IMovieFormErrors>(movieFormErrors);
+  const [formValues, setFormValues] =
+    React.useState<IMovieFormValues>(movieFormValues);
 
   React.useEffect(() => {
     dispatch(actorsList());

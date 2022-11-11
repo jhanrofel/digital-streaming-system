@@ -1,21 +1,13 @@
-export interface IActorFormErrors {
+export interface IActorForm {
+  id?: string;
   firstName: string;
   lastName: string;
   gender: string;
   birthday: string;
-  catalogue: string;
+  imageLink: string;
 }
 
-export interface IActorFormValues {
-  firstName: string;
-  lastName: string;
-  gender: string;
-  catalogue: string;
-  link?: string;
-  alert: IAlert;
-}
-
-export interface IActorPostForm {
+export interface IActorData {
   id?: string;
   firstName: string;
   lastName: string;
@@ -26,25 +18,11 @@ export interface IActorPostForm {
   age?: number;
 }
 
-export interface IActorFormPost {
-  id?: string;
-  firstName: string;
-  lastName: string;
-  gender: string;
-  birthday: string;
-  link?: string;
-  actorLink: ILinkActor;
-  actorMovies?: IMovieForm;
-  age?: number;
-}
-
 export interface IActorInitialState {
-  logged: boolean;
-  data: IActorFormPost[] | [];
-  dataOne: IActorFormPost;
-  dataMovies: IMovieForm[] | [];
-  selectedId: string | null;
-  byId: IActorPostForm | null;
+  list: IActorData[] | [];
+  byId: IActorData | null;
+  movies: IMovieForm[] | [];
+  selected: string | null;
 }
 
 export interface IAlert {
@@ -105,7 +83,7 @@ export interface IMovieActorForm {
 }
 
 export interface IMovieForm {
-  id:string;
+  id: string;
   title: string;
   cost: string;
   yearReleased: string;
@@ -314,4 +292,3 @@ export interface IUserFormTable {
   lastName: string;
   status?: string;
 }
-

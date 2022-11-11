@@ -13,15 +13,15 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { getAge } from "../../utilities/helpers";
 import {
-  getActorById,
   actorsList,
   actorsDelete,
-  selectActors,
-  clearActorOne,
   actorsUpdate,
   actorsPost,
+  clearSelected,
+  getActorById,
+  selectActors,
 } from "../../utilities/slice/actorSlice";
-import { IActorFormPost, IActorPostForm, IAlert } from "../../utilities/types";
+import { IActorData, IActorForm, IAlert } from "../../utilities/types";
 import { actorFormReset, alertDataReset } from "../../utilities/formValues";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
 import FormList from "../../components/FormList";
@@ -33,7 +33,7 @@ const ActorList = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const actor = useAppSelector((state) => state.actors.byId);
-  const actorId = useAppSelector((state) => state.actors.selectedId);
+  const actorId = useAppSelector((state) => state.actors.selected);
   const columns: GridColDef[] = [
     {
       field: "firstName",
@@ -119,7 +119,8 @@ const ActorList = () => {
       },
     },
   ];
-  const rows: IActorFormPost[] = useAppSelector((state) => state.actors.data);
+  const rows: IActorData[] = useAppSelector((state) => state.actors.list);
+
   const onConfirmDelete = async (): Promise<void> => {
     await dispatch(actorsDelete(actorId ? actorId : "")).then((res) => {
       if (res.type === "actors/delete/fulfilled") {
@@ -150,14 +151,14 @@ const ActorList = () => {
     setOpenActorForm(false);
     setFormValues(actorFormReset);
     setFormErrors(actorFormReset);
-    dispatch(clearActorOne());
+    dispatch(clearSelected());
   };
 
   const headerButtons = [{ label: "Add", onClick: onClickHandlerFormOpen }];
   const [formErrors, setFormErrors] =
-    React.useState<IActorPostForm>(actorFormReset);
+    React.useState<IActorForm>(actorFormReset);
   const [formValues, setFormValues] =
-    React.useState<IActorPostForm>(actorFormReset);
+    React.useState<IActorForm>(actorFormReset);
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>): void => {
     let name = (event.target as HTMLInputElement).name;
@@ -199,7 +200,7 @@ const ActorList = () => {
 
   const onClickSubmitHandler = async (): Promise<void> => {
     if (formValidation()) {
-      const postUserValue: IActorPostForm = {
+      const postUserValue: IActorForm = {
         firstName: formValues.firstName,
         lastName: formValues.lastName,
         gender: formValues.gender,

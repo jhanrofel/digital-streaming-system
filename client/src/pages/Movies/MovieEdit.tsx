@@ -19,7 +19,7 @@ const MovieEdit = () => {
   const { state } = useLocation();
   const movieId = state;
   const movie = useAppSelector((stateMovie) => stateMovie.movies.dataGetOne);
-  const actors = useAppSelector((stateActors) => stateActors.actors.data);
+  const actors = useAppSelector((stateActors) => stateActors.actors.list);
   const [selectedActors, setSelectedActors] = React.useState<
     Array<IAutoCompleteOption>
   >([]);

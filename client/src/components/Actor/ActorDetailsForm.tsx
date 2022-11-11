@@ -1,12 +1,12 @@
 import React from "react";
 import { getAge } from "../../utilities/helpers";
-import { IActorFormPost, IMovieForm } from "../../utilities/types";
+import { IActorData, IMovieForm } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import FormImageList from "../FormImageList";
 
 type AppProps = {
-  actor: IActorFormPost;
+  actor: IActorData | null;
   actorMovies: IMovieForm[] | [];
 };
 
@@ -24,21 +24,23 @@ const ActorDetailsForm = ({ actor, actorMovies }: AppProps) => {
         <Box sx={{ width: 400 }}>
           <Box>
             <img
-              src={`${actor.actorLink?.catalogue}`}
-              alt={`${actor.firstName} ${actor.lastName}`}
+              src={`${actor?.imageLink}`}
+              alt={`${actor?.firstName} ${actor?.lastName}`}
               height={"400"}
               width="100%"
             />
           </Box>
           <Typography variant="h4" gutterBottom>
-            {`${actor.firstName} ${actor.lastName} `}
+            {`${actor?.firstName} ${actor?.lastName} `}
           </Typography>
           <Typography>
-            {`Birthday : ${actor.birthday?.substring(0, 10)}`}
+            {`Birthday : ${actor?.birthday?.substring(0, 10)}`}
           </Typography>
-          <Typography>{`Gender : ${actor.gender}`}</Typography>
+          <Typography>{`Gender : ${actor?.gender}`}</Typography>
 
-          <Typography>{`Age : ${getAge(actor.birthday)}`}</Typography>
+          <Typography>
+            {`Age : ` + (actor ? getAge(actor?.birthday) : "")}
+          </Typography>
         </Box>
         <Box sx={{ display: "inline", width: 1, padding: 3 }}>
           <Box sx={{ width: 600 }}>

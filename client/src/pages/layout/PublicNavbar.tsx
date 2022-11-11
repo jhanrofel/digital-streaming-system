@@ -6,12 +6,14 @@ import {
   loggedInData,
   loggedInRemove,
 } from "../../utilities/loggedIn";
+import { userMe } from "../../utilities/api";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import InputBase from "@mui/material/InputBase";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import Link from "@mui/material/Link";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
@@ -82,6 +84,18 @@ function PublicNavbar() {
     }
   };
 
+  const [role, setRole] = React.useState<string>("USER");
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      await userMe().then((res) => {
+        setRole(res.user.role);
+      });
+    };
+
+    fetchData().catch(console.error);
+  }, [userMe]);
+
   React.useEffect(() => {
     if (location.pathname === "/search") {
       setSearch(location.state?.search);
@@ -143,6 +157,14 @@ function PublicNavbar() {
               >
                 Hi! {loggedInData().firstName}
               </Typography>
+
+              {(isLogged() && "ADMIN" === "ADMIN") || (
+                <Tooltip title={"Dashboard"}>
+                  <IconButton sx={{ p: 0 }} onClick={onClickLogoutHandler}>
+                    <DashboardIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
               <Tooltip title="Logout">
                 <IconButton sx={{ p: 0 }} onClick={onClickLogoutHandler}>
                   <LogoutIcon />
@@ -163,21 +185,28 @@ function PublicNavbar() {
             </Link>
           )}
 
-          {isLogged() === 0 && location.pathname !== "/register" && location.pathname !== "/login" &&(
-            <React.Fragment>
-              <Link variant="h6" underline="none" href="/login" sx={rightLink}>
-                {"Login"}
-              </Link>
-              <Link
-                variant="h6"
-                underline="none"
-                href="/register"
-                sx={rightLink}
-              >
-                {"Register"}
-              </Link>
-            </React.Fragment>
-          )}
+          {isLogged() === 0 &&
+            location.pathname !== "/register" &&
+            location.pathname !== "/login" && (
+              <React.Fragment>
+                <Link
+                  variant="h6"
+                  underline="none"
+                  href="/login"
+                  sx={rightLink}
+                >
+                  {"Login"}
+                </Link>
+                <Link
+                  variant="h6"
+                  underline="none"
+                  href="/register"
+                  sx={rightLink}
+                >
+                  {"Register"}
+                </Link>
+              </React.Fragment>
+            )}
         </Toolbar>
       </AppBar>
       <Toolbar />

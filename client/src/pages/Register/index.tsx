@@ -139,6 +139,12 @@ const Register = () => {
           ...state,
           confirm: "Confirm password does not match.",
         }));
+      } else if (formValues.password.length < 8) {
+        const fieldName: string = "password";
+        setFormErrors((state) => ({
+          ...state,
+          [fieldName]: "Password requires min of 8 characters.",
+        }));
       } else {
         valid = true;
       }
