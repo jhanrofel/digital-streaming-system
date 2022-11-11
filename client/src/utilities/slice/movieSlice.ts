@@ -114,6 +114,7 @@ export const moviesPost = createAsyncThunk(
 export const moviesUpdate = createAsyncThunk(
   "movies/patch",
   async (formValues: IMovieFormPost) => {
+    console.log(authenticationToken());
     return axios({
       url: `/movies/${formValues.id}`,
       method: "patch",

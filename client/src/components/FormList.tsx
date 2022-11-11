@@ -10,7 +10,7 @@ type AppProps = {
 const FormList = ({ rows, columns }: AppProps) => {
   return (
     <React.Fragment>
-      <Box sx={{ height: 600, width: "100%" }}>
+      <Box sx={{ height: 650, width: "100%" }}>
         <DataGrid
           rows={rows}
           columns={columns}

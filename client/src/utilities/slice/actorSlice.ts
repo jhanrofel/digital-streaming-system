@@ -86,6 +86,7 @@ const initialState = {
   data: [],
   dataOne: {},
   dataMovies: [],
+  selectedId: null,
 } as IActorInitialState;
 
 export const actorSlice = createSlice({
@@ -93,14 +94,19 @@ export const actorSlice = createSlice({
   initialState,
   reducers: {
     clearActor: (state) => {
-      state.logged = false;
       state.data = [];
     },
     selectActors: (state, action) => {
-      state.dataOne = action.payload;
+      state.selectedId = action.payload.id;
+    },
+    clearActorOne: (state) => {
+      state.dataOne = {firstName:"",lastName:"",gender:"",birthday:"",actorLink:{catalogue:""}};
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(actorsPost.fulfilled, (state, action) => {
+      state.data = [...state.data, action.payload];
+    });
     builder.addCase(actorsList.fulfilled, (state, action) => {
       state.data = action.payload;
     });
@@ -119,5 +125,5 @@ export const actorSlice = createSlice({
   },
 });
 
-export const { clearActor, selectActors } = actorSlice.actions;
+export const { clearActor, selectActors, clearActorOne } = actorSlice.actions;
 export default actorSlice.reducer;

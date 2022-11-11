@@ -32,6 +32,7 @@ export interface IActorInitialState {
   data: IActorFormPost[] | [];
   dataOne: IActorFormPost;
   dataMovies: IMovieForm[] | [];
+  selectedId: string | null;
 }
 
 export interface IAlert {
@@ -43,6 +44,11 @@ export interface IAlert {
 export interface IAutoCompleteOption {
   label: string;
   id: string;
+}
+
+export interface IButton {
+  label: string;
+  onClick: any;
 }
 
 export interface ICategory {

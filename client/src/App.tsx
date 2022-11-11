@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Actors from "./pages/Actors";
 import ActorDetails from "./pages/Actors/ActorDetails";
-import ActorEdit from "./pages/Actors/ActorEdit";
 import ActorMovies from "./pages/Actors/ActorMovies";
 import Movies from "./pages/Movies";
 import MoviesAll from "./pages/Movies/MoviesAll";
@@ -34,7 +33,6 @@ function App() {
         </Route>
         <Route path="/" element={<PrivateLayout />}>
           <Route path="/actors" element={<Actors />}></Route>
-          <Route path="/actors-edit" element={<ActorEdit />}></Route>
           <Route path="/actors-movies" element={<ActorMovies />}></Route>
           <Route path="/movies" element={<Movies />}></Route>
           <Route path="/movies-edit" element={<MovieEdit />}></Route>
