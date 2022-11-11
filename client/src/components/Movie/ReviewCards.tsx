@@ -14,7 +14,7 @@ const ReviewCards = ({ reviews }: AppProps) => {
           <Typography sx={{ fontSize: 18 }}>For Approval</Typography>
         )}
         <Typography sx={{ fontSize: 18 }}>{review.description}</Typography>
-        <Typography sx={{ fontSize: 14 }}>{review.reviewUser.email}</Typography>
+        <Typography sx={{ fontSize: 14 }}>{`${review.reviewUser.firstName} ${review.reviewUser.lastName}`}</Typography>
         <Typography sx={{ fontSize: 14 }}>{review.createdAt}</Typography>
         <FormRating name={"rating"} value={review.rating} error={""} />
       </CardContent>

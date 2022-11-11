@@ -26,6 +26,7 @@ const FormSelect = ({
       <InputLabel id="demo-simple-select-label">{label}</InputLabel>
       <Select
         labelId="demo-simple-select-label"
+        data-testid={name}
         id={name}
         name={name}
         value={value}

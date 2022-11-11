@@ -193,7 +193,6 @@ const MovieDetailsForm = ({
               No Review for this movie.
             </Typography>
           )}
-          {}
         </Box>
       </Box>
       <SnackAlert

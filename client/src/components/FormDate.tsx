@@ -18,6 +18,7 @@ const FormDate = ({ label, error, value, setNewValue }: AppProps) => {
     <FormControl fullWidth sx={{ m: 1 }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
+          data-testid={label}
           label={label}
           value={value}
           onChange={(newValue) => {

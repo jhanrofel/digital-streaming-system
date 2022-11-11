@@ -15,7 +15,7 @@ const renderForm = () => {
   return render(<FormButton label={formValues.label} onClick={formValues.onClick} />)
 }
 
-describe("<Button/>", () => {  
+describe("<Button/>", () => {    
   test("Should find element text.", () => {
     renderForm();
     const button = screen.getByText("Click Me");
