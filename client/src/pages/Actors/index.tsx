@@ -10,11 +10,10 @@ import Avatar from "@mui/material/Avatar";
 import Container from "@mui/material/Container";
 import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { SelectChangeEvent } from "@mui/material/Select";
-import dayjs, { Dayjs } from "dayjs";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { getAge } from "../../utilities/helpers";
 import {
-  actorsOne,
+  getActorById,
   actorsList,
   actorsDelete,
   selectActors,
@@ -22,12 +21,8 @@ import {
   actorsUpdate,
   actorsPost,
 } from "../../utilities/slice/actorSlice";
-import {
-  IActorFormPost,
-  IActorFormErrors,
-  IActorFormValues,
-} from "../../utilities/types";
-import { actorFormErrors, actorFormValues } from "../../utilities/formValues";
+import { IActorFormPost, IActorPostForm, IAlert } from "../../utilities/types";
+import { actorFormReset, alertDataReset } from "../../utilities/formValues";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
 import FormList from "../../components/FormList";
 import FormHeader from "../../components/FormHeader";
@@ -37,8 +32,7 @@ import SnackAlert from "../../components/SnackAlert";
 const ActorList = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [open, setOpen] = React.useState<boolean>(false);
-  const actor = useAppSelector((state) => state.actors.dataOne);
+  const actor = useAppSelector((state) => state.actors.byId);
   const actorId = useAppSelector((state) => state.actors.selectedId);
   const columns: GridColDef[] = [
     {
@@ -67,8 +61,8 @@ const ActorList = () => {
         `${getAge(params.row.birthday.substring(0, 10))}`,
     },
     {
-      field: "catalogue",
-      headerName: "Catalogue",
+      field: "imageLink",
+      headerName: "Image Link",
       sortable: false,
       width: 200,
       align: "center",
@@ -76,8 +70,8 @@ const ActorList = () => {
         return (
           <Avatar
             variant="square"
-            alt="Image Catalog"
-            src={params.row.actorLink.catalogue}
+            alt="Image Link"
+            src={params.row.imageLink}
             sx={{ width: 50, height: 50 }}
           />
         );
@@ -91,7 +85,7 @@ const ActorList = () => {
       sortable: false,
       renderCell: (params) => {
         const onClickEdit = () => {
-          dispatch(actorsOne(params.row.id));
+          dispatch(getActorById(params.row.id));
           setOpenActorForm(true);
         };
 
@@ -101,7 +95,7 @@ const ActorList = () => {
 
         const onClickDelete = () => {
           dispatch(selectActors({ id: params.row.id }));
-          setOpen(true);
+          setOpenDialogue(true);
         };
 
         return (
@@ -127,10 +121,9 @@ const ActorList = () => {
   ];
   const rows: IActorFormPost[] = useAppSelector((state) => state.actors.data);
   const onConfirmDelete = async (): Promise<void> => {
-    console.log(actorId);
     await dispatch(actorsDelete(actorId ? actorId : "")).then((res) => {
       if (res.type === "actors/delete/fulfilled") {
-        setOpen(false);
+        setOpenDialogue(false);
       }
     });
   };
@@ -142,39 +135,29 @@ const ActorList = () => {
   React.useEffect(() => {
     setFormValues((stateForm) => ({
       ...stateForm,
-      firstName: actor.firstName || "",
-      lastName: actor.lastName || "",
-      gender: actor.gender || "",
-      link: actor.link || "",
-      catalogue: actor.actorLink ? actor.actorLink.catalogue : "",
+      firstName: actor?.firstName || "",
+      lastName: actor?.lastName || "",
+      gender: actor?.gender || "",
+      birthday: actor?.birthday || "",
+      imageLink: actor?.imageLink || "",
     }));
-
-    setBirthday(dayjs(actor.birthday));
   }, [dispatch, actor]);
-
-  const [openActorForm, setOpenActorForm] = React.useState(false);
 
   const onClickHandlerFormOpen = () => {
     setOpenActorForm(true);
   };
   const onClickHandlerFormClose = () => {
     setOpenActorForm(false);
-    setFormValues(actorFormValues);
-    setFormErrors(actorFormErrors);
-    setBirthday(dayjs());
+    setFormValues(actorFormReset);
+    setFormErrors(actorFormReset);
     dispatch(clearActorOne());
   };
 
   const headerButtons = [{ label: "Add", onClick: onClickHandlerFormOpen }];
-  const [birthday, setBirthday] = React.useState<Dayjs | null>(null);
   const [formErrors, setFormErrors] =
-    React.useState<IActorFormErrors>(actorFormErrors);
+    React.useState<IActorPostForm>(actorFormReset);
   const [formValues, setFormValues] =
-    React.useState<IActorFormValues>(actorFormValues);
-
-  React.useEffect(() => {
-    formErrors.birthday = ""; // eslint-disable-next-line
-  }, [birthday]);
+    React.useState<IActorPostForm>(actorFormReset);
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>): void => {
     let name = (event.target as HTMLInputElement).name;
@@ -189,9 +172,9 @@ const ActorList = () => {
         setFormValues((state) => ({ ...state, lastName: value }));
         setFormErrors((state) => ({ ...state, lastName: "" }));
         break;
-      case "catalogue":
-        setFormValues((state) => ({ ...state, catalogue: value }));
-        setFormErrors((state) => ({ ...state, catalogue: "" }));
+      case "imageLink":
+        setFormValues((state) => ({ ...state, imageLink: value }));
+        setFormErrors((state) => ({ ...state, imageLink: "" }));
         break;
       default:
         break;
@@ -206,16 +189,22 @@ const ActorList = () => {
     setFormErrors((state) => ({ ...state, gender: "" }));
   };
 
+  const onChangeDateHandler = (newValue: string): void => {
+    setFormValues((state) => ({
+      ...state,
+      birthday: newValue,
+    }));
+    setFormErrors((state) => ({ ...state, birthday: "" }));
+  };
+
   const onClickSubmitHandler = async (): Promise<void> => {
     if (formValidation()) {
-      const postUserValue: IActorFormPost = {
+      const postUserValue: IActorPostForm = {
         firstName: formValues.firstName,
         lastName: formValues.lastName,
         gender: formValues.gender,
-        birthday: birthday ? birthday.toString() : "",
-        actorLink: {
-          catalogue: formValues.catalogue,
-        },
+        birthday: formValues.birthday,
+        imageLink: formValues.imageLink,
       };
 
       const actorGender = formValues.gender === "Male" ? "Actor" : "Actress";
@@ -226,15 +215,24 @@ const ActorList = () => {
               actorsUpdate({
                 ...postUserValue,
                 id: actor.id,
-                link: formValues.link,
               })
             )
           : await dispatch(actorsPost(postUserValue));
 
       if (dispatchResponse.type === "actors/post/fulfilled") {
-        resetFormValues(`${actorGender} added.`);
+        resetFormValues();
+        setAlert({
+          open: true,
+          message: `${actorGender} added!`,
+          severity: "success",
+        });
       } else if (dispatchResponse.type === "actors/update/fulfilled") {
-        resetFormValues(`${actorGender} updated.`);
+        resetFormValues();
+        setAlert({
+          open: true,
+          message: `${actorGender} updated!`,
+          severity: "success",
+        });
       } else {
         setFormValues((state) => ({
           ...state,
@@ -244,6 +242,11 @@ const ActorList = () => {
             severity: "error",
           },
         }));
+        setAlert({
+          open: true,
+          message: dispatchResponse.payload,
+          severity: "error",
+        });
       }
     }
   };
@@ -265,23 +268,23 @@ const ActorList = () => {
         ...state,
         gender: "Gender is required.",
       }));
-    if (birthday === null)
+    if (formValues.birthday === "")
       setFormErrors((state) => ({
         ...state,
         birthday: "Birthday is required.",
       }));
-    if (formValues.catalogue === "")
+    if (formValues.imageLink === "")
       setFormErrors((state) => ({
         ...state,
-        catalogue: "Catalogue is required.",
+        imageLink: "Image link is required.",
       }));
 
     if (
       formValues.firstName !== "" &&
       formValues.lastName !== "" &&
       formValues.gender !== "" &&
-      birthday !== null &&
-      formValues.catalogue !== ""
+      formValues.birthday !== "" &&
+      formValues.imageLink !== ""
     ) {
       valid = true;
     }
@@ -289,28 +292,23 @@ const ActorList = () => {
     return valid;
   };
 
+  const [openActorForm, setOpenActorForm] = React.useState(false);
+
+  const [openDialogue, setOpenDialogue] = React.useState<boolean>(false);
+
+  const [alertData, setAlert] = React.useState<IAlert>(alertDataReset);
   const onClickCloseAlertHandler = (
     event: Event | React.SyntheticEvent<any, Event>
   ): void => {
-    setFormValues((state) => ({
-      ...state,
-      alert: { open: false, message: "", severity: "info" },
-    }));
+    setAlert(alertDataReset);
   };
 
-  const resetFormValues = (message:string) => {
-    setFormErrors(actorFormErrors);
-    setFormValues({
-      ...actorFormValues,
-      alert: {
-        open: true,
-        message: message,
-        severity: "success",
-      },
-    });
+  const resetFormValues = () => {
+    setFormErrors(actorFormReset);
+    setFormValues(actorFormReset);
     setOpenActorForm(false);
-    setBirthday(dayjs())
-  }
+    setAlert(alertDataReset);
+  };
 
   return (
     <React.Fragment>
@@ -318,8 +316,8 @@ const ActorList = () => {
         <FormHeader header="ACTORS" buttons={headerButtons} />
         <FormList rows={rows} columns={columns} />
         <DeleteDialogue
-          setOpen={setOpen}
-          open={open}
+          setOpen={setOpenDialogue}
+          open={openDialogue}
           onConfirmDelete={onConfirmDelete}
         />
       </Container>
@@ -328,17 +326,16 @@ const ActorList = () => {
         formName={"AddForm"}
         formErrors={formErrors}
         formValues={formValues}
-        birthday={birthday}
         onChange={onChangeHandler}
         onClick={onClickSubmitHandler}
         onChangeSelect={onChangeSelect}
-        setBirthday={setBirthday}
         onClickHandlerFormClose={onClickHandlerFormClose}
-      />      
+        onChangeDate={onChangeDateHandler}
+      />
       <SnackAlert
-              alertData={formValues.alert}
-              onClickCloseAlert={onClickCloseAlertHandler}
-            />
+        alertData={alertData}
+        onClickCloseAlert={onClickCloseAlertHandler}
+      />
     </React.Fragment>
   );
 };

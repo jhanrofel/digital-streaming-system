@@ -1,6 +1,8 @@
 import {
   IActorFormErrors,
   IActorFormValues,
+  IActorPostForm,
+  IAlert,
   ILoginFormErrors,
   ILoginFormValues,
   IMovieFormErrors,
@@ -12,6 +14,20 @@ import {
   IUserFormErrors,
   IUserFormValues,
 } from "./types";
+
+export const alertDataReset: IAlert = {
+  open: false,
+  message: "string",
+  severity: "info",
+};
+
+export const actorFormReset: IActorPostForm = {
+  firstName: "",
+  lastName: "",
+  gender: "",
+  birthday: "",
+  imageLink: "",
+};
 
 export const actorFormErrors: IActorFormErrors = {
   firstName: "",

@@ -1,5 +1,5 @@
 import FormControl from "@mui/material/FormControl";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -9,21 +9,20 @@ import FormHelperText from "@mui/material/FormHelperText";
 type AppProps = {
   label: string;
   error: string;
-  value: Dayjs | null;
-  setNewValue: any;
+  value: string;
+  onChange: any;
 };
 
-const FormDate = ({ label, error, value, setNewValue }: AppProps) => {
+const FormDate = ({ label, error, value, onChange }: AppProps) => {
+  const dayJs = value ? dayjs(value) : dayjs().format("MM/DD/YYYY");
   return (
     <FormControl fullWidth sx={{ m: 1 }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           data-testid={label}
           label={label}
-          value={value}
-          onChange={(newValue) => {
-            setNewValue(newValue?.format('YYYY-MM-DD'));
-          }}
+          value={dayJs}
+          onChange={onChange}
           renderInput={(params) => <TextField {...params} variant="filled" />}
         />
       </LocalizationProvider>

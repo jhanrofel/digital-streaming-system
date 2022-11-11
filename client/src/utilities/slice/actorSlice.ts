@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authenticationToken } from "../authentication";
-import { IActorFormPost, IActorInitialState } from "../types";
+import { IActorInitialState, IActorPostForm } from "../types";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3001";
 
 export const actorsPost = createAsyncThunk(
   "actors/post",
-  async (formValues: IActorFormPost) => {
+  async (formValues: IActorPostForm) => {
     return axios({
       url: `/actors`,
       method: "post",
@@ -20,7 +20,7 @@ export const actorsPost = createAsyncThunk(
 
 export const actorsUpdate = createAsyncThunk(
   "actors/update",
-  async (formValues: IActorFormPost) => {
+  async (formValues: IActorPostForm) => {
     return axios({
       url: `/actors/${formValues.id}`,
       method: "patch",
@@ -55,7 +55,7 @@ export const actorsList = createAsyncThunk("actors/list", async () => {
     .catch((err) => err);
 });
 
-export const actorsOne = createAsyncThunk(
+export const getActorById = createAsyncThunk(
   "actors/one",
   async (actorId: string) => {
     return axios({
@@ -85,6 +85,7 @@ const initialState = {
   logged: false,
   data: [],
   dataOne: {},
+  byId: null,
   dataMovies: [],
   selectedId: null,
 } as IActorInitialState;
@@ -100,7 +101,7 @@ export const actorSlice = createSlice({
       state.selectedId = action.payload.id;
     },
     clearActorOne: (state) => {
-      state.dataOne = {firstName:"",lastName:"",gender:"",birthday:"",actorLink:{catalogue:""}};
+      state.byId = null;
     },
   },
   extraReducers: (builder) => {
@@ -110,11 +111,14 @@ export const actorSlice = createSlice({
     builder.addCase(actorsList.fulfilled, (state, action) => {
       state.data = action.payload;
     });
-    builder.addCase(actorsOne.fulfilled, (state, action) => {
-      state.dataOne = action.payload;
+    builder.addCase(getActorById.fulfilled, (state, action) => {
+      state.byId = action.payload;
     });
     builder.addCase(actorsUpdate.fulfilled, (state, action) => {
-      state.dataOne = action.payload;
+      state.data = state.data.map((actor) =>
+        actor.id === action.payload.id ? action.payload : actor
+      );
+      state.byId = null;
     });
     builder.addCase(actorsDelete.fulfilled, (state, action) => {
       state.data = state.data.filter((actor) => actor.id !== action.payload.id);

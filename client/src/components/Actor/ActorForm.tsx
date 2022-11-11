@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { IActorFormErrors, IActorFormValues } from "../../utilities/types";
-import { Dayjs } from "dayjs";
+import { IActorPostForm } from "../../utilities/types";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -16,14 +15,15 @@ import Modal from "@mui/material/Modal";
 type AppProps = {
   openActorForm: boolean;
   formName: string;
-  formValues: IActorFormValues;
-  formErrors: IActorFormErrors;
-  birthday: Dayjs | null;
+  formValues: IActorPostForm;
+  formErrors: IActorPostForm;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onChangeSelect: (event: SelectChangeEvent) => void;
-  onClickHandlerFormClose: (event: Event | React.SyntheticEvent<any, Event>) => void;
-  setBirthday: any;
+  onClickHandlerFormClose: (
+    event: Event | React.SyntheticEvent<any, Event>
+  ) => void;
+  onChangeDate: (newValue: string) => void;
 };
 
 export const genderData = ["Male", "Female"];
@@ -44,12 +44,11 @@ const ActorForm = ({
   formName,
   formErrors,
   formValues,
-  birthday,
   onClick,
   onChange,
   onChangeSelect,
-  setBirthday,
-  onClickHandlerFormClose
+  onClickHandlerFormClose,
+  onChangeDate,
 }: AppProps) => {
   const navigate = useNavigate();
   return (
@@ -57,7 +56,7 @@ const ActorForm = ({
       <Modal open={openActorForm}>
         <Box sx={style}>
           <Box sx={{ flex: 1, width: 1, justifyContent: "flex-end" }}>
-            <IconButton onClick={onClickHandlerFormClose} >
+            <IconButton onClick={onClickHandlerFormClose}>
               <CloseIcon color="primary" />
             </IconButton>
           </Box>
@@ -91,23 +90,23 @@ const ActorForm = ({
             <FormDate
               error={formErrors.birthday}
               label="Birthday"
-              value={birthday}
-              setNewValue={setBirthday}
+              value={formValues.birthday}
+              onChange={onChangeDate}
             />
           </Box>
           <Box sx={{ display: "flex" }}>
             <FormText
-              name="catalogue"
-              value={formValues.catalogue}
+              name="imageLink"
+              value={formValues.imageLink}
               label="Image Link"
               type="search"
-              error={formErrors.catalogue}
+              error={formErrors.imageLink}
               onChange={onChange}
             />
             <Avatar
               variant="square"
               alt="Image Catalogue"
-              src={formValues.catalogue}
+              src={formValues.imageLink}
               sx={{ width: 65, height: 65 }}
             />
           </Box>

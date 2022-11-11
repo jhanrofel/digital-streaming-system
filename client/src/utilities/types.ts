@@ -15,6 +15,17 @@ export interface IActorFormValues {
   alert: IAlert;
 }
 
+export interface IActorPostForm {
+  id?: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  birthday: string;
+  imageLink: string;
+  actorMovies?: IMovieForm;
+  age?: number;
+}
+
 export interface IActorFormPost {
   id?: string;
   firstName: string;
@@ -33,6 +44,7 @@ export interface IActorInitialState {
   dataOne: IActorFormPost;
   dataMovies: IMovieForm[] | [];
   selectedId: string | null;
+  byId: IActorPostForm | null;
 }
 
 export interface IAlert {
