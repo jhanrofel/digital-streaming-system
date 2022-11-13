@@ -51,12 +51,12 @@ const Movies = () => {
         imageLink: movie.imageLink,
         trailerLink: movie.trailerLink,
         actors: movieActors,
-      }
+      };
 
-      setDefaultValue({...movieFormReset,...newValue});
+      setDefaultValue({ ...movieFormReset, ...newValue });
 
       setForm(newValue);
-    }
+    }// eslint-disable-next-line
   }, [movie]);
 
   const onClickDeleteIcon = () => {
@@ -67,7 +67,7 @@ const Movies = () => {
     setTimeout(() => {
       setOpenMovieForm(true);
     }, 100);
-    
+
     if (movie) {
       setDefaultValue({
         ...defaultValue,

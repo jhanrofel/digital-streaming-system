@@ -65,10 +65,17 @@ export const useFormValidation = ({ callback, fieldsToValidate }: any) => {
     let name = (event.target as HTMLInputElement).name;
     let value = (event.target as HTMLInputElement).value;
 
+    const newFormErrors = omit(formErrors, name);
+    setErrors(newFormErrors);
+
     setValues({
       ...formValues,
       [name]: value,
     });
+  };
+
+  const onChangeDateBirthday = (value: string): void => {
+    setValues({ ...formValues, birthday: value });
   };
 
   const onClickHandler = (event: React.FormEvent<HTMLFormElement>) => {
@@ -138,6 +145,7 @@ export const useFormValidation = ({ callback, fieldsToValidate }: any) => {
     formErrors,
     onChangeHandler,
     onChangeActors,
+    onChangeDateBirthday,
     onChangeSelect,
     onClickHandler,
     resetForm,
@@ -153,6 +161,12 @@ export const getFieldName = (name: string): string => {
       break;
     case "imageLink":
       fieldName = "Image link";
+      break;
+    case "firstName":
+      fieldName = "First name";
+      break;
+    case "lastName":
+      fieldName = "Last name";
       break;
     default:
       fieldName = name.charAt(0).toUpperCase() + name.slice(1);

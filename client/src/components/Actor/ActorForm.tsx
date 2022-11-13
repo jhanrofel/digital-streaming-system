@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { IActorForm } from "../../utilities/types";
+import { IObjectAny, IActorForm } from "../../utilities/types";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -15,18 +15,20 @@ import Modal from "@mui/material/Modal";
 type AppProps = {
   openActorForm: boolean;
   formName: string;
-  formValues: IActorForm;
-  formErrors: IActorForm;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  formValues: IObjectAny;
+  formErrors: IObjectAny;
+  defaultValue: IActorForm;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onChangeSelect: (event: SelectChangeEvent) => void;
   onClickHandlerFormClose: (
     event: Event | React.SyntheticEvent<any, Event>
   ) => void;
   onChangeDate: (newValue: string) => void;
+  onClickHandler: any;
 };
 
-export const genderData = ["Male", "Female"];
+const genderData = ["Male", "Female"];
+
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -44,7 +46,8 @@ const ActorForm = ({
   formName,
   formErrors,
   formValues,
-  onClick,
+  defaultValue,
+  onClickHandler,
   onChange,
   onChangeSelect,
   onClickHandlerFormClose,
@@ -62,16 +65,16 @@ const ActorForm = ({
           </Box>
           <Box sx={{ display: "flex" }}>
             <FormText
+              value={defaultValue.firstName}
               name="firstName"
-              value={formValues.firstName}
               label="First Name"
               type="search"
               error={formErrors.firstName}
               onChange={onChange}
             />
             <FormText
+              value={defaultValue.lastName}
               name="lastName"
-              value={formValues.lastName}
               label="Last Name"
               type="search"
               error={formErrors.lastName}
@@ -81,7 +84,7 @@ const ActorForm = ({
           <Box sx={{ display: "flex" }}>
             <FormSelect
               name="gender"
-              value={formValues.gender}
+              value={formValues.gender || defaultValue.gender}
               label="Gender"
               error={formErrors.gender}
               options={genderData}
@@ -90,14 +93,14 @@ const ActorForm = ({
             <FormDate
               error={formErrors.birthday}
               label="Birthday"
-              value={formValues.birthday}
+              value={formValues.birthday || defaultValue.birthday}
               onChange={onChangeDate}
             />
           </Box>
           <Box sx={{ display: "flex" }}>
             <FormText
+              value={defaultValue.imageLink}
               name="imageLink"
-              value={formValues.imageLink}
               label="Image Link"
               type="search"
               error={formErrors.imageLink}
@@ -117,7 +120,7 @@ const ActorForm = ({
                 onClick={() => navigate("../actors")}
               />
             )}
-            <FormButton label="Save" onClick={onClick} />
+            <FormButton label="Save" onClick={onClickHandler} />
           </Box>
         </Box>
       </Modal>

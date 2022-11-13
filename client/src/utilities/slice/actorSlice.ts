@@ -99,7 +99,7 @@ export const actorSlice = createSlice({
       state.selected = null;
     },
     selectActors: (state, action) => {
-      state.selected = action.payload.id;
+      state.selected = action.payload;
     },
     clearSelected: (state) => {
       state.byId = null;
