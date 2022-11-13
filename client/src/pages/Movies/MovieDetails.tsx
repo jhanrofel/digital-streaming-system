@@ -1,22 +1,24 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import {
+  movieFormResetErrors,
+  movieFormReset,
   movieDetailsFormErrors,
-  movieDetailsFormValues,
+  movieDetailsForm,
 } from "../../utilities/formValues";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { isLogged } from "../../utilities/loggedIn";
 import { categoriesList } from "../../utilities/slice/categorySlice";
 import {
-  moviesOne,
+  moviesById,
   moviesReviewsApproved,
   moviesRating,
 } from "../../utilities/slice/movieSlice";
 import { reviewsPost, myMovieReview } from "../../utilities/slice/reviewSlice";
 import {
-  IMovieDetailsFormErrors,
-  IMovieDetailsFormValues,
-  IReviewFormPost,
+  IMovieForm,
+  IMovieFormErrors,
+  IReviewFormPost,IMovieReviewForm,IMovieReviewFormErrors,
 } from "../../utilities/types";
 import MovieDetailsForm from "../../components/Movie/MovieDetailsForm";
 
@@ -24,28 +26,26 @@ const MovieDetails = () => {
   const dispatch = useAppDispatch();
   const { state } = useLocation();
   const movieId = state;
-  const movie = useAppSelector((stateMovie) => stateMovie.movies.dataGetOne);
+  const movie = useAppSelector((stateMovie) => stateMovie.movies.byId);
   const movieRating = useAppSelector(
-    (stateMovieRating) => stateMovieRating.movies.dataRating
+    (stateMovieRating) => stateMovieRating.movies.rating
   );
   const categories = useAppSelector(
     (stateCategories) => stateCategories.categories.data
   );
-  const reviews = useAppSelector(
-    (stateReviews) => stateReviews.movies.dataReviews
-  );
+  const reviews = useAppSelector((stateReviews) => stateReviews.movies.reviews);
   const myReview = useAppSelector(
     (stateMyReview) => stateMyReview.reviews.dataOne
   );
-  const [formValues, setFormValues] = React.useState<IMovieDetailsFormValues>(
-    movieDetailsFormValues
+  const [formValues, setFormValues] = React.useState<IMovieReviewForm>(
+    movieDetailsForm
   );
-  const [formErrors, setFormErrors] = React.useState<IMovieDetailsFormErrors>(
+  const [formErrors, setFormErrors] = React.useState<IMovieReviewFormErrors>(
     movieDetailsFormErrors
   );
 
   React.useEffect(() => {
-    dispatch(moviesOne(movieId));
+    dispatch(moviesById(movieId));
     dispatch(categoriesList());
     dispatch(moviesReviewsApproved(movieId));
     dispatch(moviesRating(movieId));
@@ -58,68 +58,68 @@ const MovieDetails = () => {
     let name = (event.target as HTMLInputElement).name;
     let value = (event.target as HTMLInputElement).value;
     if (name === "review") {
-      setFormValues((stateReviewForm) => ({
-        ...stateReviewForm,
-        review: value,
-      }));
-      setFormErrors((stateReviewError) => ({
-        ...stateReviewError,
-        review: "",
-      }));
+      // setFormValues((stateReviewForm) => ({
+      //   ...stateReviewForm,
+      //   review: value,
+      // }));
+      // setFormErrors((stateReviewError) => ({
+      //   ...stateReviewError,
+      //   review: "",
+      // }));
     }
   };
 
   const onClickSubmitHandler = async (): Promise<void> => {
-    const postReviewValue: IReviewFormPost = {
-      description: formValues.review,
-      rating: formValues.rating,
-      movie: movieId,
-    };
-    if (formValidation()) {
-      await dispatch(reviewsPost(postReviewValue)).then((res) => {
-        if (res.type === "reviews/post/fulfilled") {
-          setFormValues((stateAlertFullfilled) => ({
-            ...stateAlertFullfilled,
-            alert: {
-              open: true,
-              message: "Review awaits for approval.",
-              severity: "success",
-            },
-          }));
-          setFormValues((stateRatingValue) => ({
-            ...stateRatingValue,
-            review: "",
-            rating: null,
-          }));
-        } else {
-          setFormValues((stateAlertReject) => ({
-            ...stateAlertReject,
-            alert: {
-              open: true,
-              message: res.payload,
-              severity: "warning",
-            },
-          }));
-        }
-      });
-    }
+    // const postReviewValue: IReviewFormPost = {
+    //   description: formValues.review,
+    //   rating: formValues.rating,
+    //   movie: movieId,
+    // };
+    // if (formValidation()) {
+    //   await dispatch(reviewsPost(postReviewValue)).then((res) => {
+    //     if (res.type === "reviews/post/fulfilled") {
+    //       setFormValues((stateAlertFullfilled) => ({
+    //         ...stateAlertFullfilled,
+    //         alert: {
+    //           open: true,
+    //           message: "Review awaits for approval.",
+    //           severity: "success",
+    //         },
+    //       }));
+    //       setFormValues((stateRatingValue) => ({
+    //         ...stateRatingValue,
+    //         review: "",
+    //         rating: null,
+    //       }));
+    //     } else {
+    //       setFormValues((stateAlertReject) => ({
+    //         ...stateAlertReject,
+    //         alert: {
+    //           open: true,
+    //           message: res.payload,
+    //           severity: "warning",
+    //         },
+    //       }));
+    //     }
+    //   });
+    // }
   };
 
   const formValidation = (): boolean => {
     let valid = false;
-    if (formValues.review === "")
-      setFormErrors((stateReviewError) => ({
-        ...stateReviewError,
-        review: "Review is required.",
-      }));
-    if (formValues.rating === null)
-      setFormErrors((stateRatingError) => ({
-        ...stateRatingError,
-        rating: "Rating is required.",
-      }));
-    if (formValues.review !== "" && formValues.rating !== null) {
-      valid = true;
-    }
+    // if (formValues.review === "")
+    //   setFormErrors((stateReviewError) => ({
+    //     ...stateReviewError,
+    //     review: "Review is required.",
+    //   }));
+    // if (formValues.rating === null)
+    //   setFormErrors((stateRatingError) => ({
+    //     ...stateRatingError,
+    //     rating: "Rating is required.",
+    //   }));
+    // if (formValues.review !== "" && formValues.rating !== null) {
+    //   valid = true;
+    // }
 
     return valid;
   };
@@ -127,20 +127,20 @@ const MovieDetails = () => {
   const onClickCloseAlertHandler = (
     event: Event | React.SyntheticEvent<any, Event>
   ): void => {
-    setFormValues((stateAlertForm) => ({
-      ...stateAlertForm,
-      alert: { open: false, message: "", severity: "info" },
-    }));
+    // setFormValues((stateAlertForm) => ({
+    //   ...stateAlertForm,
+    //   alert: { open: false, message: "", severity: "info" },
+    // }));
   };
 
   const onChangeRatingHandler = (
     event: Event | React.SyntheticEvent<Element, Event>,
     newValue: number | null
   ): void => {
-    setFormValues((stateRatingForm) => ({
-      ...stateRatingForm,
-      rating: newValue,
-    }));
+    // setFormValues((stateRatingForm) => ({
+    //   ...stateRatingForm,
+    //   rating: newValue,
+    // }));
   };
 
   return (

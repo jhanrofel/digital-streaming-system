@@ -55,7 +55,7 @@ export const actorsList = createAsyncThunk("actors/list", async () => {
     .catch((err) => err);
 });
 
-export const getActorById = createAsyncThunk(
+export const actorById = createAsyncThunk(
   "actors/one",
   async (actorId: string) => {
     return axios({
@@ -112,7 +112,7 @@ export const actorSlice = createSlice({
     builder.addCase(actorsList.fulfilled, (state, action) => {
       state.list = action.payload;
     });
-    builder.addCase(getActorById.fulfilled, (state, action) => {
+    builder.addCase(actorById.fulfilled, (state, action) => {
       state.byId = action.payload;
     });
     builder.addCase(actorsUpdate.fulfilled, (state, action) => {

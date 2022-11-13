@@ -4,7 +4,6 @@ import ActorDetails from "./pages/Actors/ActorDetails";
 import ActorMovies from "./pages/Actors/ActorMovies";
 import Movies from "./pages/Movies";
 import MoviesAll from "./pages/Movies/MoviesAll";
-import MovieEdit from "./pages/Movies/MovieEdit";
 import MovieDetails from "./pages/Movies/MovieDetails";
 import Reviews from "./pages/Reviews";
 import Users from "./pages/Users";
@@ -35,7 +34,6 @@ function App() {
           <Route path="/actors" element={<Actors />}></Route>
           <Route path="/actors-movies" element={<ActorMovies />}></Route>
           <Route path="/movies" element={<Movies />}></Route>
-          <Route path="/movies-edit" element={<MovieEdit />}></Route>
           <Route path="/reviews" element={<Reviews />}></Route>
           <Route path="/users" element={<Users />}></Route>
           <Route path="/users-edit" element={<UserEdit />}></Route>

@@ -18,7 +18,7 @@ import {
   actorsUpdate,
   actorsPost,
   clearSelected,
-  getActorById,
+  actorById,
   selectActors,
 } from "../../utilities/slice/actorSlice";
 import { IActorData, IActorForm, IAlert } from "../../utilities/types";
@@ -85,7 +85,7 @@ const ActorList = () => {
       sortable: false,
       renderCell: (params) => {
         const onClickEdit = () => {
-          dispatch(getActorById(params.row.id));
+          dispatch(actorById(params.row.id));
           setOpenActorForm(true);
         };
 
@@ -120,6 +120,10 @@ const ActorList = () => {
     },
   ];
   const rows: IActorData[] = useAppSelector((state) => state.actors.list);
+  const [formErrors, setFormErrors] =
+    React.useState<IActorForm>(actorFormReset);
+  const [formValues, setFormValues] =
+    React.useState<IActorForm>(actorFormReset);
 
   const onConfirmDelete = async (): Promise<void> => {
     await dispatch(actorsDelete(actorId ? actorId : "")).then((res) => {
@@ -144,9 +148,6 @@ const ActorList = () => {
     }));
   }, [dispatch, actor]);
 
-  const onClickHandlerFormOpen = () => {
-    setOpenActorForm(true);
-  };
   const onClickHandlerFormClose = () => {
     setOpenActorForm(false);
     setFormValues(actorFormReset);
@@ -154,11 +155,10 @@ const ActorList = () => {
     dispatch(clearSelected());
   };
 
+  const onClickHandlerFormOpen = () => {
+    setOpenActorForm(true);
+  };
   const headerButtons = [{ label: "Add", onClick: onClickHandlerFormOpen }];
-  const [formErrors, setFormErrors] =
-    React.useState<IActorForm>(actorFormReset);
-  const [formValues, setFormValues] =
-    React.useState<IActorForm>(actorFormReset);
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>): void => {
     let name = (event.target as HTMLInputElement).name;
@@ -200,7 +200,7 @@ const ActorList = () => {
 
   const onClickSubmitHandler = async (): Promise<void> => {
     if (formValidation()) {
-      const postUserValue: IActorForm = {
+      const postActorForm: IActorForm = {
         firstName: formValues.firstName,
         lastName: formValues.lastName,
         gender: formValues.gender,
@@ -214,11 +214,11 @@ const ActorList = () => {
         actor && actor.id
           ? await dispatch(
               actorsUpdate({
-                ...postUserValue,
+                ...postActorForm,
                 id: actor.id,
               })
             )
-          : await dispatch(actorsPost(postUserValue));
+          : await dispatch(actorsPost(postActorForm));
 
       if (dispatchResponse.type === "actors/post/fulfilled") {
         resetFormValues();

@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
-import { getActorById, actorsMovies } from "../../utilities/slice/actorSlice";
+import { actorById, actorsMovies } from "../../utilities/slice/actorSlice";
 import ActorDetailsForm from "../../components/Actor/ActorDetailsForm";
 
 const ActorDetails = () => {
@@ -14,7 +14,7 @@ const ActorDetails = () => {
   );
 
   React.useEffect(() => {
-    dispatch(getActorById(actorId));
+    dispatch(actorById(actorId));
     dispatch(actorsMovies(actorId));
   }, [dispatch, actorId]);
 

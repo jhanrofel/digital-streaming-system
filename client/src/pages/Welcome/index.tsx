@@ -1,5 +1,6 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
+import { ICard } from "../../utilities/types";
 import { moviesLatestUploads } from "../../utilities/slice/movieSlice";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
@@ -12,13 +13,13 @@ const Welcome = () => {
   const [search, setSearch] = React.useState<string>("");
 
   const moviesLatest = useAppSelector(
-    (state) => state.movies.dataLatestUploads
+    (state) => state.movies.list
   );
-  const movieDataLatestUploads: any = moviesLatest.map((movies) => ({
+  const movieLatestUploads: ICard[] = moviesLatest.map((movies) => ({
     id: movies.id,
     title: movies.title,
     subtitle: movies.yearReleased,
-    url: movies.movieLink.catalogue,
+    url: movies.imageLink,
   }));
 
   React.useEffect(() => {
@@ -54,7 +55,7 @@ const Welcome = () => {
             <FormImageList
               header="LATEST UPLOADS"
               page="movies-details"
-              movieData={movieDataLatestUploads}
+              movieData={movieLatestUploads}
             />
           </Box>
         </Box>

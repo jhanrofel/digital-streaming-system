@@ -3,10 +3,10 @@ import {
   IAlert,
   ILoginFormErrors,
   ILoginFormValues,
+  IMovieForm,
   IMovieFormErrors,
-  IMovieFormValues,
-  IMovieDetailsFormErrors,
-  IMovieDetailsFormValues,
+  IMovieReviewForm,
+  IMovieReviewFormErrors,
   IRegisterFormErrors,
   IRegisterFormValues,
   IUserFormErrors,
@@ -42,45 +42,38 @@ export const loginFormValues: ILoginFormValues = {
   },
 };
 
-export const movieFormErrors: IMovieFormErrors = {
+export const movieFormReset: IMovieForm = {
   title: "",
   cost: "",
   yearReleased: "",
-  catalogue: "",
+  comingSoon: "False",
+  featured: "False",
+  imageLink: "",
+  trailerLink: "",
+  actors: [],
+};
+
+export const movieFormResetErrors: IMovieFormErrors = {
+  title: "",
+  cost: "",
+  yearReleased: "",
+  comingSoon: "",
+  featured: "",
+  imageLink: "",
+  trailerLink: "",
   actors: "",
 };
 
-export const movieFormValues: IMovieFormValues = {
-  title: "",
-  cost: 0,
-  yearReleased: 2022,
-  comingSoon: "False",
-  featured: "False",
-  categories: [],
-  catalogue: "",
-  trailer: "",
-  actors: [],
-  alert: {
-    open: false,
-    message: "",
-    severity: "info",
-  },
+export const movieDetailsForm: IMovieReviewForm = {
+  review: "",
+  rating: 0,
 };
 
-export const movieDetailsFormErrors: IMovieDetailsFormErrors = {
+export const movieDetailsFormErrors: IMovieReviewFormErrors = {
   review: "",
   rating: "",
 };
 
-export const movieDetailsFormValues: IMovieDetailsFormValues = {
-  review: "",
-  rating: null,
-  alert: {
-    open: false,
-    message: "",
-    severity: "info",
-  },
-};
 
 export const registerFormErrors: IRegisterFormErrors = {
   email: "",

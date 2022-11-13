@@ -21,11 +21,7 @@ const ActorMoviesForm = ({ actor, movies }: AppProps) => {
       >{`${actor?.firstName} ${actor?.lastName}'s MOVIES `}</Typography>
       <Box sx={{ display: "flex" }}>
         {movies?.map((movie, i) => (
-          <FormCard
-            key={i}
-            title={movie.title}
-            link={movie.movieLink.catalogue}
-          />
+          <FormCard key={i} title={movie.title} link={movie.imageLink} />
         ))}
       </Box>
       <Box>

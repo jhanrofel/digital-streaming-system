@@ -1,6 +1,6 @@
 import React from "react";
 import { getAge } from "../../utilities/helpers";
-import { IActorData, IMovieForm } from "../../utilities/types";
+import { IActorData, ICard, IMovieForm } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import FormImageList from "../FormImageList";
@@ -11,11 +11,11 @@ type AppProps = {
 };
 
 const ActorDetailsForm = ({ actor, actorMovies }: AppProps) => {
-  const movieData = actorMovies?.map((movie: IMovieForm) => ({
+  const movieData:ICard[] = actorMovies?.map((movie) => ({
     id: movie.id,
     title: movie.title,
     subtitle: movie.yearReleased,
-    url: movie.movieLink.catalogue,
+    url: movie.imageLink,
   }));
 
   return (

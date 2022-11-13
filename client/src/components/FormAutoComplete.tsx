@@ -2,19 +2,15 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
+import { IAutoCompleteOption } from "../utilities/types";
 type AppProps = {
   id: string;
   label: string;
   error: string;
-  options: OptionsClass[];
-  value: OptionsClass[];
+  options: IAutoCompleteOption[];
+  value: IAutoCompleteOption[];
   onChange: any;
 };
-
-interface OptionsClass {
-  label: string;
-  id: string;
-}
 
 export default function FormAutoComplete({
   id,

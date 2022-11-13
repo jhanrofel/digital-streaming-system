@@ -41,6 +41,13 @@ export interface IButton {
   onClick: any;
 }
 
+export interface ICard {
+  id?: string;
+  title: string;
+  subtitle: string;
+  url: string;
+}
+
 export interface ICategory {
   id?: string;
   name: string;
@@ -49,15 +56,6 @@ export interface ICategory {
 export interface ICategoryInitialState {
   data: ICategory[] | [];
   dataOne: ICategory;
-}
-
-export interface ILinkActor {
-  catalogue: string;
-}
-
-export interface ILinkMovie {
-  catalogue: string;
-  trailer?: string;
 }
 
 export interface ILoginFormErrors {
@@ -71,111 +69,83 @@ export interface ILoginFormValues {
   alert: IAlert;
 }
 
-export interface IMovieActors {
-  id: string;
-  firstName: string;
-  lastName: string;
-}
-
-export interface IMovieActorForm {
-  firstName: string;
-  lastName: string;
-}
-
 export interface IMovieForm {
-  id: string;
+  id?: string;
   title: string;
   cost: string;
   yearReleased: string;
-  link: string;
-  movieLink: ILinkMovie;
+  comingSoon?: string;
+  featured?: string;
+  imageLink: string;
+  trailerLink?: string;
+  actors: IAutoCompleteOption[];
 }
 
 export interface IMovieFormErrors {
+  id?: string;
   title: string;
   cost: string;
   yearReleased: string;
-  catalogue: string;
+  comingSoon?: string;
+  featured?: string;
+  imageLink: string;
+  trailerLink?: string;
   actors: string;
 }
 
-export interface IMovieFormValues {
-  title: string;
-  cost: number;
-  yearReleased: number;
-  comingSoon: string;
-  featured: string;
-  categories: IAutoCompleteOption[];
-  catalogue: string;
-  trailer?: string;
-  actors: IAutoCompleteOption[];
-  alert: IAlert;
-}
-
-export interface IMovieFormPatch {
+export interface IMovieDataPost {
   id?: string;
-  link?: string;
   title: string;
   cost: number;
   yearReleased: number;
-  comingSoon: boolean;
-  featured: boolean;
-  categories: string[];
-  trailer?: string;
-  actors: string[];
-  movieLink: ILinkMovie;
+  comingSoon?: boolean;
+  featured?: boolean;
+  imageLink: string;
+  trailerLink?: string;
   movieActors: string[];
 }
 
-export interface IMovieFormPost {
+export interface IMovieData {
   id?: string;
-  link?: string;
   title: string;
-  cost: number;
-  yearReleased: number;
-  comingSoon: boolean;
-  featured: boolean;
-  categories: string[];
-  trailer?: string;
-  actors: string[];
-  movieLink: ILinkMovie;
+  cost: string;
+  yearReleased: string;
+  comingSoon?: boolean;
+  featured?: boolean;
+  imageLink: string;
+  trailerLink?: string;
+  movieActors: IActorData[];
+  movieReviews?: IActorData[];
 }
 
-export interface IMovieFormTable {
-  id?: string;
-  link?: string;
-  title: string;
-  cost: number;
-  yearReleased: number;
-  comingSoon: boolean;
-  featured: boolean;
-  categories: string[];
-  trailer?: string;
-  actors: string[];
-  movieLink: ILinkMovie;
-  movieActors: IMovieActors[];
+export interface IMovieReviewForm {
+  review: string;
+  rating: number;
 }
 
-export interface IMovieDetailsFormErrors {
+export interface IMovieReviewFormErrors {
   review: string;
   rating: string;
 }
 
-export interface IMovieDetailsFormValues {
+export interface IMovieRatingData {
   review: string;
   rating: number | null;
   alert: IAlert;
 }
 
 export interface IMovieInitialState {
-  data: IMovieFormPost[] | [];
-  dataLatestUploads: IMovieFormPost[] | [];
-  dataFeatured: IMovieFormPost[] | [];
-  dataComingSoon: IMovieFormPost[] | [];
-  dataReviews: IReviewForm[] | [];
-  dataOne: IMovieFormPost;
-  dataGetOne: any;
-  dataRating: IReviewRating | [];
+  list: IMovieData[] | [];
+  byId: IMovieData | null;
+  reviews: IReviewForm[] | [];
+  comingSoon: IMovieData[] | [];
+  featured: IMovieData[] | [];
+  selected: string | null;
+  rating: IReviewRating | null;
+}
+
+export interface IObjectAny {
+  [key: string]: any;
 }
 
 export interface IRegisterFormErrors {

@@ -2,8 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { isLogged } from "../../utilities/loggedIn";
 import {
-  IMovieDetailsFormErrors,
-  IMovieDetailsFormValues,
+  IMovieForm,
+  IMovieFormErrors,IMovieReviewForm,IMovieReviewFormErrors
 } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -22,8 +22,8 @@ import FormYoutube from "../FormYoutube";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
-  formValues: IMovieDetailsFormValues;
-  formErrors: IMovieDetailsFormErrors;
+  formValues: IMovieReviewForm;
+  formErrors: IMovieReviewFormErrors;
   movie: any;
   categories: any;
   reviews: any;
@@ -52,11 +52,11 @@ const MovieDetailsForm = ({
   onClickCloseAlert,
 }: AppProps) => {
   const navigate = useNavigate();
-  const actorData = movie.movieActors?.map((actor: any) => ({
+  const actorData = movie?.movieActors?.map((actor: any) => ({
     id: actor.id,
     title: `${actor.firstName} ${actor.lastName}`,
     subtitle: "",
-    url: actor.actorLink.catalogue,
+    url: actor.imageLink,
   }));
 
   return (
@@ -64,7 +64,7 @@ const MovieDetailsForm = ({
       <Box sx={{ display: "flex", maxWidth: "100%" }}>
         <Box>
           <img
-            src={`${movie.movieLink?.catalogue}`}
+            src={`${movie?.imageLink}`}
             alt={movie.title}
             height={"400"}
             loading="lazy"
@@ -91,9 +91,9 @@ const MovieDetailsForm = ({
           </Typography>
         </Box>
         <Box sx={{ display: "inline", width: 1, padding: 3 }}>
-          {movie.movieLink && movie.movieLink.trailer && (
+          {movie.trailerLink && (
             <Box sx={{ width: 600 }}>
-              <FormYoutube url={movie.movieLink.trailer} />
+              <FormYoutube url={movie.trailerLink} />
             </Box>
           )}
 
@@ -104,20 +104,6 @@ const MovieDetailsForm = ({
               movieData={actorData ? actorData : []}
             />
           </Box>
-          <Stack direction="row" spacing={3}>
-            {movie.categories?.map((categoryMovie: string) => (
-              <Chip
-                key={categoryMovie}
-                color="primary"
-                label={
-                  categories.find(
-                    (category: any) => category.id === categoryMovie
-                  )?.name
-                }
-              />
-            ))}
-          </Stack>
-          {/* <Grid container spacing={2}> */}
 
           {isLogged() === 1 && myReview && myReview.approval !== "approved" && (
             <Box sx={{ display: "inline", width: 1, paddingTop: 3 }}>
@@ -150,10 +136,10 @@ const MovieDetailsForm = ({
               <Box sx={{ width: 600 }}>
                 <FormText
                   name="review"
-                  value={formValues.review}
+                  value={"formValues.review"}
                   label={"What can you say about this movie?."}
                   type={"search"}
-                  error={formErrors.review}
+                  error={"formErrors.review"}
                   onChange={onChange}
                 />
               </Box>
@@ -186,7 +172,7 @@ const MovieDetailsForm = ({
               <Divider textAlign="left">
                 <Chip label={"MOVIE REVIEWS"} color="primary" />
               </Divider>
-              <ReviewCards reviews={reviews} />
+              {/* <ReviewCards reviews={reviews} /> */}
             </React.Fragment>
           ) : (
             <Typography variant="h6" gutterBottom>
@@ -195,10 +181,10 @@ const MovieDetailsForm = ({
           )}
         </Box>
       </Box>
-      <SnackAlert
+      {/* <SnackAlert
         alertData={formValues.alert}
         onClickCloseAlert={onClickCloseAlert}
-      />
+      /> */}
     </React.Fragment>
   );
 };

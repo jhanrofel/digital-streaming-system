@@ -6,7 +6,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 
 type AppProps = {
   name: string;
-  value: string;
+  value: string | undefined;
   label: string;
   error?: string;
   options: string[];
@@ -34,7 +34,9 @@ const FormSelect = ({
         onChange={onChange}
       >
         {options.map((option) => (
-          <MenuItem key={option} value={option}>{option}</MenuItem>
+          <MenuItem key={option} value={option}>
+            {option}
+          </MenuItem>
         ))}
       </Select>
       {error ? (
