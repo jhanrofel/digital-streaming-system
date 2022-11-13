@@ -158,7 +158,7 @@ function PublicNavbar() {
                 Hi! {loggedInData().firstName}
               </Typography>
 
-              {(isLogged() && "ADMIN" === "ADMIN") || (
+              {(isLogged() && role === "ADMIN") || (
                 <Tooltip title={"Dashboard"}>
                   <IconButton sx={{ p: 0 }} onClick={onClickLogoutHandler}>
                     <DashboardIcon />

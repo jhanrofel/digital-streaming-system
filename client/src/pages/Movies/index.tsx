@@ -9,6 +9,8 @@ import {
   moviesList,
   moviesDelete,
   clearSelected,
+  moviesPost,
+  moviesUpdate,
 } from "../../utilities/slice/movieSlice";
 import {
   IMovieData,
@@ -25,7 +27,6 @@ import FormHeader from "../../components/FormHeader";
 import MovieForm from "../../components/Movie/MovieForm";
 import SnackAlert from "../../components/SnackAlert";
 import { actorsList } from "../../utilities/slice/actorSlice";
-import { moviesPost, moviesUpdate } from "../../utilities/slice/movieSlice";
 import MovieData from "./MovieData";
 
 const Movies = () => {
@@ -56,7 +57,7 @@ const Movies = () => {
       setDefaultValue({ ...movieFormReset, ...newValue });
 
       setForm(newValue);
-    }// eslint-disable-next-line
+    } // eslint-disable-next-line
   }, [movie]);
 
   const onClickDeleteIcon = () => {

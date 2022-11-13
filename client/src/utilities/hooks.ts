@@ -78,6 +78,13 @@ export const useFormValidation = ({ callback, fieldsToValidate }: any) => {
     setValues({ ...formValues, birthday: value });
   };
 
+  const onChangeRating = (
+    event: Event | React.SyntheticEvent<Element, Event>,
+    value: number | null
+  ): void => {
+    setValues({ ...formValues, rating: value });
+  };
+
   const onClickHandler = (event: React.FormEvent<HTMLFormElement>) => {
     if (event) event.preventDefault();
 
@@ -147,6 +154,7 @@ export const useFormValidation = ({ callback, fieldsToValidate }: any) => {
     onChangeActors,
     onChangeDateBirthday,
     onChangeSelect,
+    onChangeRating,
     onClickHandler,
     resetForm,
     setForm,

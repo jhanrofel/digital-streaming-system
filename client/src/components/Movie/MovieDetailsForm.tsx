@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { isLogged } from "../../utilities/loggedIn";
 import {
   IMovieForm,
-  IMovieFormErrors,IMovieReviewForm,IMovieReviewFormErrors
+  IMovieFormErrors,IMovieReviewForm,IMovieReviewFormErrors,IObjectAny
 } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -19,13 +19,11 @@ import FormImageList from "../FormImageList";
 import FormRating from "../FormRating";
 import FormText from "../FormText";
 import FormYoutube from "../FormYoutube";
-import SnackAlert from "../SnackAlert";
 
 type AppProps = {
-  formValues: IMovieReviewForm;
-  formErrors: IMovieReviewFormErrors;
+  formValues: IObjectAny;
+  formErrors: IObjectAny;
   movie: any;
-  categories: any;
   reviews: any;
   myReview: any;
   movieRating: any;
@@ -34,7 +32,7 @@ type AppProps = {
     event: Event | React.SyntheticEvent<Element, Event>,
     newValue: number | null
   ) => void;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  onClick: any;
   onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 };
 
@@ -42,7 +40,6 @@ const MovieDetailsForm = ({
   formValues,
   formErrors,
   movie,
-  categories,
   reviews,
   myReview,
   movieRating,
@@ -59,20 +56,20 @@ const MovieDetailsForm = ({
     url: actor.imageLink,
   }));
 
-  return (
+  return movie && (
     <React.Fragment>
       <Box sx={{ display: "flex", maxWidth: "100%" }}>
         <Box>
           <img
-            src={`${movie?.imageLink}`}
-            alt={movie.title}
+            src={`${movie.imageLink}`}
+            alt={movie?.title}
             height={"400"}
             loading="lazy"
           />
           <Box sx={{ display: "flex", maxWidth: "100%" }}>
             <FormRating
               name={"movieRating"}
-              value={movieRating.length ? movieRating[0].average : null}
+              value={movieRating?.length ? movieRating[0].average : null}
               error={""}
             />
             <Typography sx={{ fontSize: 16, paddingLeft: 1 }}>
@@ -84,10 +81,10 @@ const MovieDetailsForm = ({
           <Typography sx={{ fontSize: 16, paddingLeft: 1 }}>
             {movieRating.length ? `${movieRating[0].count} reviews` : ""}
           </Typography>
-          <Typography variant="h4">{movie.title}</Typography>
+          <Typography variant="h4">{movie?.title}</Typography>
           <Typography>{movie.yearReleased}</Typography>
           <Typography>
-            Budget: ${movie.cost?.toLocaleString("en-US")}
+            Budget: ${movie.cost.toLocaleString("en-US")}
           </Typography>
         </Box>
         <Box sx={{ display: "inline", width: 1, padding: 3 }}>
@@ -136,10 +133,10 @@ const MovieDetailsForm = ({
               <Box sx={{ width: 600 }}>
                 <FormText
                   name="review"
-                  value={"formValues.review"}
+                  value={formValues.review}
                   label={"What can you say about this movie?."}
                   type={"search"}
-                  error={"formErrors.review"}
+                  error={formErrors.review}
                   onChange={onChange}
                 />
               </Box>
@@ -172,7 +169,7 @@ const MovieDetailsForm = ({
               <Divider textAlign="left">
                 <Chip label={"MOVIE REVIEWS"} color="primary" />
               </Divider>
-              {/* <ReviewCards reviews={reviews} /> */}
+              <ReviewCards reviews={reviews} />
             </React.Fragment>
           ) : (
             <Typography variant="h6" gutterBottom>
@@ -181,10 +178,6 @@ const MovieDetailsForm = ({
           )}
         </Box>
       </Box>
-      {/* <SnackAlert
-        alertData={formValues.alert}
-        onClickCloseAlert={onClickCloseAlert}
-      /> */}
     </React.Fragment>
   );
 };
