@@ -69,6 +69,14 @@ export interface ILoginFormValues {
   alert: IAlert;
 }
 
+export interface IMovieFilter {
+  where : {
+    comingSoon?: boolean;
+    featured?: boolean;
+  }
+  
+}
+
 export interface IMovieForm {
   id?: string;
   title: string;

@@ -1,10 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import {
-  movieFormResetErrors,
-  movieFormReset,
-  movieDetailsFormErrors,
-  movieDetailsForm,
   alertDataReset,
 } from "../../utilities/formValues";
 import {
@@ -13,7 +9,6 @@ import {
   useFormValidation,
 } from "../../utilities/hooks";
 import { isLogged } from "../../utilities/loggedIn";
-import { categoriesList } from "../../utilities/slice/categorySlice";
 import {
   moviesById,
   moviesReviewsApproved,
@@ -21,11 +16,7 @@ import {
 } from "../../utilities/slice/movieSlice";
 import { reviewsPost, myMovieReview } from "../../utilities/slice/reviewSlice";
 import {
-  IMovieForm,
-  IMovieFormErrors,
   IReviewFormPost,
-  IMovieReviewForm,
-  IMovieReviewFormErrors,
   IAlert,
 } from "../../utilities/types";
 import MovieDetailsForm from "../../components/Movie/MovieDetailsForm";
@@ -112,7 +103,6 @@ const MovieDetails = () => {
         onChange={onChangeHandler}
         onChangeRating={onChangeRating}
         onClick={onClickHandler}
-        onClickCloseAlert={onClickCloseAlertHandler}
       />
       <SnackAlert
         alertData={alertData}

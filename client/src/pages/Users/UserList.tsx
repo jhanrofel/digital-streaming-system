@@ -104,11 +104,11 @@ const UserList = () => {
                   <DeleteIcon color="error" onClick={onClickDelete} />
                 </Tooltip>
                 {params.row.status === "ACTIVATED" ? (
-                  <Tooltip title="Deactivate user.">
+                  <Tooltip title="Deactivate user." key={`deactivate_${params.row.id}`}>
                     <PersonOffIcon color="error" onClick={onClickDeactivate} />
                   </Tooltip>
                 ) : (
-                  <Tooltip title="Activate user.">
+                  <Tooltip title="Activate user." key={`activate_${params.row.id}`}>
                     <PersonAddIcon color="primary" onClick={onClickActivate} />
                   </Tooltip>
                 )}

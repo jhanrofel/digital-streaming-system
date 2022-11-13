@@ -1,17 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { isLogged } from "../../utilities/loggedIn";
-import {
-  IMovieForm,
-  IMovieFormErrors,IMovieReviewForm,IMovieReviewFormErrors,IObjectAny
+import {IObjectAny
 } from "../../utilities/types";
+import { userMe } from "../../utilities/api";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import ReviewCards from "./ReviewCards";
 import FormButton from "../FormButton";
@@ -33,7 +31,6 @@ type AppProps = {
     newValue: number | null
   ) => void;
   onClick: any;
-  onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 };
 
 const MovieDetailsForm = ({
@@ -46,7 +43,6 @@ const MovieDetailsForm = ({
   onChange,
   onChangeRating,
   onClick,
-  onClickCloseAlert,
 }: AppProps) => {
   const navigate = useNavigate();
   const actorData = movie?.movieActors?.map((actor: any) => ({
@@ -56,7 +52,21 @@ const MovieDetailsForm = ({
     url: actor.imageLink,
   }));
 
-  return movie && (
+  const [role, setRole] = React.useState<string>("USER");
+  React.useEffect(() => {
+    if (isLogged()) {
+      const fetchData = async () => {
+        await userMe().then((res) => {
+          setRole(res.user.role);
+        });
+      };
+  
+      fetchData().catch(console.error);
+
+    }
+  }, []);
+
+  return movie && movieRating && (
     <React.Fragment>
       <Box sx={{ display: "flex", maxWidth: "100%" }}>
         <Box>
@@ -128,7 +138,7 @@ const MovieDetailsForm = ({
             </Box>
           )}
 
-          {isLogged() === 1 && !myReview && (
+          {isLogged() === 1 && !myReview && role !== "ADMIN" && (
             <React.Fragment>
               <Box sx={{ width: 600 }}>
                 <FormText

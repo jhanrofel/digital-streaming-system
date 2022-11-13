@@ -87,14 +87,17 @@ function PublicNavbar() {
   const [role, setRole] = React.useState<string>("USER");
 
   React.useEffect(() => {
-    const fetchData = async () => {
-      await userMe().then((res) => {
-        setRole(res.user.role);
-      });
-    };
+    if (isLogged()) {
+      const fetchData = async () => {
+        await userMe().then((res) => {
+          setRole(res.user.role);
+        });
+      };
+  
+      fetchData().catch(console.error);
 
-    fetchData().catch(console.error);
-  }, [userMe]);
+    }
+  }, []);
 
   React.useEffect(() => {
     if (location.pathname === "/search") {
@@ -158,14 +161,14 @@ function PublicNavbar() {
                 Hi! {loggedInData().firstName}
               </Typography>
 
-              {(isLogged() && role === "ADMIN") || (
+              {(isLogged() === 1 && role === "ADMIN") && (
                 <Tooltip title={"Dashboard"}>
-                  <IconButton sx={{ p: 0 }} onClick={onClickLogoutHandler}>
+                  <IconButton sx={{ p: 0 }} onClick={() => navigate("/movies")}>
                     <DashboardIcon />
                   </IconButton>
                 </Tooltip>
               )}
-              <Tooltip title="Logout">
+              <Tooltip title={"Logout"}>
                 <IconButton sx={{ p: 0 }} onClick={onClickLogoutHandler}>
                   <LogoutIcon />
                 </IconButton>

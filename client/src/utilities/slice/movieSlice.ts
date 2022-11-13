@@ -44,7 +44,7 @@ export const moviesLatestUploads = createAsyncThunk(
   "movies/latest-uploads",
   async () => {
     return axios({
-      url: `/movies`,
+      url: `/movies/latest-uploads`,
       method: "get",
     })
       .then((res) => res.data)
@@ -179,10 +179,10 @@ export const moviesSlice = createSlice({
       state.list = action.payload;
     });
     builder.addCase(moviesFeatured.fulfilled, (state, action) => {
-      state.list = action.payload;
+      state.featured = action.payload;
     });
     builder.addCase(moviesComingSoon.fulfilled, (state, action) => {
-      state.list = action.payload;
+      state.comingSoon = action.payload;
     });
     builder.addCase(moviesById.fulfilled, (state, action) => {
       state.byId = action.payload;
