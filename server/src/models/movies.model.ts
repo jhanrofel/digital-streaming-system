@@ -1,4 +1,10 @@
-import {Entity, model, property, hasMany, belongsTo} from '@loopback/repository';
+import {
+  Entity,
+  model,
+  property,
+  hasMany,
+  belongsTo,
+} from '@loopback/repository';
 import {Links} from './links.model';
 import {Actors} from './actors.model';
 import {MovieActor} from './movie-actor.model';
@@ -32,18 +38,6 @@ export class Movies extends Entity {
   yearReleased: number;
 
   @property({
-    type: 'array',
-    itemType: 'string',
-  })
-  categories?: string[];
-
-  @property({
-    type: 'string',
-    default: "",
-  })
-  hashTags?: string;
-
-  @property({
     type: 'boolean',
   })
   comingSoon?: boolean;
@@ -55,14 +49,24 @@ export class Movies extends Entity {
 
   @property({
     type: 'date',
-    default: () => new Date().toLocaleString("en-PH"),
+    default: () => new Date().toLocaleString('en-PH'),
   })
   createdAt?: string;
 
-  @belongsTo(() => Links, {name: 'movieLink'})
-  link: string;
+  @property({
+    type: 'string',
+    required: true,
+  })
+  imageLink: string;
 
-  @hasMany(() => Actors, {through: {model: () => MovieActor, keyFrom: 'movieId', keyTo: 'actorId'}})
+  @property({
+    type: 'string',
+  })
+  trailerLink?: string;
+
+  @hasMany(() => Actors, {
+    through: {model: () => MovieActor, keyFrom: 'movieId', keyTo: 'actorId'},
+  })
   movieActors: Actors[];
 
   @hasMany(() => Reviews, {keyTo: 'movie'})

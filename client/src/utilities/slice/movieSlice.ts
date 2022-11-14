@@ -160,6 +160,11 @@ export const moviesSlice = createSlice({
   reducers: {
     clearMovies: (state) => {
       state.list = [];
+      state.byId= null;
+      state.reviews= [];
+      state.comingSoon= [];
+      state.featured= [];
+      state.selected= null;
     },
     selectMovies: (state, action) => {
       state.selected = action.payload;

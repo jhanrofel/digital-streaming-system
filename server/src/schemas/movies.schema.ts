@@ -1,54 +1,36 @@
 import {SchemaObject} from '@loopback/rest';
 
-export const MoviesCountSchema: SchemaObject = {
-  type: 'object',
-  title: 'Count moives',
-  properties: {
-    where: {commingSoon: 'boolean'},
-  },
-};
-
 export const MoviesPatchSchema: SchemaObject = {
   type: 'object',
   title: 'Update Movie',
-  required: ['cost'],
+  required: ['title', 'cost', 'yearReleased', 'imageLink', 'movieActors'],
   properties: {
+    title: {type: 'string'},
     cost: {type: 'number'},
-    comingSoon: {type: 'boolean', enum: [true, false]},
-    featured: {type: 'boolean', enum: [true, false]},
-    hashTag: {type: 'array', default: []},
-    categories: {type: 'array', default: []},
-    movieLink: {
-      type: 'object',
-      required: ['banner', 'catalogue'],
-      properties: {
-        id: {type: 'string'},
-        catalogue: {type: 'string'},
-        picture: {type: 'array', default: []},
-        facebook: {type: 'string'},
-        instagram: {type: 'string'},
-        youtube: {type: 'string'},
-        trailer: {type: 'string'},
-        clip: {type: 'array', default: []},
-      },
-    },
+    yearReleased: {type: 'number'},
+    comingSoon: {type: 'boolean', enum: [false, true]},
+    featured: {type: 'boolean', enum: [false, true]},
+    imageLink: {type: 'string'},
+    trailerLink: {type: 'string'},
+    movieActors: {type: 'array', default: []},
   },
 };
 
 export const MoviesPostSchema: SchemaObject = {
   type: 'object',
   title: 'Post Movie',
-  required: ['title', 'cost', 'yearReleased'],
+  required: ['title', 'cost', 'yearReleased', 'imageLink', 'movieActors'],
   properties: {
     title: {type: 'string'},
     cost: {type: 'number'},
     yearReleased: {type: 'number'},
-    categories: {type: 'array'},
-    hashTag: {type: 'array'},
-    comingSoon: {type: 'boolean', enum: [true, false]},
-    featured: {type: 'boolean', enum: [true, false]},
-    actors: {type: 'array'},
+    comingSoon: {type: 'boolean', enum: [false, true]},
+    featured: {type: 'boolean', enum: [false, true]},
+    imageLink: {type: 'string'},
+    trailerLink: {type: 'string'},
+    movieActors: {type: 'array', default: []},
   },
+  
 };
 
 export const MoviesSearchSchema: SchemaObject = {

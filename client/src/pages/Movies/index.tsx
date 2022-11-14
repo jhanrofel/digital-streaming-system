@@ -11,13 +11,13 @@ import {
   clearSelected,
   moviesPost,
   moviesUpdate,
+  clearMovies
 } from "../../utilities/slice/movieSlice";
 import {
   IMovieData,
   IAlert,
   IAutoCompleteOption,
   IMovieDataPost,
-  IObjectAny,
   IMovieForm,
 } from "../../utilities/types";
 import { alertDataReset, movieFormReset } from "../../utilities/formValues";
@@ -36,6 +36,9 @@ const Movies = () => {
   const [defaultValue, setDefaultValue] =
     React.useState<IMovieForm>(movieFormReset);
 
+    React.useEffect(() => {
+      dispatch(clearMovies());// eslint-disable-next-line
+    }, []);
   React.useEffect(() => {
     if (movie) {
       const movieActors = movie.movieActors.map((actor: any) => ({
@@ -121,9 +124,7 @@ const Movies = () => {
     dispatch(actorsList());
   }, [dispatch]);
 
-  const onClickSubmitHandler = async (
-    formValues: IObjectAny
-  ): Promise<void> => {
+  const onClickSubmitHandler = async (): Promise<void> => {
     const actorsValue = formValues.actors.map((actor: any) => actor.id);
 
     const postMovieValue: IMovieDataPost = {

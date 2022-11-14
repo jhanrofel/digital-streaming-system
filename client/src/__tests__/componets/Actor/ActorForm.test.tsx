@@ -1,36 +1,37 @@
 import ActorForm, { genderData } from "../../../components/Actor/ActorForm";
-import {
-  actorFormErrors,
-  actorFormValues,
-} from "../../../utilities/formValues";
-import { IActorFormErrors, IActorFormValues } from "../../../utilities/types";
+import { actorFormReset } from "../../../utilities/formValues";
+import { IActorForm,IObjectAny } from "../../../utilities/types";
 import { render, screen } from "@testing-library/react";
-import { Dayjs } from "dayjs";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { BrowserRouter as Router } from "react-router-dom";
 
 interface FormProps {
-  formName: string;
-  formValues: IActorFormValues;
-  formErrors: IActorFormErrors;
-  birthday: Dayjs | null;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  openActorForm: boolean;
+  formName: "AddForm";
+  formValues: IObjectAny;
+  formErrors: IObjectAny;
+  defaultValue: IActorForm;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onChangeSelect: (event: SelectChangeEvent) => void;
-  onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
-  setBirthday: any;
+  onClickHandlerFormClose: (
+    event: Event | React.SyntheticEvent<any, Event>
+  ) => void;
+  onChangeDate: (newValue: string) => void;
+  onClickHandler: any;
 }
 
 const formPropsValues: FormProps = {
+  openActorForm: true,
   formName: "AddForm",
-  formValues: actorFormValues,
-  formErrors: actorFormErrors,
-  birthday: null,
+  formValues: actorFormReset,
+  formErrors: actorFormReset,
+  defaultValue: actorFormReset,
   onChange: jest.fn(),
-  onClick: jest.fn(),
-  onClickCloseAlert: jest.fn(),
   onChangeSelect: jest.fn(),
-  setBirthday: "",
+  onClickHandlerFormClose: jest.fn(),
+  onChangeDate: jest.fn(),
+  onClickHandler: jest.fn(),
+  
 };
 
 const renderForm = ({ props }: any) => {
@@ -40,12 +41,11 @@ const renderForm = ({ props }: any) => {
         formName={"AddForm"}
         formErrors={formPropsValues.formErrors}
         formValues={formPropsValues.formValues}
-        birthday={formPropsValues.birthday}
         onChange={formPropsValues.onChange}
-        onClick={formPropsValues.onClick}
         onChangeSelect={formPropsValues.onChangeSelect}
-        setBirthday={formPropsValues.setBirthday}
-        onClickCloseAlert={formPropsValues.onClickCloseAlert}
+        onClickHandlerFormClose={formPropsValues.onChangeSelect}
+        onChangeDate={formPropsValues.onChangeSelect}
+        onClickHandler={formPropsValues.onChangeSelect}
         {...props}
       />
     </Router>
@@ -56,16 +56,6 @@ describe("<ActorForm/>", () => {
   test("Should find gender options data.", () => {
     expect(genderData).toEqual(["Male", "Female"]);
   });
+  
 
-  test("Should find element by text.", () => {
-    renderForm({ props: { formName: "AddForm" } });
-    const links = screen.getByText("LINKS");
-    expect(links).toBeInTheDocument;
-  });
-
-  test("Should find element by text.", () => {
-    renderForm({ props: { formName: "EditForm" } });
-    const links = screen.getByText("Back to List");
-    expect(links).toBeInTheDocument;
-  });
 });

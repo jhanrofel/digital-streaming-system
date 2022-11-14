@@ -27,7 +27,7 @@ type AppProps = {
   onClickHandler: any;
 };
 
-const genderData = ["Male", "Female"];
+export const genderData = ["Male", "Female"];
 
 const style = {
   position: "absolute" as "absolute",

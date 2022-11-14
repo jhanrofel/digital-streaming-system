@@ -19,8 +19,8 @@ export const useFormValidation = ({ callback, fieldsToValidate }: any) => {
     setErrors({});
   };
 
-  const setForm = (defaultValues:any) => {
-    setValues({...formValues,...defaultValues});
+  const setForm = (defaultValues: any) => {
+    setValues({ ...formValues, ...defaultValues });
   };
 
   const onChangeHandler = (event: any) => {
@@ -29,13 +29,7 @@ export const useFormValidation = ({ callback, fieldsToValidate }: any) => {
     let name = event.target.name;
     let value = event.target.value;
 
-    switch (name) {
-      case "trailerLink":
-        break;
-      default:
-        validate(event, name, value);
-        break;
-    }
+    if (name !== "trailerLink") validate(event, name, value);
 
     setValues({
       ...formValues,
@@ -117,27 +111,22 @@ export const useFormValidation = ({ callback, fieldsToValidate }: any) => {
     } else {
       const newFormErrors = omit(formErrors, name);
       setErrors(newFormErrors);
-      switch (name) {
-        case "cost":
-        case "yearReleased":
-          if (!new RegExp(regex.number).test(value) || parseInt(value) <= 0) {
-            setErrors({
-              ...formErrors,
-              [name]: `${fieldName} is invalid.`,
-            });
-            console.log(value, name);
-          }
-          break;
-        default:
-          break;
+      if (name === "cost" || name === "yearReleased") {
+        if (!new RegExp(regex.number).test(value) || parseInt(value) <= 0) {
+          setErrors({
+            ...formErrors,
+            [name]: `${fieldName} is invalid.`,
+          });
+          console.log(value, name);
+        }
       }
     }
   };
 
-  const formValidate = (fieldsToValidate: string[]) => {
+  const formValidate = (submitFieldsToValidate: string[]) => {
     let emptyFields: IObjectAny = {};
 
-    fieldsToValidate.forEach((name) => {
+    submitFieldsToValidate.forEach((name) => {
       if (formValues[name] === undefined) {
         const fieldName = getFieldName(name);
         emptyFields = { ...emptyFields, [name]: `${fieldName} is required.` };

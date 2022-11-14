@@ -73,15 +73,17 @@ export class ActorsController {
     })
     actors: ActorClass,
   ): Promise<Actors> {
-    const link = actors.actorLink;
-    const actor = await this.linksRepository.create(link).then(newLink => {
-      actors.link = newLink.id;
-      return this.actorsRepository.create(_.omit(actors, ['actorLink']));
-    });
+    // const link = actors.actorLink;
+    // const actor = await this.linksRepository.create(link).then(newLink => {
+    //   actors.link = newLink.id;
+    //   return this.actorsRepository.create(_.omit(actors, ['actorLink']));
+    // });
 
-    return this.actorsRepository.findById(actor.id, {
-      include: [{relation: 'actorLink', scope: {fields: {id: false}}}],
-    });
+    return this.actorsRepository.create(actors);
+
+    // return this.actorsRepository.findById(actor.id, {
+    //   include: [{relation: 'actorLink', scope: {fields: {id: false}}}],
+    // });
   }
 
   @get('/actors/count')
@@ -108,7 +110,6 @@ export class ActorsController {
   async find(): Promise<Actors[]> {
     return this.actorsRepository.find({
       include: [
-        {relation: 'actorLink', scope: {fields: {id: false}}},
         {relation: 'actorMovies'},
       ],
       order: ["firstName","lastName"]
@@ -127,7 +128,6 @@ export class ActorsController {
   async findById(@param.path.string('id') id: string): Promise<Actors> {
     return this.actorsRepository.findById(id, {
       include: [
-        {relation: 'actorLink', scope: {fields: {id: false}}},
         {relation: 'actorMovies'},
       ],
     });
@@ -145,7 +145,7 @@ export class ActorsController {
   async findMoviesById(@param.path.string('id') id: string): Promise<Movies[]> {
     return this.actorsRepository
       .actorMovies(id)
-      .find({include: [{relation: 'movieLink'}], order: ['yearReleased DESC']});
+      .find({order: ['yearReleased DESC']});
   }
 
   @authenticate('jwt')
@@ -163,16 +163,12 @@ export class ActorsController {
     })
     actors: ActorClass,
   ): Promise<Actors> {
-    const actorLink = actors.actorLink;
     await this.actorsRepository.updateById(
       id,
-      _.omit(actors, ['actorLink', 'link']),
+      _.omit(actors),
     );
-    await this.linksRepository.updateById(actors.link, actorLink);
 
-    return this.actorsRepository.findById(id, {
-      include: [{relation: 'actorLink', scope: {fields: {id: false}}}],
-    });
+    return this.actorsRepository.findById(id);
   }
 
   @authenticate('jwt')
@@ -184,7 +180,6 @@ export class ActorsController {
   async deleteById(@param.path.string('id') id: string): Promise<ApiResponse> {
     const actor = await this.actorsRepository.findById(id, {
       include: [
-        {relation: 'actorLink', scope: {fields: {id: false}}},
         {relation: 'actorMovies'},
       ],
     });
@@ -198,7 +193,7 @@ export class ActorsController {
       };
     } else {
       await this.actorsRepository.deleteById(id);
-      await this.linksRepository.deleteById(actor.link);
+      // await this.linksRepository.deleteById(actor.link);
 
       return {status: 200, message: 'Actor deleted.', actors: [actor]};
     }

@@ -47,7 +47,6 @@ const ActorList = () => {
         birthday: actor.birthday,
         imageLink: actor.imageLink,
       });
-      console.log(actor);
     }
   };
 

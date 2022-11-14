@@ -14,10 +14,10 @@ export class ActorsRepository extends DefaultCrudRepository<
   typeof Actors.prototype.id,
   ActorsRelations
 > {
-  public readonly actorLink: BelongsToAccessor<
-    Links,
-    typeof Actors.prototype.id
-  >;
+  // public readonly actorLink: BelongsToAccessor<
+  //   Links,
+  //   typeof Actors.prototype.id
+  // >;
 
   public readonly actorMovies: HasManyThroughRepositoryFactory<Movies, typeof Movies.prototype.id,
           MovieActor,
@@ -26,19 +26,20 @@ export class ActorsRepository extends DefaultCrudRepository<
 
   constructor(
     @inject('datasources.mongoDb') dataSource: MongoDbDataSource,
-    @repository.getter('LinksRepository')
-    protected linksRepositoryGetter: Getter<LinksRepository>, @repository.getter('MovieActorRepository') protected movieActorRepositoryGetter: Getter<MovieActorRepository>, @repository.getter('MoviesRepository') protected moviesRepositoryGetter: Getter<MoviesRepository>,
+    // @repository.getter('LinksRepository') protected linksRepositoryGetter: Getter<LinksRepository>, 
+    @repository.getter('MovieActorRepository') protected movieActorRepositoryGetter: Getter<MovieActorRepository>, 
+    @repository.getter('MoviesRepository') protected moviesRepositoryGetter: Getter<MoviesRepository>,
   ) {
     super(Actors, dataSource);
     this.actorMovies = this.createHasManyThroughRepositoryFactoryFor('actorMovies', moviesRepositoryGetter, movieActorRepositoryGetter,);
     this.registerInclusionResolver('actorMovies', this.actorMovies.inclusionResolver);
-    this.actorLink = this.createBelongsToAccessorFor(
-      'actorLink',
-      linksRepositoryGetter,
-    );
-    this.registerInclusionResolver(
-      'actorLink',
-      this.actorLink.inclusionResolver,
-    );
+    // this.actorLink = this.createBelongsToAccessorFor(
+    //   'actorLink',
+    //   linksRepositoryGetter,
+    // );
+    // this.registerInclusionResolver(
+    //   'actorLink',
+    //   this.actorLink.inclusionResolver,
+    // );
   }
 }
