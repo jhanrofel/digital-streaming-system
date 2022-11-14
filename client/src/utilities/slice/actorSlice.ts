@@ -82,6 +82,7 @@ export const actorsMovies = createAsyncThunk(
 );
 
 const initialState = {
+  loading: false,
   list: [],
   byId: null,
   movies: [],
@@ -108,9 +109,16 @@ export const actorSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(actorsPost.fulfilled, (state, action) => {
       state.list = [...state.list, action.payload];
+    });    
+    builder.addCase(actorsList.pending, (state) => {
+      state.loading = true;
     });
     builder.addCase(actorsList.fulfilled, (state, action) => {
+      state.loading = false;
       state.list = action.payload;
+    });
+    builder.addCase(actorsList.rejected, (state) => {
+      state.loading = false;
     });
     builder.addCase(actorById.fulfilled, (state, action) => {
       state.byId = action.payload;

@@ -5,14 +5,12 @@ import {
 } from "@reduxjs/toolkit";
 import userReducer from "./slice/userSlice";
 import actorReducer from "./slice/actorSlice";
-import categoryReducer from "./slice/categorySlice";
 import movieReducer from "./slice/movieSlice";
 import reviewReducer from "./slice/reviewSlice";
 // Create the root reducer independently to obtain the RootState type
 const rootReducer = combineReducers({
   users: userReducer,
   actors: actorReducer,
-  categories: categoryReducer,
   movies: movieReducer,
   reviews: reviewReducer,
 });

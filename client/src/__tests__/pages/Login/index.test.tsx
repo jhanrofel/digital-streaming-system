@@ -1,5 +1,6 @@
 import Login from "../../../pages/Login";
 import { fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { setupStore } from "../../../utilities/store";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
@@ -38,5 +39,18 @@ describe("<Login />", () => {
     const password: HTMLInputElement = screen.getByLabelText("Password");
     fireEvent.change(password, { target: { value: "mypass12134" } });
     expect(password.value).toBe("mypass12134");
+  }); 
+
+  test("Should check validation on submit.", () => {
+    renderForm();
+    
+    const button:HTMLButtonElement = screen.getByText("Login"); 
+    userEvent.click(button);
+
+    const emailRequired = screen.getAllByText("Email is required.");
+    expect(emailRequired).toBeInTheDocument;
+
+    const passwordRequired = screen.getAllByText("Password is required.");
+    expect(passwordRequired).toBeInTheDocument;
   });  
 });

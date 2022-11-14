@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { renderWithProviders } from "../../../utilities/test-utils";
 import { BrowserRouter } from "react-router-dom";
 import { handlers } from "../../../mocks/handlers";
-import { mockActorList } from "../../../mocks/actor.mocks";
+import { mockActorList } from "../../../mocks/actors.mocks";
 import { setupServer } from "msw/node";
 
 const server = setupServer(...handlers); // Enable API mocking before tests.

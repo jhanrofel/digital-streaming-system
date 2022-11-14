@@ -109,7 +109,7 @@ const Register = () => {
       const fieldName: string = "password";
       setFormErrors((state) => ({
         ...state,
-        [fieldName]: "Password is requried.",
+        [fieldName]: "Password is required.",
       }));
     }
 
