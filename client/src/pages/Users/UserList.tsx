@@ -7,7 +7,7 @@ import {
   selectUsers,
   usersUpdate,
 } from "../../utilities/slice/userSlice";
-import Box from "@mui/material/Box";
+import { IUserFormTable } from "../../utilities/types";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
@@ -15,24 +15,15 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonOffIcon from "@mui/icons-material/PersonOff";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import DeleteDialogue from "../../components/Dialog/DeleteDialog";
-
-interface RowValues {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-  status: string;
-}
+import FormList from "../../components/FormList";
 
 const UserList = () => {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState<boolean>(false);
   const user = useAppSelector((state) => state.users.dataOne);
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 90 },
     {
       field: "email",
       headerName: "Email",
@@ -80,7 +71,7 @@ const UserList = () => {
           setOpen(true);
         };
         const onClickActivate = async (): Promise<void> => {
-          const formValues: RowValues = {
+          const formValues: IUserFormTable = {
             id: params.row.id,
             role: params.row.role,
             email: params.row.email,
@@ -91,7 +82,7 @@ const UserList = () => {
           await dispatch(usersUpdate(formValues));
         };
         const onClickDeactivate = async (): Promise<void> => {
-          const formValues: RowValues = {
+          const formValues: IUserFormTable = {
             id: params.row.id,
             role: params.row.role,
             email: params.row.email,
@@ -113,11 +104,11 @@ const UserList = () => {
                   <DeleteIcon color="error" onClick={onClickDelete} />
                 </Tooltip>
                 {params.row.status === "ACTIVATED" ? (
-                  <Tooltip title="Deactivate user.">
+                  <Tooltip title="Deactivate user." key={`deactivate_${params.row.id}`}>
                     <PersonOffIcon color="error" onClick={onClickDeactivate} />
                   </Tooltip>
                 ) : (
-                  <Tooltip title="Activate user.">
+                  <Tooltip title="Activate user." key={`activate_${params.row.id}`}>
                     <PersonAddIcon color="primary" onClick={onClickActivate} />
                   </Tooltip>
                 )}
@@ -129,7 +120,7 @@ const UserList = () => {
     },
   ];
   const dispatch = useAppDispatch();
-  const rows: RowValues[] = useAppSelector((state) => state.users.data);
+  const rows: IUserFormTable[] = useAppSelector((state) => state.users.data);
 
   React.useEffect(() => {
     dispatch(usersApproved());
@@ -139,37 +130,20 @@ const UserList = () => {
     await dispatch(usersDelete(user.id ? user.id : "")).then((res) => {
       if (res.type === "users/delete/fulfilled") {
         setOpen(false);
-      } else {
-        alert(res.payload);
       }
     });
   };
 
   return (
-    <>
-      <Box sx={{ height: 600, width: "100%" }}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          pageSize={10}
-          rowsPerPageOptions={[10]}
-          disableSelectionOnClick
-          experimentalFeatures={{ newEditingApi: true }}
-          initialState={{
-            columns: {
-              columnVisibilityModel: {
-                id: false,
-              },
-            },
-          }}
-        />
-      </Box>
+    <React.Fragment>
+      <FormList rows={rows} columns={columns} />
+
       <DeleteDialogue
         setOpen={setOpen}
         open={open}
         onConfirmDelete={onConfirmDelete}
       />
-    </>
+    </React.Fragment>
   );
 };
 

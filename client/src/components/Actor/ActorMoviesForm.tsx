@@ -1,46 +1,30 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { IActorData, IMovieForm } from "../../utilities/types";
 import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
 import FormButton from "../../components/FormButton";
 import FormCard from "../../components/FormCard";
 
 type AppProps = {
-  actor: FormValue;
-  movies: MoviesClass[];
+  actor: IActorData | null;
+  movies: IMovieForm[];
 };
-
-interface FormValue {
-  firstName: string;
-  lastName: string;
-}
-
-interface MoviesClass {
-  title: string;
-  link: string;
-  movieLink: LinkClass;
-}
-
-interface LinkClass {
-  catalogue: string;
-}
 
 const ActorMoviesForm = ({ actor, movies }: AppProps) => {
   const navigate = useNavigate();
   return (
     <React.Fragment>
-      <Divider
-        sx={{ display: "flex", width: 600, paddingTop: 10 }}
-        textAlign="left"
-      >
-        {`${actor.firstName} ${actor.lastName}'s MOVIES `}
-      </Divider>
+      <Typography
+        variant="h4"
+        sx={{ display: "flex", width: 600, paddingTop: 10, paddingBottom: 2 }}
+      >{`${actor?.firstName} ${actor?.lastName}'s MOVIES `}</Typography>
       <Box sx={{ display: "flex" }}>
         {movies?.map((movie, i) => (
-          <FormCard key={i} title={movie.title} link={movie.movieLink.catalogue} />
+          <FormCard key={i} title={movie.title} link={movie.imageLink} />
         ))}
       </Box>
-      <Box sx={{ width: 300 }}>
+      <Box>
         <FormButton
           label="Back to Actors List"
           onClick={() => {

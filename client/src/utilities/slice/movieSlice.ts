@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authenticationToken } from "../authentication";
+import { IMovieDataPost, IMovieInitialState } from "../types";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3001";
 
@@ -13,7 +14,7 @@ export const moviesList = createAsyncThunk("movies/list", async () => {
     .catch((err) => err);
 });
 
-export const moviesOne = createAsyncThunk(
+export const moviesById = createAsyncThunk(
   "movies/one",
   async (movieId: string) => {
     return axios({
@@ -98,7 +99,7 @@ export const moviesRating = createAsyncThunk(
 
 export const moviesPost = createAsyncThunk(
   "movies/post",
-  async (formValues: MoviesDataOne) => {
+  async (formValues: IMovieDataPost) => {
     return axios({
       url: `/movies`,
       method: "post",
@@ -112,7 +113,7 @@ export const moviesPost = createAsyncThunk(
 
 export const moviesUpdate = createAsyncThunk(
   "movies/patch",
-  async (formValues: MoviesDataOne) => {
+  async (formValues: IMovieDataPost) => {
     return axios({
       url: `/movies/${formValues.id}`,
       method: "patch",
@@ -143,101 +144,69 @@ export const moviesDelete = createAsyncThunk(
   }
 );
 
-interface ReviewsDataOne {
-  id?: string;
-  description: string;
-}
-
-interface MoviesDataOne {
-  id?: string;
-  title: string;
-  cost: number;
-  yearReleased: number;
-  comingSoon: boolean;
-  featured: boolean;
-  categories: string[];
-  actors: string[];
-  movieLink: MovieLink;
-}
-
-interface MoviesData {
-  data: MoviesDataOne[] | [];
-  dataLatestUploads: MoviesDataOne[] | [];
-  dataFeatured: MoviesDataOne[] | [];
-  dataComingSoon: MoviesDataOne[] | [];
-  dataReviews: ReviewsDataOne[] | [];
-  dataOne: MoviesDataOne;
-  dataGetOne: any;
-  dataRating: RatingData | [];
-}
-
-interface MovieLink {
-  catalogue: string;
-  trailer?: string;
-}
-
-interface RatingData {
-  _id: string | null;
-  count: number;
-  total: number;
-  average: number;
-}
-
 const initialState = {
-  data: [],
-  dataLatestUploads: [],
-  dataFeatured: [],
-  dataComingSoon: [],
-  dataOne: {},
-  dataGetOne: [],
-  dataReviews: [],
-  dataRating: [],
-} as MoviesData;
+  list: [],
+  byId: null,
+  reviews: [],
+  comingSoon: [],
+  featured: [],
+  selected: null,
+  rating: null,
+} as IMovieInitialState;
 
 export const moviesSlice = createSlice({
   name: "movies",
   initialState,
   reducers: {
     clearMovies: (state) => {
-      state.data = [];
+      state.list = [];
+      state.byId= null;
+      state.reviews= [];
+      state.comingSoon= [];
+      state.featured= [];
+      state.selected= null;
     },
     selectMovies: (state, action) => {
-      state.dataOne = action.payload;
+      state.selected = action.payload;
+    },
+    clearSelected: (state) => {
+      state.byId = null;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(moviesList.fulfilled, (state, action) => {
-      state.data = action.payload;
+      state.list = action.payload;
     });
     builder.addCase(moviesSearch.fulfilled, (state, action) => {
-      state.data = action.payload;
+      state.list = action.payload;
     });
     builder.addCase(moviesLatestUploads.fulfilled, (state, action) => {
-      state.dataLatestUploads = action.payload;
+      state.list = action.payload;
     });
     builder.addCase(moviesFeatured.fulfilled, (state, action) => {
-      state.dataFeatured = action.payload;
+      state.featured = action.payload;
     });
     builder.addCase(moviesComingSoon.fulfilled, (state, action) => {
-      state.dataComingSoon = action.payload;
+      state.comingSoon = action.payload;
     });
-    builder.addCase(moviesOne.fulfilled, (state, action) => {
-      state.dataGetOne = action.payload;
+    builder.addCase(moviesById.fulfilled, (state, action) => {
+      state.byId = action.payload;
     });
     builder.addCase(moviesPost.fulfilled, (state, action) => {
-      state.data = [...state.data, action.payload];
+      state.list = [...state.list, action.payload];
     });
     builder.addCase(moviesDelete.fulfilled, (state, action) => {
-      state.data = state.data.filter((movie) => movie.id !== action.payload.id);
+      state.list = state.list.filter((movie) => movie.id !== action.payload.id);
+      state.selected = null;
     });
     builder.addCase(moviesReviewsApproved.fulfilled, (state, action) => {
-      state.dataReviews = action.payload;
+      state.reviews = action.payload;
     });
     builder.addCase(moviesRating.fulfilled, (state, action) => {
-      state.dataRating = action.payload;
+      state.rating = action.payload;
     });
   },
 });
 
-export const { clearMovies, selectMovies } = moviesSlice.actions;
+export const { clearMovies, selectMovies,clearSelected } = moviesSlice.actions;
 export default moviesSlice.reducer;

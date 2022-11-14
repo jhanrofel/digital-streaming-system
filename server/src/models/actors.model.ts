@@ -36,8 +36,14 @@ export class Actors extends Entity {
   })
   birthday: string;
 
-  @belongsTo(() => Links, {name: 'actorLink'})
-  link: string;
+  @property({
+    type: 'string',
+    required: true,
+  })
+  imageLink: string;
+
+  // @belongsTo(() => Links, {name: 'actorLink'})
+  // link: string;
 
   @hasMany(() => Movies, {through: {model: () => MovieActor, keyFrom: 'actorId', keyTo: 'movieId'}})
   actorMovies: Movies[];

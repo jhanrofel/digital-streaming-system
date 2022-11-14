@@ -1,40 +1,22 @@
 import React from "react";
+import {
+  IRegisterFormErrors,
+  IRegisterFormValues,
+} from "../../utilities/types";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 import FormButton from "../FormButton";
 import FormText from "../FormText";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
-  formValues: FormValues;
-  formErrors: FormErrors;
+  formValues: IRegisterFormValues;
+  formErrors: IRegisterFormErrors;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 };
-
-interface FormValues {
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-  confirm: string;
-  alert: AlertData;
-}
-
-interface FormErrors {
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-  confirm: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-}
 
 const RegistrationForm = ({
   formValues,
@@ -46,8 +28,13 @@ const RegistrationForm = ({
   return (
     <React.Fragment>
       <Container maxWidth="sm">
-        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          <div className="form-header">REGISTRATION</div>
+        <Box>
+          <Typography
+            variant="h5"
+            sx={{ width: 1, display: "flex", justifyContent: "center" }}
+          >
+            REGISTRATION
+          </Typography>
           <FormText
             name="email"
             value={formValues.email}

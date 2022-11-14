@@ -11,31 +11,31 @@ import FormImageList from "../../components/FormImageList";
 const MoviesAll = () => {
   const dispatch = useAppDispatch();
   const moviesLatest = useAppSelector(
-    (state) => state.movies.dataLatestUploads
+    (state) => state.movies.list
   );
   const movieDataLatestUploads: any = moviesLatest.map((movies) => ({
     id: movies.id,
     title: movies.title,
     subtitle: movies.yearReleased,
-    url: movies.movieLink.catalogue,
+    url: movies.imageLink,
   }));
   const moviesDataFeatured = useAppSelector(
-    (state) => state.movies.dataFeatured
+    (state) => state.movies.featured
   );
   const movieDataFeatured: any = moviesDataFeatured.map((movieFeatured) => ({
     id: movieFeatured.id,
     title: movieFeatured.title,
     subtitle: movieFeatured.yearReleased,
-    url: movieFeatured.movieLink.catalogue,
+    url: movieFeatured.imageLink,
   }));
   const moviesDataComingSoon = useAppSelector(
-    (state) => state.movies.dataComingSoon
+    (state) => state.movies.comingSoon
   );
   const movieDataComingSoon: any = moviesDataComingSoon.map((movieComingSoon) => ({
     id: movieComingSoon.id,
     title: movieComingSoon.title,
     subtitle: movieComingSoon.yearReleased,
-    url: movieComingSoon.movieLink.catalogue,
+    url: movieComingSoon.imageLink,
   }));
 
   React.useEffect(() => {

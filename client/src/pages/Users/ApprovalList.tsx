@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { usersApproval, usersApprove } from "../../utilities/slice/userSlice";
+import { IUserFormApprovePost, IUserFormTable } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
@@ -9,19 +10,6 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-
-interface RowValues {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-}
-
-interface ApproveFormValues {
-  id: string;
-  approval: string;
-  role: string;
-}
 
 const ApprovalList = () => {
   const columns: GridColDef[] = [
@@ -51,7 +39,7 @@ const ApprovalList = () => {
       sortable: false,
       renderCell: (params) => {
         const onClickApprovedAdmin = async (): Promise<void> => {
-          const formValues: ApproveFormValues = {
+          const formValues: IUserFormApprovePost = {
             id: params.row.id,
             approval: "approved",
             role: "ADMIN",
@@ -60,7 +48,7 @@ const ApprovalList = () => {
         };
 
         const onClickApproved = async (): Promise<void> => {
-          const formValues: ApproveFormValues = {
+          const formValues: IUserFormApprovePost = {
             id: params.row.id,
             approval: "approved",
             role: "USER",
@@ -69,7 +57,7 @@ const ApprovalList = () => {
         };
 
         const onClickDisapproved = async (): Promise<void> => {
-          const formValues: ApproveFormValues = {
+          const formValues: IUserFormApprovePost = {
             id: params.row.id,
             approval: "disapproved",
             role: "USER",
@@ -99,7 +87,7 @@ const ApprovalList = () => {
     },
   ];
   const dispatch = useAppDispatch();
-  const rows: RowValues[] = useAppSelector((state) => state.users.data);
+  const rows: IUserFormTable[] = useAppSelector((state) => state.users.data);
 
   useEffect(() => {
     dispatch(usersApproval());

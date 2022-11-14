@@ -1,0 +1,86 @@
+import {
+  createStubInstance,
+  expect,
+  sinon,
+  StubbedInstanceWithSinonAccessor,
+} from '@loopback/testlab';
+import {ActorsController} from '../../../controllers';
+import {Actors} from '../../../models';
+import {
+  ActorsRepository,
+  LinksRepository,
+  MovieActorRepository,
+} from '../../../repositories';
+import {givenActor} from '../../helper';
+
+describe('ActorsController', () => {
+  let actorsRepository: StubbedInstanceWithSinonAccessor<ActorsRepository>;
+  let linkRepository: StubbedInstanceWithSinonAccessor<LinksRepository>;
+  let movieActorRepository: StubbedInstanceWithSinonAccessor<MovieActorRepository>;
+  let controller: ActorsController;
+  // let actorPost: Actors;
+  let aActorWithId: Actors;
+  // let aChangedActor: Actors;
+  let aListOfActors: Actors[];
+
+  beforeEach(resetRepositories);
+
+  // describe('createActor', () => {
+  //   it('creates a Actor', async () => {
+  //     const create = actorsRepository.stubs.create;
+  //     create.resolves(aActorWithId);
+  //     const result = await controller.create(actorPost);
+  //     expect(result).to.eql(aActorWithId);
+  //     sinon.assert.calledWith(create, actorPost);
+  //   });
+  // });
+
+  describe('findActors', () => {
+    it('returns multiple actors if they exist', async () => {
+      const find = actorsRepository.stubs.find;
+      find.resolves(aListOfActors);
+      expect(await controller.find()).to.eql(aListOfActors);
+      sinon.assert.called(find);
+    });
+  
+  });
+
+  describe('findActorById', () => {
+    it('returns actors if they exist', async () => {
+      const findById = actorsRepository.stubs.findById;
+      findById.resolves(aActorWithId);
+      expect(await controller.findById(aActorWithId.id as string)).to.eql(
+        aActorWithId,
+      );
+      sinon.assert.calledWith(findById, aActorWithId.id);
+    });
+  
+  });
+
+
+  function resetRepositories() {
+    actorsRepository = createStubInstance(ActorsRepository);
+    // actorPost = givenActor();
+    // actorPost = giveActorPost();
+    aActorWithId = givenActor({
+      id: '63694bfe8a9ea1faf597feb7',
+    });
+    aListOfActors = [
+      aActorWithId,
+      givenActor({
+        id: '63694c308a9ea1faf597feb9',
+        firstName: 'Robert',
+      }),
+    ] as Actors[];
+    // aChangedActor = givenActor({
+    //   id: aActorWithId.id,
+    //   firstName: 'Robert - edited',
+    // });
+
+    controller = new ActorsController(
+      actorsRepository,
+      linkRepository,
+      movieActorRepository,
+    );
+  }
+});

@@ -1,32 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authenticationToken } from "../authentication";
+import { IActorInitialState, IActorForm } from "../types";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3001";
 
-interface ActorDataOne {
-  id?: string;
-  firstName: string;
-  lastName: string;
-  gender: string;
-  birthday: string;
-  link?: string;
-  actorLink: LinkClass;
-  actorMovies?: Movies[];
-}
-
-interface LinkClass {
-  catalogue: string;
-}
-
-interface Movies {
-  title: string;
-  link: string;
-  movieLink: LinkClass;
-}
-
 export const actorsPost = createAsyncThunk(
   "actors/post",
-  async (formValues: ActorDataOne) => {
+  async (formValues: IActorForm) => {
     return axios({
       url: `/actors`,
       method: "post",
@@ -40,7 +20,7 @@ export const actorsPost = createAsyncThunk(
 
 export const actorsUpdate = createAsyncThunk(
   "actors/update",
-  async (formValues: ActorDataOne) => {
+  async (formValues: IActorForm) => {
     return axios({
       url: `/actors/${formValues.id}`,
       method: "patch",
@@ -75,7 +55,7 @@ export const actorsList = createAsyncThunk("actors/list", async () => {
     .catch((err) => err);
 });
 
-export const actorsOne = createAsyncThunk(
+export const actorById = createAsyncThunk(
   "actors/one",
   async (actorId: string) => {
     return axios({
@@ -101,50 +81,54 @@ export const actorsMovies = createAsyncThunk(
   }
 );
 
-interface ActorData {
-  logged: boolean;
-  data: ActorDataOne[] | [];
-  dataOne: ActorDataOne;
-  dataMovies: Movies[] | [];
-}
-
 const initialState = {
-  logged: false,
-  data: [],
-  dataOne: {},
-  dataMovies: [],
-} as ActorData;
+  list: [],
+  byId: null,
+  movies: [],
+  selected: null,
+} as IActorInitialState;
 
 export const actorSlice = createSlice({
   name: "actors",
   initialState,
   reducers: {
     clearActor: (state) => {
-      state.logged = false;
-      state.data = [];
+      state.list = [];
+      state.byId = null;
+      state.movies = [];
+      state.selected = null;
     },
     selectActors: (state, action) => {
-      state.dataOne = action.payload;
+      state.selected = action.payload;
+    },
+    clearSelected: (state) => {
+      state.byId = null;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(actorsList.fulfilled, (state, action) => {
-      state.data = action.payload;
+    builder.addCase(actorsPost.fulfilled, (state, action) => {
+      state.list = [...state.list, action.payload];
     });
-    builder.addCase(actorsOne.fulfilled, (state, action) => {
-      state.dataOne = action.payload;
+    builder.addCase(actorsList.fulfilled, (state, action) => {
+      state.list = action.payload;
+    });
+    builder.addCase(actorById.fulfilled, (state, action) => {
+      state.byId = action.payload;
     });
     builder.addCase(actorsUpdate.fulfilled, (state, action) => {
-      state.dataOne = action.payload;
+      state.list = state.list.map((actor) =>
+        actor.id === action.payload.id ? action.payload : actor
+      );
+      state.byId = null;
     });
     builder.addCase(actorsDelete.fulfilled, (state, action) => {
-      state.data = state.data.filter((actor) => actor.id !== action.payload.id);
+      state.list = state.list.filter((actor) => actor.id !== action.payload.id);
     });
     builder.addCase(actorsMovies.fulfilled, (state, action) => {
-      state.dataMovies = action.payload;
+      state.movies = action.payload;
     });
   },
 });
 
-export const { clearActor, selectActors } = actorSlice.actions;
+export const { clearActor, clearSelected, selectActors } = actorSlice.actions;
 export default actorSlice.reducer;

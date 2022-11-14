@@ -64,12 +64,12 @@ export class DigitalStreamingSystemApplication extends BootMixin(
     this.dataSource(MongoDbDataSource, UserServiceBindings.DATASOURCE_NAME);
 
     // Bind user service
-    this.bind(UserServiceBindings.USER_SERVICE).toClass(CustomUserService),
-      // Bind user and credentials repository
-      this.bind(UserServiceBindings.USER_REPOSITORY).toClass(UsersRepository),
-      this.bind(UserServiceBindings.USER_CREDENTIALS_REPOSITORY).toClass(
-        UserCredentialsRepository,
-      );
+    this.bind(UserServiceBindings.USER_SERVICE).toClass(CustomUserService);
+    // Bind user and credentials repository
+    this.bind(UserServiceBindings.USER_REPOSITORY).toClass(UsersRepository);
+    this.bind(UserServiceBindings.USER_CREDENTIALS_REPOSITORY).toClass(
+      UserCredentialsRepository,
+    );
 
     const optionsAuth: AuthorizationOptions = {
       precedence: AuthorizationDecision.DENY,

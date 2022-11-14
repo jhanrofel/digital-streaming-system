@@ -1,38 +1,15 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { userFormErrors } from "../../utilities/formValues";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { usersOne, usersUpdate } from "../../utilities/slice/userSlice";
+import {
+  IUserFormErrors,
+  IUserFormValues,
+  IUserFormPatch,
+} from "../../utilities/types";
 import { SelectChangeEvent } from "@mui/material/Select";
-import UserEditForm from "../../components/User/UserEditForm";
-
-interface FormValues {
-  role: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  alert: AlertData;
-}
-
-interface FormErrors {
-  role: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-}
-
-interface PostUserValue {
-  id: string;
-  role: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-}
+import UserForm from "../../components/User/UserForm";
 
 const UserEdit = () => {
   const dispatch = useAppDispatch();
@@ -40,7 +17,7 @@ const UserEdit = () => {
   const userId = state;
   const user = useAppSelector((stateUser) => stateUser.users.dataOne);
 
-  const [formValues, setFormValues] = React.useState<FormValues>({
+  const [formValues, setFormValues] = React.useState<IUserFormValues>({
     role: user.role || "USER",
     email: user.email || "",
     firstName: user.firstName || "",
@@ -52,12 +29,8 @@ const UserEdit = () => {
     },
   });
 
-  const [formErrors, setFormErrors] = React.useState<FormErrors>({
-    role: "",
-    email: "",
-    firstName: "",
-    lastName: "",
-  });
+  const [formErrors, setFormErrors] =
+    React.useState<IUserFormErrors>(userFormErrors);
 
   React.useEffect(() => {
     dispatch(usersOne(userId));
@@ -79,16 +52,31 @@ const UserEdit = () => {
 
     switch (name) {
       case "email":
-        setFormValues((stateEmailForm) => ({ ...stateEmailForm, email: value }));
+        setFormValues((stateEmailForm) => ({
+          ...stateEmailForm,
+          email: value,
+        }));
         setFormErrors((stateEmailError) => ({ ...stateEmailError, email: "" }));
         break;
       case "firstName":
-        setFormValues((stateFirstNameForm) => ({ ...stateFirstNameForm, firstName: value }));
-        setFormErrors((stateFirstNameError) => ({ ...stateFirstNameError, firstName: "" }));
+        setFormValues((stateFirstNameForm) => ({
+          ...stateFirstNameForm,
+          firstName: value,
+        }));
+        setFormErrors((stateFirstNameError) => ({
+          ...stateFirstNameError,
+          firstName: "",
+        }));
         break;
       case "lastName":
-        setFormValues((stateLastNameForm) => ({ ...stateLastNameForm, lastName: value }));
-        setFormErrors((stateLastNameError) => ({ ...stateLastNameError, lastName: "" }));
+        setFormValues((stateLastNameForm) => ({
+          ...stateLastNameForm,
+          lastName: value,
+        }));
+        setFormErrors((stateLastNameError) => ({
+          ...stateLastNameError,
+          lastName: "",
+        }));
         break;
       default:
         break;
@@ -105,7 +93,7 @@ const UserEdit = () => {
 
   const onClickSubmitHandler = async (): Promise<void> => {
     if (formValidation()) {
-      const postUserValue: PostUserValue = {
+      const postUserValue: IUserFormPatch = {
         id: userId,
         role: formValues.role,
         email: formValues.email,
@@ -178,7 +166,8 @@ const UserEdit = () => {
   };
 
   return (
-    <UserEditForm
+    <UserForm
+      formName="EditForm"
       formErrors={formErrors}
       formValues={formValues}
       onChange={onChangeHandler}

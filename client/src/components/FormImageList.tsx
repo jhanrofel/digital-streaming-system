@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
+import { ICard } from "../utilities/types";
 import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 import ImageList from "@mui/material/ImageList";
@@ -9,15 +10,8 @@ import ImageListItemBar from "@mui/material/ImageListItemBar";
 type AppProps = {
   header: string;
   page: string;
-  movieData: ImageData[];
+  movieData: ICard[];
 };
-
-interface ImageData {
-  id: string;
-  title: string;
-  subtitle: string;
-  url: string;
-}
 
 export default function FormImageList({
   header,

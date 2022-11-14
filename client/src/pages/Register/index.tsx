@@ -1,52 +1,22 @@
 import React, { useState } from "react";
+import {
+  registerFormErrors,
+  registerFormValues,
+} from "../../utilities/formValues";
 import { useAppDispatch } from "../../utilities/hooks";
 import { usersRegister } from "../../utilities/slice/userSlice";
+import {
+  IRegisterFormErrors,
+  IRegisterFormValues,
+} from "../../utilities/types";
 import RegistrationForm from "../../components/Register";
-
-interface FormValues {
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-  confirm: string;
-  alert: AlertData;
-}
-
-interface FormErrors {
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-  confirm: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-}
 
 const Register = () => {
   const dispatch = useAppDispatch();
-  const [formValues, setFormValues] = useState<FormValues>({
-    email: "",
-    firstName: "",
-    lastName: "",
-    password: "",
-    confirm: "",
-    alert: {
-      open: false,
-      message: "",
-      severity: "info",
-    },
-  });
-  const [formErrors, setFormErrors] = useState<FormErrors>({
-    email: "",
-    firstName: "",
-    lastName: "",
-    password: "",
-    confirm: "",
-  });
+  const [formValues, setFormValues] =
+    useState<IRegisterFormValues>(registerFormValues);
+  const [formErrors, setFormErrors] =
+    useState<IRegisterFormErrors>(registerFormErrors);
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>): void => {
     let name = (event.target as HTMLInputElement).name;
@@ -135,11 +105,14 @@ const Register = () => {
         ...state,
         lastName: "Last name is required.",
       }));
-    if (formValues.password === "")
+    if (formValues.password === "") {
+      const fieldName: string = "password";
       setFormErrors((state) => ({
         ...state,
-        password: "Password is required.",
+        [fieldName]: "Password is requried.",
       }));
+    }
+
     if (formValues.confirm === "")
       setFormErrors((state) => ({
         ...state,
@@ -165,6 +138,12 @@ const Register = () => {
         setFormErrors((state) => ({
           ...state,
           confirm: "Confirm password does not match.",
+        }));
+      } else if (formValues.password.length < 8) {
+        const fieldName: string = "password";
+        setFormErrors((state) => ({
+          ...state,
+          [fieldName]: "Password requires min of 8 characters.",
         }));
       } else {
         valid = true;

@@ -1,18 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authenticationToken, unauthorize } from "../authentication";
+import { IUserFormRegister } from "../types";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3001";
 
-interface PostInput {
-  firstName?: string;
-  lastName?: string;
-  email: string;
-  password: string;
-}
-
 export const usersRegister = createAsyncThunk(
   "users/register",
-  async (formValues: PostInput, { rejectWithValue }) => {
+  async (formValues: IUserFormRegister, { rejectWithValue }) => {
     return axios({
       url: `/users/register`,
       method: "post",
@@ -31,7 +25,7 @@ export const usersRegister = createAsyncThunk(
 
 export const usersLogin = createAsyncThunk(
   "users/login",
-  async (formValues: PostInput, { rejectWithValue }) => {
+  async (formValues: IUserFormRegister, { rejectWithValue }) => {
     return axios({
       url: `/users/login`,
       method: "post",
@@ -227,16 +221,7 @@ export const userSlice = createSlice({
       state.data = action.payload;
     });
     builder.addCase(usersApprove.fulfilled, (state, action) => {
-      if (action.payload.form === "approval")
-        state.data = state.data.filter((user) => user.id !== action.payload.id);
-
-      if (action.payload.form === "list") {
-        state.data = state.data.map((user) =>
-          user.id === action.payload.id
-            ? { ...user, role: action.payload.role }
-            : user
-        );
-      }
+      state.data = state.data.filter((user) => user.id !== action.payload.id);
     });
     builder.addCase(usersApproved.fulfilled, (state, action) => {
       state.data = action.payload;

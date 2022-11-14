@@ -19,7 +19,7 @@ const FormSearch = ({
   onChange,
 }: AppProps) => {
   return (
-    <>
+    <React.Fragment>
       <Box sx={{ width: 600 }}>
         <Typography variant="h3" gutterBottom>
           FREE MOVIE STREAMING
@@ -42,7 +42,7 @@ const FormSearch = ({
           </Button>
         </FormControl>
       </Box>
-    </>
+    </React.Fragment>
   );
 };
 

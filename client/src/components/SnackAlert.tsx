@@ -3,6 +3,7 @@ import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
+import { IAlert } from "../utilities/types";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -12,20 +13,11 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 type AppProps = {
-  alertData: AlertData;
+  alertData: IAlert;
   onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 };
 
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-}
-
-export default function SnackAlert({
-  alertData,
-  onClickCloseAlert,
-}: AppProps) {
+export default function SnackAlert({ alertData, onClickCloseAlert }: AppProps) {
   const action = (
     <React.Fragment>
       <IconButton

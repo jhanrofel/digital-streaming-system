@@ -1,44 +1,20 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { cookiesCreate } from "../../utilities/cookies";
+import { loginFormErrors, loginFormValues } from "../../utilities/formValues";
 import { useAppDispatch } from "../../utilities/hooks";
 import { loggedInCreate } from "../../utilities/loggedIn";
 import { usersData, usersLogin } from "../../utilities/slice/userSlice";
+import { ILoginFormErrors, ILoginFormValues } from "../../utilities/types";
 import LoginForm from "../../components/Login";
-
-interface FormValues {
-  email: string;
-  password: string;
-  alert: AlertData;
-}
-
-interface FormErrors {
-  email: string;
-  password: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-}
 
 const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [formValues, setFormValues] = React.useState<FormValues>({
-    email: "",
-    password: "",
-    alert: {
-      open: false,
-      message: "",
-      severity: "info",
-    },
-  });
-  const [formErrors, setFormErrors] = React.useState<FormErrors>({
-    email: "",
-    password: "",
-  });
+  const [formErrors, setFormErrors] =
+    React.useState<ILoginFormErrors>(loginFormErrors);
+  const [formValues, setFormValues] =
+    React.useState<ILoginFormValues>(loginFormValues);
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>): void => {
     let name = (event.target as HTMLInputElement).name;
@@ -47,11 +23,17 @@ const Login = () => {
     switch (name) {
       case "email":
         setFormValues((state) => ({ ...state, email: value }));
-        setFormErrors((state) => ({ ...state, email: "" }));
+        setFormErrors((state) => ({
+          ...state,
+          [name]: value ? "" : "Email is required",
+        }));
         break;
       case "password":
         setFormValues((state) => ({ ...state, password: value }));
-        setFormErrors((state) => ({ ...state, password: "" }));
+        setFormErrors((state) => ({
+          ...state,
+          [name]: value ? "" : "Password is required",
+        }));
         break;
       default:
         break;
@@ -60,7 +42,7 @@ const Login = () => {
 
   const onClickSubmitHandler = async (): Promise<void> => {
     if (formValidation()) {
-      const postUserValue: FormErrors = {
+      const postUserValue: ILoginFormErrors = {
         email: formValues.email,
         password: formValues.password,
       };
@@ -86,11 +68,14 @@ const Login = () => {
         ...state,
         email: "Email is required.",
       }));
-    if (formValues.password === "")
+
+    if (formValues.password === "") {
+      const fieldName: string = "password";
       setFormErrors((state) => ({
         ...state,
-        password: "Password is requried.",
+        [fieldName]: "Password is requried.",
       }));
+    }
 
     if (formValues.email !== "" && formValues.password !== "") {
       valid = true;

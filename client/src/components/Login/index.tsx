@@ -1,34 +1,19 @@
 import React from "react";
+import { ILoginFormErrors, ILoginFormValues } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 import FormButton from "../FormButton";
 import FormText from "../FormText";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
-  formValues: FormValues;
-  formErrors: FormErrors;
+  formValues: ILoginFormValues;
+  formErrors: ILoginFormErrors;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   onClickCloseAlert: (event: Event | React.SyntheticEvent<any, Event>) => void;
 };
-
-interface FormValues {
-  email: string;
-  password: string;
-  alert: AlertData;
-}
-
-interface FormErrors {
-  email: string;
-  password: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-}
 
 const LoginForm = ({
   formValues,
@@ -40,9 +25,15 @@ const LoginForm = ({
   return (
     <React.Fragment>
       <Container maxWidth="sm">
-        <Box sx={{ bgcolor: "#ffffff", display: "flex", flexWrap: "wrap" }}>
-          <div className="form-header">SIGN IN</div>
+        <Box>
+          <Typography
+            variant="h5"
+            sx={{ width: 1, display: "flex", justifyContent: "center" }}
+          >
+            SIGN IN
+          </Typography>
           <FormText
+            test-id="email"
             name="email"
             label="Email"
             type="search"

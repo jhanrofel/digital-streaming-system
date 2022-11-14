@@ -16,8 +16,9 @@ const FormText = ({ name, value, label, type, error, variant, onChange }: AppPro
   return (
     <FormControl fullWidth sx={{ m: 1 }} variant="filled">
       <TextField
+        data-testid={name}
+        defaultValue={value}
         id={name}
-        value={value}
         name={name}
         label={label}
         type={type}

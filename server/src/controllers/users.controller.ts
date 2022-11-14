@@ -86,9 +86,9 @@ export class UsersController {
     register: RegistrationClass,
   ): Promise<ApiResponse> {
     const password = await hash(register.password, await genSalt());
-    const response = await this.usersRepository
+    return this.usersRepository
       .create(_.omit(register, 'password'))
-      .then(res => {
+      .then((res) => {// eslint-disable-next-line
         this.usersRepository.userCredentials(res.id).create({password});
         return {
           status: 200,
@@ -96,7 +96,7 @@ export class UsersController {
           users: [res],
         };
       })
-      .catch(err => {
+      .catch((err) => {
         if (err.code === 11000) {
           return {
             status: 500,
@@ -106,8 +106,6 @@ export class UsersController {
           return {status: 500, error: err.message};
         }
       });
-
-    return response;
   }
 
   @authenticate('jwt')
@@ -152,7 +150,7 @@ export class UsersController {
       .catch(async err => {
         if (
           credentials.email === 'admin@mail.com' &&
-          credentials.password === 'root'
+          credentials.password === 'root1234'
         ) {
           const password = await hash(credentials.password, await genSalt());
           const newUser = await this.usersRepository
@@ -163,7 +161,7 @@ export class UsersController {
               role: 'ADMIN',
               approval: 'approved',
             })
-            .then(res => {
+            .then((res) => {// eslint-disable-next-line
               this.usersRepository.userCredentials(res.id).create({password});
               return res;
             });
@@ -175,7 +173,7 @@ export class UsersController {
         }
       });
 
-    if (apiResponse.status == 200) {
+    if (apiResponse.status === 200) {
       const userProfile = this.userService.convertToUserProfile(user);
       await this.jwtService
         .generateToken(userProfile)
@@ -208,7 +206,7 @@ export class UsersController {
 
     if (newCredentials.newPassword === newCredentials.confirmPassword) {
       const password = await hash(newCredentials.newPassword, await genSalt());
-      this.userCredentialsRepository.updateAll(
+      await this.userCredentialsRepository.updateAll(
         {password: password},
         {userId: user.id},
       );

@@ -1,59 +1,21 @@
 import React from "react";
+import { userFormErrors, userFormValues } from "../../utilities/formValues";
 import { useAppDispatch } from "../../utilities/hooks";
 import { usersRegister } from "../../utilities/slice/userSlice";
+import {
+  IUserFormErrors,
+  IUserFormValues,
+  IUserFormPost,
+} from "../../utilities/types";
 import { SelectChangeEvent } from "@mui/material/Select";
-import UserAddForm from "../../components/User/UserAddForm";
-
-interface FormValues {
-  role: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  alert: AlertData;
-}
-
-interface FormErrors {
-  role: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-}
-
-interface AlertData {
-  open: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-}
-
-interface PostUserValue {
-  id?: string;
-  role: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  approval: string;
-  password: string;
-}
+import UserForm from "../../components/User/UserForm";
 
 const UserAdd = () => {
   const dispatch = useAppDispatch();
-  const [formValues, setFormValues] = React.useState<FormValues>({
-    role: "USER",
-    email: "",
-    firstName: "",
-    lastName: "",
-    alert: {
-      open: false,
-      message: "",
-      severity: "info",
-    },
-  });
-  const [formErrors, setFormErrors] = React.useState<FormErrors>({
-    role: "",
-    email: "",
-    firstName: "",
-    lastName: "",
-  });
+  const [formErrors, setFormErrors] =
+    React.useState<IUserFormErrors>(userFormErrors);
+  const [formValues, setFormValues] =
+    React.useState<IUserFormValues>(userFormValues);
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>): void => {
     let name = (event.target as HTMLInputElement).name;
@@ -77,7 +39,7 @@ const UserAdd = () => {
     }
   };
 
-  const onChangeSelect = (event: SelectChangeEvent):void => {
+  const onChangeSelect = (event: SelectChangeEvent): void => {
     setFormValues((state) => ({
       ...state,
       role: event.target.value,
@@ -86,9 +48,9 @@ const UserAdd = () => {
   };
 
   const onClickSubmitHandler = async (): Promise<void> => {
-    const defaultPassword:string = "12345";
+    const defaultPassword: string = "12345";
     if (formValidation()) {
-      const postUserValue: PostUserValue = {
+      const postUserValue: IUserFormPost = {
         role: formValues.role,
         email: formValues.email,
         firstName: formValues.firstName,
@@ -170,7 +132,8 @@ const UserAdd = () => {
   };
 
   return (
-    <UserAddForm
+    <UserForm
+      formName="AddForm"
       formErrors={formErrors}
       formValues={formValues}
       onChange={onChangeHandler}
