@@ -1,1 +1,1 @@
- 2tsXÉhr$src/controllers/movies.controller.ts
+ 2tsXÉhr$src/controllers/movies.controller.ts

@@ -177,6 +177,7 @@ const ActorList = () => {
     setOpenActorForm(false);
     resetForm();
     setAlert(alertDataReset);
+    setDefaultValue(actorFormReset);
   };
 
   return (

@@ -9,6 +9,6 @@ export const ActorsPostSchema: SchemaObject = {
     lastName: {type: 'string'},
     gender: {type: 'string'},
     birthday: {type: 'string'},
-    actorLink: {type: 'object'},
+    imagelink: {type: 'string'},
   },
 };

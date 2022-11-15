@@ -4,5 +4,5 @@ export interface IActorPost {
   lastName: string;
   gender: string;
   birthday: string;
-  actorLink: string;
+  imageLink: string;
 }

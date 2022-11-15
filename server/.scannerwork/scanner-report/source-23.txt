@@ -10,10 +10,7 @@ import {
   response,
 } from '@loopback/rest';
 import {Actors, Movies} from '../models';
-import {
-  ActorsRepository,
-  MovieActorRepository,
-} from '../repositories';
+import {ActorsRepository, MovieActorRepository} from '../repositories';
 import {ActorsPostSchema} from '../schemas';
 import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
@@ -24,19 +21,9 @@ class ActorClass {
   lastName: string;
   gender: string;
   birthday: string;
-  actorLink: LinkClass;
-  link?: string;
+  imageLink: string;
 }
 
-class LinkClass {
-  catalogue: string;
-  picture?: string[];
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
-  trailer?: string;
-  clip?: string[];
-}
 
 interface ApiResponse {
   status: number;
@@ -70,17 +57,7 @@ export class ActorsController {
     })
     actors: ActorClass,
   ): Promise<Actors> {
-    // const link = actors.actorLink;
-    // const actor = await this.linksRepository.create(link).then(newLink => {
-    //   actors.link = newLink.id;
-    //   return this.actorsRepository.create(_.omit(actors, ['actorLink']));
-    // });
-
     return this.actorsRepository.create(actors);
-
-    // return this.actorsRepository.findById(actor.id, {
-    //   include: [{relation: 'actorLink', scope: {fields: {id: false}}}],
-    // });
   }
 
   @get('/actors/count')
@@ -106,10 +83,8 @@ export class ActorsController {
   })
   async find(): Promise<Actors[]> {
     return this.actorsRepository.find({
-      include: [
-        {relation: 'actorMovies'},
-      ],
-      order: ["firstName","lastName"]
+      include: [{relation: 'actorMovies'}],
+      order: ['firstName', 'lastName'],
     });
   }
 
@@ -124,9 +99,7 @@ export class ActorsController {
   })
   async findById(@param.path.string('id') id: string): Promise<Actors> {
     return this.actorsRepository.findById(id, {
-      include: [
-        {relation: 'actorMovies'},
-      ],
+      include: [{relation: 'actorMovies'}],
     });
   }
 
@@ -160,10 +133,7 @@ export class ActorsController {
     })
     actors: ActorClass,
   ): Promise<Actors> {
-    await this.actorsRepository.updateById(
-      id,
-      _.omit(actors),
-    );
+    await this.actorsRepository.updateById(id, _.omit(actors));
 
     return this.actorsRepository.findById(id);
   }
@@ -176,9 +146,7 @@ export class ActorsController {
   })
   async deleteById(@param.path.string('id') id: string): Promise<ApiResponse> {
     const actor = await this.actorsRepository.findById(id, {
-      include: [
-        {relation: 'actorMovies'},
-      ],
+      include: [{relation: 'actorMovies'}],
     });
 
     const movieCount = await this.movieActorRepository.count({actorId: id});
@@ -190,8 +158,6 @@ export class ActorsController {
       };
     } else {
       await this.actorsRepository.deleteById(id);
-      // await this.linksRepository.deleteById(actor.link);
-
       return {status: 200, message: 'Actor deleted.', actors: [actor]};
     }
   }

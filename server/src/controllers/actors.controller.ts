@@ -20,22 +20,12 @@ import {authorize} from '@loopback/authorization';
 import _ from 'lodash';
 
 class ActorClass {
+  id?: string;
   firstName: string;
   lastName: string;
   gender: string;
   birthday: string;
-  actorLink: LinkClass;
-  link?: string;
-}
-
-class LinkClass {
-  catalogue: string;
-  picture?: string[];
-  facebook?: string;
-  instagram?: string;
-  youtube?: string;
-  trailer?: string;
-  clip?: string[];
+  imageLink: string;
 }
 
 interface ApiResponse {
@@ -70,17 +60,7 @@ export class ActorsController {
     })
     actors: ActorClass,
   ): Promise<Actors> {
-    // const link = actors.actorLink;
-    // const actor = await this.linksRepository.create(link).then(newLink => {
-    //   actors.link = newLink.id;
-    //   return this.actorsRepository.create(_.omit(actors, ['actorLink']));
-    // });
-
     return this.actorsRepository.create(actors);
-
-    // return this.actorsRepository.findById(actor.id, {
-    //   include: [{relation: 'actorLink', scope: {fields: {id: false}}}],
-    // });
   }
 
   @get('/actors/count')
@@ -190,8 +170,6 @@ export class ActorsController {
       };
     } else {
       await this.actorsRepository.deleteById(id);
-      // await this.linksRepository.deleteById(actor.link);
-
       return {status: 200, message: 'Actor deleted.', actors: [actor]};
     }
   }

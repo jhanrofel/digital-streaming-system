@@ -1,6 +1,7 @@
 import { rest } from "msw";
 import { mockActorsList } from "./actors.mocks";
 import { mockUsersList } from "./users.mocks";
+import { mockMoviesList } from "./movies.mocks";
 
 const baseAPIUrl = "http://localhost:3001";
 
@@ -20,6 +21,16 @@ export const handlers  = [
       ctx.json({
         status: 200,
         data: mockUsersList,
+      }),
+      ctx.delay(150)
+    );
+  }),
+
+  rest.get(`${baseAPIUrl}/movies`, (req, res, ctx) => {
+    return res(
+      ctx.json({
+        status: 200,
+        data: mockMoviesList,
       }),
       ctx.delay(150)
     );

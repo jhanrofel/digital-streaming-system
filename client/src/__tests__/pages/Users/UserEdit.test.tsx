@@ -1,4 +1,4 @@
-import UserAdd from "../../../pages/Users/UserAdd";
+import UserEdit from "../../../pages/Users/UserEdit";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { setupStore } from "../../../utilities/store";
@@ -9,13 +9,13 @@ const renderForm = () => {
   return render(
     <Provider store={setupStore()}>
       <BrowserRouter>
-        <UserAdd />
+        <UserEdit />
       </BrowserRouter>
     </Provider>
   );
 };
 
-describe("<UserAdd />", () => {  
+describe("<UserEdit />", () => {  
   test("Should render components in the forms.", () => {
     renderForm();
 
@@ -65,24 +65,4 @@ describe("<UserAdd />", () => {
     expect(emailRequired).toBeInTheDocument;
 
   });  
- 
-
-  // test("Should happy path submit alert success.", () => {
-  //   renderForm();
-    
-  //   const button:HTMLButtonElement = screen.getByText("Save"); 
-  //   userEvent.click(button);
-
-  //   const firstNameRequired = screen.getAllByText("First name  is required.");
-  //   expect(firstNameRequired).toBeInTheDocument;
-
-  //   const lastNameRequired = screen.getAllByText("Last name is required.");
-  //   expect(lastNameRequired).toBeInTheDocument;
-
-  //   const emailRequired = screen.getAllByText("Email is required.");
-  //   expect(emailRequired).toBeInTheDocument;
-
-  //   const roleRequired = screen.getAllByText("Role is required.");
-  //   expect(roleRequired).toBeInTheDocument;
-  // });
 });

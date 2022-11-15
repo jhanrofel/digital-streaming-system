@@ -23,16 +23,16 @@ const UserAdd = () => {
 
     switch (name) {
       case "email":
-        setFormValues((state) => ({ ...state, email: value }));
-        setFormErrors((state) => ({ ...state, email: "" }));
+        setFormValues((userState) => ({ ...userState, email: value }));
+        setFormErrors((userState) => ({ ...userState, email: "" }));
         break;
       case "firstName":
-        setFormValues((state) => ({ ...state, firstName: value }));
-        setFormErrors((state) => ({ ...state, firstName: "" }));
+        setFormValues((userState) => ({ ...userState, firstName: value }));
+        setFormErrors((userState) => ({ ...userState, firstName: "" }));
         break;
       case "lastName":
-        setFormValues((state) => ({ ...state, lastName: value }));
-        setFormErrors((state) => ({ ...state, lastName: "" }));
+        setFormValues((userState) => ({ ...userState, lastName: value }));
+        setFormErrors((userState) => ({ ...userState, lastName: "" }));
         break;
       default:
         break;

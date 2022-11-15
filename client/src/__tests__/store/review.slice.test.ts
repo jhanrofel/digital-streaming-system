@@ -5,17 +5,18 @@ import reducer, {
   reviewsDisapprovedList,
   reviewsPost,
   reviewsApproval,
-  myMovieReview,clearReviews,selectReviews
+  myMovieReview,
+  clearReviews,
+  selectReviews,
 } from "../../utilities/slice/reviewSlice";
 import {
   mockReviewsList,
   mockReviewsPending,
   mockReviewsApproved,
   mockReviewsDispproved,
-  mockReviewsPendingAfterPost,
   mockNewReviewPost,
   mockReviewApprovedId,
-  mockReviewsPendingAfterApproved,
+  mockReviewsPendingAfterApproved,mockReviewSelected
 } from "../../mocks/review.mocks";
 import { IReviewInitialState } from "../../utilities/types";
 
@@ -125,13 +126,10 @@ describe("Reviews Slice ExtraReducers", () => {
   describe("current user review", () => {
     it("fulfilled", () => {
       expect(
-        reducer(
-            initialState,
-          {
-            type: myMovieReview.fulfilled.type,
-            payload: mockNewReviewPost,
-          }
-        )
+        reducer(initialState, {
+          type: myMovieReview.fulfilled.type,
+          payload: mockNewReviewPost,
+        })
       ).toEqual({
         data: [],
         dataOne: mockNewReviewPost,
@@ -160,14 +158,12 @@ describe("Reviews Slice ExtraReducers", () => {
       expect(
         reducer(initialState, {
           type: selectReviews,
-          payload: mockNewReviewPost,
+          payload: mockReviewSelected,
         })
       ).toEqual({
-        logged: false,
         data: [],
-        dataOne: mockNewReviewPost,
+        dataOne: {...reviewEmpty,id:mockReviewSelected},
       });
     });
   });
-
 });

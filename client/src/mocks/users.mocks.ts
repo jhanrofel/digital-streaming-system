@@ -166,7 +166,7 @@ export const mockUsersOne: IUserData = {
     status: "ACTIVATED",
   };
 
-  export const mockUsersOneEdited: IUserData = {
+  export const mockUsersOneEdited = {
     id: "636b1f0a90fe4644667becb1",
     status: "DEACTIVATED",
   };

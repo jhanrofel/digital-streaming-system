@@ -6,32 +6,19 @@ import {
 } from '@loopback/testlab';
 import {ActorsController} from '../../../controllers';
 import {Actors} from '../../../models';
-import {
-  ActorsRepository,
-  MovieActorRepository,
-} from '../../../repositories';
-import {givenActor} from '../../helper';
+import {ActorsRepository, MovieActorRepository} from '../../../repositories';
+import {givenActor, giveActorPost} from '../../helper';
 
 describe('ActorsController', () => {
   let actorsRepository: StubbedInstanceWithSinonAccessor<ActorsRepository>;
   let movieActorRepository: StubbedInstanceWithSinonAccessor<MovieActorRepository>;
   let controller: ActorsController;
-  // let actorPost: Actors;
+  let actorPost: Actors;
   let aActorWithId: Actors;
   // let aChangedActor: Actors;
   let aListOfActors: Actors[];
 
   beforeEach(resetRepositories);
-
-  // describe('createActor', () => {
-  //   it('creates a Actor', async () => {
-  //     const create = actorsRepository.stubs.create;
-  //     create.resolves(aActorWithId);
-  //     const result = await controller.create(actorPost);
-  //     expect(result).to.eql(aActorWithId);
-  //     sinon.assert.calledWith(create, actorPost);
-  //   });
-  // });
 
   describe('findActors', () => {
     it('returns multiple actors if they exist', async () => {
@@ -40,7 +27,6 @@ describe('ActorsController', () => {
       expect(await controller.find()).to.eql(aListOfActors);
       sinon.assert.called(find);
     });
-  
   });
 
   describe('findActorById', () => {
@@ -52,14 +38,31 @@ describe('ActorsController', () => {
       );
       sinon.assert.calledWith(findById, aActorWithId.id);
     });
-  
   });
 
+  describe('createActor', () => {
+    it('creates a Actor', async () => {
+      const create = actorsRepository.stubs.create;
+      create.resolves(aActorWithId);
+      const result = await controller.create(actorPost);
+      expect(result).to.eql(aActorWithId);
+      sinon.assert.calledWith(create, actorPost);
+    });
+  });
+
+  // describe('deleteTodo', () => {
+  //   it('successfully deletes actors', async () => {
+  //     const deleteById = actorsRepository.stubs.deleteById;
+  //     deleteById.resolves();
+  //     await controller.deleteById(aActorWithId.id as string);
+  //     sinon.assert.calledWith(deleteById, aActorWithId.id);
+  //   });
+  // });
 
   function resetRepositories() {
     actorsRepository = createStubInstance(ActorsRepository);
-    // actorPost = givenActor();
-    // actorPost = giveActorPost();
+    actorPost = givenActor();
+    actorPost = giveActorPost();
     aActorWithId = givenActor({
       id: '63694bfe8a9ea1faf597feb7',
     });
@@ -75,9 +78,6 @@ describe('ActorsController', () => {
     //   firstName: 'Robert - edited',
     // });
 
-    controller = new ActorsController(
-      actorsRepository,
-      movieActorRepository,
-    );
+    controller = new ActorsController(actorsRepository, movieActorRepository);
   }
 });

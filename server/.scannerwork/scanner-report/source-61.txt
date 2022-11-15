@@ -21,7 +21,7 @@ export function givenActor(actor?: Partial<Actors>) {
       lastName: 'Downey Jr.',
       gender: 'Male',
       birthday: '01-01-1980',
-      actorLink: '63694bfe8a9ea1faf597feb6',
+      imageLink: '63694bfe8a9ea1faf597feb6',
     },
     {
       id: '63694c308a9ea1faf597feb9',
@@ -29,7 +29,7 @@ export function givenActor(actor?: Partial<Actors>) {
       lastName: 'Paltrow',
       gender: 'Female',
       birthday: '02-02-1983',
-      actorLink: '63694c308a9ea1faf597feb8',
+      imageLink: '63694c308a9ea1faf597feb8',
     },
     actor,
   );

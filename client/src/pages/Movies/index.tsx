@@ -157,13 +157,12 @@ const Movies = () => {
         severity: "success",
       });
     } else if (dispatchResponse.type === "movies/patch/fulfilled") {
-      resetForm();
-      setOpenMovieForm(false);
       setAlert({
         open: true,
         message: `Movie updated!`,
         severity: "success",
-      });
+      });      
+      onClickHandlerFormClose();
     } else {
       setAlert({
         open: true,

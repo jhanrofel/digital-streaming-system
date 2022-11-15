@@ -188,3 +188,5 @@ export const mockReviewsPendingAfterApproved: IReviewFormTable[] = [
       reviewUser: { email: "mary.grace@mail.com" },
     },
   ];
+
+  export const mockReviewSelected = "636b1ec790fe4644667becp2";

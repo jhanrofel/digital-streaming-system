@@ -44,15 +44,14 @@ const ActorData = ({ callbackDelete, callbackEdit }: any) => {
     },
     {
       field: "imageLink",
-      headerName: "Image Link",
+      headerName: "Actor Image",
       width: 200,
       align: "center",
-      sortable: false,
       renderCell: (params) => {
         return (
           <Avatar
             variant="square"
-            alt="Image Catalogue"
+            alt="Actor Image"
             src={params.row.imageLink}
             sx={{ width: 50, height: 50 }}
           />
@@ -60,10 +59,9 @@ const ActorData = ({ callbackDelete, callbackEdit }: any) => {
       },
     },
     {
-      field: "action",
+      field: "actors_action",
       headerName: "Action",
       width: 200,
-      sortable: false,
       renderCell: (params) => {
         const onClickDelete = () => {
           dispatch(selectActors(params.row.id));
