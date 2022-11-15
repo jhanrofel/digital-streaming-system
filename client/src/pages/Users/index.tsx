@@ -5,7 +5,7 @@ import UserList from "./UserList";
 import FormTable from "../../components/FormTable";
 
 const tableTab: ITableTabInfo[] = [
-  { label: "USER", formPages: <UserList /> },
+  { label: "USERS", formPages: <UserList /> },
   { label: "ADD", formPages: <UserAdd /> },
   { label: "APPROVAL", formPages: <ApprovalList /> },
 ];

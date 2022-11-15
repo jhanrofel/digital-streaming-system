@@ -34,7 +34,7 @@ const MovieData = ({ callbackDelete, callbackEdit }: any) => {
     },
     {
       field: "imageLink",
-      headerName: "Image Link",
+      headerName: "Movie Image",
       width: 200,
       align: "center",
       sortable: false,
@@ -42,7 +42,7 @@ const MovieData = ({ callbackDelete, callbackEdit }: any) => {
         return (
           <Avatar
             variant="square"
-            alt="Image Catalogue"
+            alt="Movie Image"
             src={params.row.imageLink}
             sx={{ width: 50, height: 50 }}
           />
@@ -50,7 +50,7 @@ const MovieData = ({ callbackDelete, callbackEdit }: any) => {
       },
     },
     {
-      field: "action",
+      field: "movies_action",
       headerName: "Action",
       width: 200,
       sortable: false,

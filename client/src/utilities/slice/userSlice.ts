@@ -16,6 +16,7 @@ export const usersRegister = createAsyncThunk(
         if (res.data.status === 200) {
           return res.data.users[0];
         } else {
+          console.log(res);
           return rejectWithValue(res.data.error);
         }
       })

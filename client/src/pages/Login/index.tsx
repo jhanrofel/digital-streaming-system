@@ -6,6 +6,7 @@ import { useAppDispatch } from "../../utilities/hooks";
 import { loggedInCreate } from "../../utilities/loggedIn";
 import { usersData, usersLogin } from "../../utilities/slice/userSlice";
 import { ILoginFormErrors, ILoginFormValues } from "../../utilities/types";
+import { regex } from "../../utilities/helpers";
 import LoginForm from "../../components/Login";
 
 const Login = () => {
@@ -73,12 +74,20 @@ const Login = () => {
       const fieldName: string = "password";
       setFormErrors((state) => ({
         ...state,
-        [fieldName]: "Password is requried.",
+        [fieldName]: "Password is required.",
       }));
     }
 
     if (formValues.email !== "" && formValues.password !== "") {
-      valid = true;
+      if (!new RegExp(regex.email).test(formValues.email)) {
+        setFormErrors((state) => ({
+          ...state,
+          email: "Email is invalid.",
+        }));
+      } else {
+        valid = true;
+      }
+      
     }
 
     return valid;

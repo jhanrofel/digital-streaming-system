@@ -1,6 +1,6 @@
-projectKey=poc-server
+projectKey=1d0f6a0d095149a665d1c9a52145be9aa35378e7
 serverUrl=http://localhost:9000
 serverVersion=8.9.10.61524
-dashboardUrl=http://localhost:9000/dashboard?id=poc-server
-ceTaskId=AYRmCKk0iSIunHa5J4SM
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYRmCKk0iSIunHa5J4SM
+dashboardUrl=http://localhost:9000/dashboard?id=1d0f6a0d095149a665d1c9a52145be9aa35378e7
+ceTaskId=AYR3FdLw3x1R-3Ouvbqf
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYR3FdLw3x1R-3Ouvbqf

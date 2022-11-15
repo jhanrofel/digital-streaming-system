@@ -160,11 +160,11 @@ export const moviesSlice = createSlice({
   reducers: {
     clearMovies: (state) => {
       state.list = [];
-      state.byId= null;
-      state.reviews= [];
-      state.comingSoon= [];
-      state.featured= [];
-      state.selected= null;
+      state.byId = null;
+      state.reviews = [];
+      state.comingSoon = [];
+      state.featured = [];
+      state.selected = null;
     },
     selectMovies: (state, action) => {
       state.selected = action.payload;
@@ -195,6 +195,12 @@ export const moviesSlice = createSlice({
     builder.addCase(moviesPost.fulfilled, (state, action) => {
       state.list = [...state.list, action.payload];
     });
+    builder.addCase(moviesUpdate.fulfilled, (state, action) => {
+      state.list = state.list.map((movie) =>
+        movie.id === action.payload.id ? action.payload : movie
+      );
+      state.byId = null;
+    });
     builder.addCase(moviesDelete.fulfilled, (state, action) => {
       state.list = state.list.filter((movie) => movie.id !== action.payload.id);
       state.selected = null;
@@ -208,5 +214,5 @@ export const moviesSlice = createSlice({
   },
 });
 
-export const { clearMovies, selectMovies,clearSelected } = moviesSlice.actions;
+export const { clearMovies, selectMovies, clearSelected } = moviesSlice.actions;
 export default moviesSlice.reducer;

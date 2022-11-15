@@ -19,6 +19,7 @@ export interface IActorData {
 }
 
 export interface IActorInitialState {
+  loading: boolean;
   list: IActorData[] | [];
   byId: IActorData | null;
   movies: IMovieForm[] | [];
@@ -194,6 +195,7 @@ export interface IReviewFormTable {
   description: string;
   rating: number;
   createdAt: string;
+  approval?: string;
   reviewMovie: { title: string };
   reviewUser: { email: string };
 }
@@ -213,6 +215,16 @@ export interface IReviewRating {
 export interface ITableTabInfo {
   label: string;
   formPages: JSX.Element;
+}
+
+export interface IUserData {
+  id:string;
+  role: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  approval?: string;
+  status: string;
 }
 
 export interface IUserFormErrors {
@@ -270,3 +282,10 @@ export interface IUserFormTable {
   lastName: string;
   status?: string;
 }
+
+export interface IUserInitialState {
+  logged: boolean;
+  data: IUserData[] | [];
+  dataOne: IUserData | null;
+}
+

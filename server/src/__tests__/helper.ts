@@ -1,49 +1,50 @@
-import {juggler} from '@loopback/repository';
-import {Actors, Links} from '../models';
+import {givenHttpServerConfig} from '@loopback/testlab';
+import {DigitalStreamingSystemApplication} from '../application';
+import {Actors, Movies, MovieActor, Reviews, UserCredentials, Users } from '../models';
+import {ActorsRepository, UsersRepository} from '../repositories';
 
-export function giveActorPost() {
-  const actorLink = new Links(
-    Object.assign({
-      id: '63694bfe8a9ea1faf597feb6',
-      catalogue: 'image_url',
-    }),
+export function givenAdmin(user?: Partial<Users>) {
+  const data = Object.assign(
+    {
+      firstName: 'root',
+      lastName: 'admin',
+      email: 'root@admin.com',
+      role: 'ADMIN',
+      password: 'pass1234',
+    },
+    user,
   );
-  
-  const data = Object.assign({
-    id: '63694bfe8a9ea1faf597feb7',
-    firstName: 'Robert',
-    lastName: 'Downey Jr.',
-    gender: 'Male',
-    birthday: '01-01-1980',
-    actorLink: actorLink,
-  });
-  return new Actors(data);
+  return new Users(data);
 }
 
 export function givenActor(actor?: Partial<Actors>) {
   const data = Object.assign(
     {
-      id: '63694bfe8a9ea1faf597feb7',
-      firstName: 'Robert',
-      lastName: 'Downey Jr.',
+      firstName: 'Tom',
+      lastName: 'Hollands',
       gender: 'Male',
-      birthday: '01-01-1980',
-      actorLink: '63694bfe8a9ea1faf597feb6',
-    },
-    {
-      id: '63694c308a9ea1faf597feb9',
-      firstName: 'Gwyneth',
-      lastName: 'Paltrow',
-      gender: 'Female',
-      birthday: '02-02-1983',
-      actorLink: '63694c308a9ea1faf597feb8',
+      birthday: '01-01-1999',
+      imageLink:
+        'http://t0.gstatic.com/licensed-image?q=tbn:ANd9GcR6bMpT-g99Sl1A9UtU6L5X4VcN_ADVkV2pKsFD2TTW2jDDRN1asWn7ZbyrjZ8nan3tZn38A9dnHmpRhZg',
     },
     actor,
   );
   return new Actors(data);
 }
 
-export const testdb: juggler.DataSource = new juggler.DataSource({
-  name: 'db',
-  connector: 'memory',
-});
+
+export async function givenRunningApplicationWithCustomConfiguration() {
+  const app = new DigitalStreamingSystemApplication({
+    rest: givenHttpServerConfig(),
+  });
+
+  await app.boot();
+
+  app.bind('datasources.config.db').to({
+    name: 'db',
+    connector: 'memory',
+  });
+
+  await app.start();
+  return app;
+}

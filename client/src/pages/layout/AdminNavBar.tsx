@@ -13,7 +13,6 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { clearCategories } from "../../utilities/slice/categorySlice";
 import { clearActor } from "../../utilities/slice/actorSlice";
 import { clearMovies } from "../../utilities/slice/movieSlice";
 import { clearReviews } from "../../utilities/slice/reviewSlice";
@@ -25,7 +24,6 @@ const AdminNavBar: React.FC = () => {
   const dispatch = useAppDispatch();
   const onClickLogoutHandler = (event: React.MouseEvent<HTMLElement>) => {
     dispatch(clearActor());
-    dispatch(clearCategories());
     dispatch(clearMovies());
     dispatch(clearReviews());
     dispatch(clearUser());
@@ -62,6 +60,7 @@ const AdminNavBar: React.FC = () => {
             variant="h6"
             noWrap
             component="a"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },

@@ -1,5 +1,6 @@
 import Register from "../../../pages/Register";
 import { fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { setupStore } from "../../../utilities/store";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
@@ -41,14 +42,74 @@ describe("<Register />", () => {
   });
 
   test("Should change input fields value onChange event.", () => {
-    renderForm();
+    renderForm();    
+    
+    const firstName: HTMLInputElement = screen.getByLabelText("First Name");
+    userEvent.type(firstName, "Mike");
+    expect(firstName.value).toBe("Mike");
+    
+    const lastName: HTMLInputElement = screen.getByLabelText("Last Name");
+    userEvent.type(lastName, "Ross");
+    expect(lastName.value).toBe("Ross");
     
     const email: HTMLInputElement = screen.getByLabelText("Email");
-    fireEvent.change(email, { target: { value: "john.doe@mail.com" } });
-    expect(email.value).toBe("john.doe@mail.com");
-
+    userEvent.type(email, "mike.ross@mail.com");
+    expect(email.value).toBe("mike.ross@mail.com");
+    
     const password: HTMLInputElement = screen.getByLabelText("Password");
-    fireEvent.change(password, { target: { value: "mypass12134" } });
-    expect(password.value).toBe("mypass12134");
+    userEvent.type(password, "mike@123");
+    expect(password.value).toBe("mike@123");
+    
+    const confirm: HTMLInputElement = screen.getByLabelText("Confirm Password");
+    userEvent.type(confirm, "mike@123");
+    expect(confirm.value).toBe("mike@123");
+
+  });    
+
+  test("Should check validation on submit.", () => {
+    renderForm();
+    
+    const button:HTMLButtonElement = screen.getByText("Create Account"); 
+    userEvent.click(button);
+
+    const firstNameRequired = screen.getAllByText("First name is required.");
+    expect(firstNameRequired).toBeInTheDocument;
+
+    const lastNameRequired = screen.getAllByText("Last name is required.");
+    expect(lastNameRequired).toBeInTheDocument;
+
+    const emailRequired = screen.getAllByText("Email is required.");
+    expect(emailRequired).toBeInTheDocument;
+
+    const passwordRequired = screen.getAllByText("Password is required.");
+    expect(passwordRequired).toBeInTheDocument;
+
+    const confirmRequired = screen.getAllByText("Confirm password is required.");
+    expect(confirmRequired).toBeInTheDocument;
+  });      
+
+  test("Should check email on submit.", () => {
+    renderForm();
+    
+    const firstName: HTMLInputElement = screen.getByLabelText("First Name");
+    userEvent.type(firstName, "Mike");
+    
+    const lastName: HTMLInputElement = screen.getByLabelText("Last Name");
+    userEvent.type(lastName, "Ross");
+    
+    const password: HTMLInputElement = screen.getByLabelText("Password");
+    userEvent.type(password, "mike@123");
+    
+    const confirm: HTMLInputElement = screen.getByLabelText("Confirm Password");
+    userEvent.type(confirm, "mike@123");
+    
+    const email: HTMLInputElement = screen.getByLabelText("Email");
+    userEvent.type(email, "mike.ross");
+
+    const button:HTMLButtonElement = screen.getByText("Create Account"); 
+    userEvent.click(button);
+
+    const confirmRequired = screen.getAllByText("Invalid email.");
+    expect(confirmRequired).toBeInTheDocument;
   });  
 });

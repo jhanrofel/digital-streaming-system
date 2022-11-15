@@ -14,7 +14,6 @@ import {
   ActorsRepository,
   MoviesRepository,
   MovieActorRepository,
-  LinksRepository,
   ReviewsRepository,
 } from '../repositories';
 import {
@@ -30,11 +29,10 @@ class MovieClass {
   title: string;
   cost: number;
   yearReleased: number;
-  categories?: string[] | undefined;
-  comingSoon: boolean;
-  featured: boolean;
-  movieLink: string;
-  trailerLink: string;
+  comingSoon?: boolean;
+  featured?: boolean;
+  imageLink: string;
+  trailerLink?: string;
   movieActors: string[];
 }
 
@@ -58,8 +56,6 @@ export class MoviesController {
     public actorsRepository: ActorsRepository,
     @repository(MoviesRepository)
     public moviesRepository: MoviesRepository,
-    @repository(LinksRepository)
-    public linksRepository: LinksRepository,
     @repository(MovieActorRepository)
     public movieActorRepository: MovieActorRepository,
     @repository(ReviewsRepository)

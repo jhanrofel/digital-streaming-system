@@ -89,6 +89,7 @@ export class UsersController {
     return this.usersRepository
       .create(_.omit(register, 'password'))
       .then((res) => {// eslint-disable-next-line
+        console.log(res);
         this.usersRepository.userCredentials(res.id).create({password});
         return {
           status: 200,
@@ -97,6 +98,7 @@ export class UsersController {
         };
       })
       .catch((err) => {
+        console.log(err);
         if (err.code === 11000) {
           return {
             status: 500,

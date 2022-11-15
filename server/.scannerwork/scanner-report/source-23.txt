@@ -1,0 +1,164 @@
+import {Count, CountSchema, repository} from '@loopback/repository';
+import {
+  post,
+  param,
+  get,
+  getModelSchemaRef,
+  patch,
+  del,
+  requestBody,
+  response,
+} from '@loopback/rest';
+import {Actors, Movies} from '../models';
+import {ActorsRepository, MovieActorRepository} from '../repositories';
+import {ActorsPostSchema} from '../schemas';
+import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
+import _ from 'lodash';
+
+class ActorClass {
+  firstName: string;
+  lastName: string;
+  gender: string;
+  birthday: string;
+  imageLink: string;
+}
+
+
+interface ApiResponse {
+  status: number;
+  message?: string;
+  actors?: Actors[] | void[];
+  error?: string;
+}
+
+export class ActorsController {
+  constructor(
+    @repository(ActorsRepository)
+    public actorsRepository: ActorsRepository,
+    @repository(MovieActorRepository)
+    public movieActorRepository: MovieActorRepository,
+  ) {}
+
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
+  @post('/actors')
+  @response(200, {
+    description: 'Actors model instance',
+    content: {'application/json': {schema: ActorsPostSchema}},
+  })
+  async create(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: ActorsPostSchema,
+        },
+      },
+    })
+    actors: ActorClass,
+  ): Promise<Actors> {
+    return this.actorsRepository.create(actors);
+  }
+
+  @get('/actors/count')
+  @response(200, {
+    description: 'Actors model count',
+    content: {'application/json': {schema: CountSchema}},
+  })
+  async count(): Promise<Count> {
+    return this.actorsRepository.count();
+  }
+
+  @get('/actors')
+  @response(200, {
+    description: 'Array of Actors model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(Actors, {includeRelations: true}),
+        },
+      },
+    },
+  })
+  async find(): Promise<Actors[]> {
+    return this.actorsRepository.find({
+      include: [{relation: 'actorMovies'}],
+      order: ['firstName', 'lastName'],
+    });
+  }
+
+  @get('/actors/{id}')
+  @response(200, {
+    description: 'Actors model instance',
+    content: {
+      'application/json': {
+        schema: getModelSchemaRef(Actors, {includeRelations: true}),
+      },
+    },
+  })
+  async findById(@param.path.string('id') id: string): Promise<Actors> {
+    return this.actorsRepository.findById(id, {
+      include: [{relation: 'actorMovies'}],
+    });
+  }
+
+  @get('/actors/{id}/movies')
+  @response(200, {
+    description: 'Actors model instance',
+    content: {
+      'application/json': {
+        schema: getModelSchemaRef(Actors, {includeRelations: true}),
+      },
+    },
+  })
+  async findMoviesById(@param.path.string('id') id: string): Promise<Movies[]> {
+    return this.actorsRepository
+      .actorMovies(id)
+      .find({order: ['yearReleased DESC']});
+  }
+
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
+  @patch('/actors/{id}')
+  @response(204, {
+    description: 'Actors PATCH success',
+  })
+  async updateById(
+    @param.path.string('id') id: string,
+    @requestBody({
+      content: {
+        'application/json': {schema: ActorsPostSchema},
+      },
+    })
+    actors: ActorClass,
+  ): Promise<Actors> {
+    await this.actorsRepository.updateById(id, _.omit(actors));
+
+    return this.actorsRepository.findById(id);
+  }
+
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
+  @del('/actors/{id}')
+  @response(204, {
+    description: 'Actors DELETE success',
+  })
+  async deleteById(@param.path.string('id') id: string): Promise<ApiResponse> {
+    const actor = await this.actorsRepository.findById(id, {
+      include: [{relation: 'actorMovies'}],
+    });
+
+    const movieCount = await this.movieActorRepository.count({actorId: id});
+    if (movieCount.count > 0) {
+      return {
+        status: 500,
+        error: `Actor have (${movieCount.count}) existing movie.`,
+        actors: [actor],
+      };
+    } else {
+      await this.actorsRepository.deleteById(id);
+      return {status: 200, message: 'Actor deleted.', actors: [actor]};
+    }
+  }
+}
