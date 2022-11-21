@@ -227,19 +227,13 @@ export interface IUserData {
   status: string;
 }
 
-export interface IUserFormErrors {
+export interface IUserForm {
   role: string;
   email: string;
   firstName: string;
-  lastName: string;
-}
-
-export interface IUserFormValues {
-  role: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  alert: IAlert;
+  lastName: string;  
+  approval?: string;
+  password?: string;
 }
 
 export interface IUserFormPatch {
@@ -252,40 +246,21 @@ export interface IUserFormPatch {
   password?: string;
 }
 
-export interface IUserFormPost {
-  role: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  approval: string;
-  password: string;
-}
-
-export interface IUserFormRegister {
-  firstName?: string;
-  lastName?: string;
-  email: string;
-  password: string;
-}
-
 export interface IUserFormApprovePost {
   id: string;
   approval: string;
   role: string;
 }
 
-export interface IUserFormTable {
-  id: string;
-  role: string;
+export interface IUserLogin {
   email: string;
-  firstName: string;
-  lastName: string;
-  status?: string;
+  password: string;
 }
 
 export interface IUserInitialState {
   logged: boolean;
-  data: IUserData[] | [];
-  dataOne: IUserData | null;
+  list: IUserData[] | [];
+  byId: IUserData | null;
+  selected: string | null;
 }
 

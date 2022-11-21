@@ -193,7 +193,6 @@ const ActorList = () => {
       </Container>
       <ActorForm
         openActorForm={openActorForm}
-        formName={"AddForm"}
         formErrors={formErrors}
         formValues={formValues}
         defaultValue={defaultValue}

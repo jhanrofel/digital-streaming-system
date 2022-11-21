@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import FormButton from "../FormButton";
-import FormText from "../FormText";
+import FormTextOld from "../FormTextOld";
 import SnackAlert from "../SnackAlert";
 
 type AppProps = {
@@ -35,7 +35,7 @@ const RegistrationForm = ({
           >
             REGISTRATION
           </Typography>
-          <FormText
+          <FormTextOld
             name="email"
             value={formValues.email}
             label="Email"
@@ -43,7 +43,7 @@ const RegistrationForm = ({
             error={formErrors.email}
             onChange={onChange}
           />
-          <FormText
+          <FormTextOld
             name="firstName"
             value={formValues.firstName}
             label="First Name"
@@ -51,7 +51,7 @@ const RegistrationForm = ({
             error={formErrors.firstName}
             onChange={onChange}
           />
-          <FormText
+          <FormTextOld
             name="lastName"
             value={formValues.lastName}
             label="Last Name"
@@ -59,7 +59,7 @@ const RegistrationForm = ({
             error={formErrors.lastName}
             onChange={onChange}
           />
-          <FormText
+          <FormTextOld
             name="password"
             value={formValues.password}
             label="Password"
@@ -67,7 +67,7 @@ const RegistrationForm = ({
             error={formErrors.password}
             onChange={onChange}
           />
-          <FormText
+          <FormTextOld
             name="confirm"
             value={formValues.confirm}
             label="Confirm Password"

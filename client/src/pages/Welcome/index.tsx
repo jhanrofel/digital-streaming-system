@@ -10,11 +10,7 @@ import FormSearch from "../../components/Welcome/FormSearch";
 const Welcome = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [search, setSearch] = React.useState<string>("");
-
-  const moviesLatest = useAppSelector(
-    (state) => state.movies.list
-  );
+  const moviesLatest = useAppSelector((state) => state.movies.list);
   const movieLatestUploads: ICard[] = moviesLatest.map((movies) => ({
     id: movies.id,
     title: movies.title,
@@ -26,17 +22,8 @@ const Welcome = () => {
     dispatch(moviesLatestUploads());
   }, [dispatch]);
 
-  const onChangeHandler = (event: React.FormEvent<HTMLInputElement>): void => {
-    let value = (event.target as HTMLInputElement).value;
-    setSearch(value);
-  };
-
   const onClickSubmitHandler = async (): Promise<void> => {
-    if (search === "") {
-      navigate("../movies-all");
-    } else {
-      navigate("../search", { state: { search: search } });
-    }
+    navigate("../movies-all");
   };
 
   return (
@@ -44,12 +31,7 @@ const Welcome = () => {
       <Box sx={{ width: "100%", display: "flex" }}>
         <Box sx={{ width: 1, display: "inline", padding: 5 }}>
           <Box sx={{ width: 600 }}>
-            <FormSearch
-              error={""}
-              search={search}
-              onChange={onChangeHandler}
-              onClick={onClickSubmitHandler}
-            />
+            <FormSearch onClick={onClickSubmitHandler} />
           </Box>
           <Box sx={{ width: 1, paddingTop: 5 }}>
             <FormImageList

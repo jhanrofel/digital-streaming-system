@@ -1,12 +1,18 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authenticationToken, unauthorize } from "../authentication";
-import { IUserFormRegister } from "../types";
+import {
+  IUserForm,
+  IUserFormPatch,
+  IUserFormApprovePost,
+  IUserInitialState,
+  IUserLogin,
+} from "../types";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3001";
 
 export const usersRegister = createAsyncThunk(
   "users/register",
-  async (formValues: IUserFormRegister, { rejectWithValue }) => {
+  async (formValues: IUserForm, { rejectWithValue }) => {
     return axios({
       url: `/users/register`,
       method: "post",
@@ -26,7 +32,7 @@ export const usersRegister = createAsyncThunk(
 
 export const usersLogin = createAsyncThunk(
   "users/login",
-  async (formValues: IUserFormRegister, { rejectWithValue }) => {
+  async (formValues: IUserLogin, { rejectWithValue }) => {
     return axios({
       url: `/users/login`,
       method: "post",
@@ -45,7 +51,7 @@ export const usersLogin = createAsyncThunk(
   }
 );
 
-export const usersOne = createAsyncThunk(
+export const usersById = createAsyncThunk(
   "users/one",
   async (userId: string) => {
     return axios({
@@ -96,18 +102,9 @@ export const usersApproved = createAsyncThunk("users/approved", async () => {
     });
 });
 
-interface PatchInput {
-  id: string;
-  role: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  status?: string;
-}
-
 export const usersUpdate = createAsyncThunk(
   "users/update",
-  async (formValues: PatchInput, { rejectWithValue }) => {
+  async (formValues: IUserFormPatch, { rejectWithValue }) => {
     return axios({
       url: `/users/${formValues.id}`,
       method: "patch",
@@ -146,15 +143,9 @@ export const usersDelete = createAsyncThunk(
   }
 );
 
-interface ApproveFormValues {
-  id: string | number;
-  approval: string;
-  role: string;
-}
-
 export const usersApprove = createAsyncThunk(
   "users/approve",
-  async (formValues: ApproveFormValues) => {
+  async (formValues: IUserFormApprovePost) => {
     return axios({
       url: `/users/register-approval`,
       method: "post",
@@ -170,78 +161,59 @@ export const usersApprove = createAsyncThunk(
   }
 );
 
-interface UsersDataOne {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
-  status: string;
-}
-
-interface UsersData {
-  logged: boolean;
-  data: UsersDataOne[] | [];
-  dataOne: UsersDataOne;
-}
-
 const initialState = {
   logged: false,
-  data: [],
-  dataOne: {},
-} as UsersData;
+  list: [],
+  byId: null,
+  selected: null,
+} as IUserInitialState;
 
 export const userSlice = createSlice({
   name: "users",
   initialState,
   reducers: {
     clearUser: (state) => {
-      state.logged = false;
-      state.data = [];
-      state.dataOne = {
-        id: "",
-        firstName: "",
-        lastName: "",
-        email: "",
-        role: "",
-        status: "",
-      };
+      state.list = [];
+      state.byId = null;
+      state.selected = null;
     },
     selectUsers: (state, action) => {
-      state.dataOne = action.payload;
+      state.selected = action.payload;
+    },
+    clearSelected: (state) => {
+      state.byId = null;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(usersRegister.fulfilled, (state, action) => {
-      state.data = [...state.data, action.payload];
+      state.list = [...state.list, action.payload];
     });
     builder.addCase(usersLogin.fulfilled, (state) => {
       state.logged = true;
     });
     builder.addCase(usersApproval.fulfilled, (state, action) => {
-      state.data = action.payload;
+      state.list = action.payload;
     });
     builder.addCase(usersApprove.fulfilled, (state, action) => {
-      state.data = state.data.filter((user) => user.id !== action.payload.id);
+      state.list = state.list.filter((user) => user.id !== action.payload.id);
     });
     builder.addCase(usersApproved.fulfilled, (state, action) => {
-      state.data = action.payload;
+      state.list = action.payload;
     });
     builder.addCase(usersDelete.fulfilled, (state, action) => {
-      state.data = state.data.filter((user) => user.id !== action.payload);
+      state.list = state.list.filter((user) => user.id !== action.payload);
     });
-    builder.addCase(usersOne.fulfilled, (state, action) => {
-      state.dataOne = action.payload;
+    builder.addCase(usersById.fulfilled, (state, action) => {
+      state.byId = action.payload;
     });
     builder.addCase(usersUpdate.fulfilled, (state, action) => {
-      state.data = state.data.map((user) =>
-        user.id === action.payload.id
-          ? { ...user, status: action.payload.status }
-          : user
+      state.list = state.list.map((user) =>
+        user.id === action.payload.id ? { ...user, ...action.payload } : user
       );
+      state.byId = null
     });
   },
 });
 
-export const { clearUser, selectUsers } = userSlice.actions;
+export const { clearUser, selectUsers, clearSelected } = userSlice.actions;
 export default userSlice.reducer;

@@ -9,8 +9,7 @@ import {
   IMovieReviewFormErrors,
   IRegisterFormErrors,
   IRegisterFormValues,
-  IUserFormErrors,
-  IUserFormValues,
+  IUserForm,
 } from "./types";
 
 export const alertDataReset: IAlert = {
@@ -96,21 +95,11 @@ export const registerFormValues: IRegisterFormValues = {
   },
 };
 
-export const userFormErrors: IUserFormErrors = {
+export const userForm : IUserForm = {
   role: "",
   email: "",
   firstName: "",
   lastName: "",
-};
-
-export const userFormValues: IUserFormValues = {
-  role: "USER",
-  email: "",
-  firstName: "",
-  lastName: "",
-  alert: {
-    open: false,
-    message: "",
-    severity: "info",
-  },
+  approval: "",
+  password: "",
 };

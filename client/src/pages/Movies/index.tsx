@@ -213,7 +213,6 @@ const Movies = () => {
       </Container>
       <MovieForm
         openMovieForm={openMovieForm}
-        formName={"AddForm"}
         formErrors={formErrors}
         formValues={formValues}
         defaultValue={defaultValue}

@@ -1,7 +1,6 @@
 import {givenHttpServerConfig} from '@loopback/testlab';
 import {DigitalStreamingSystemApplication} from '../application';
-import {Actors, Movies, MovieActor, Reviews, UserCredentials, Users } from '../models';
-import {ActorsRepository, UsersRepository} from '../repositories';
+import {Actors, Movies, Users } from '../models';
 
 export function givenAdmin(user?: Partial<Users>) {
   const data = Object.assign(
@@ -47,4 +46,20 @@ export async function givenRunningApplicationWithCustomConfiguration() {
 
   await app.start();
   return app;
+}
+
+export function givenMovie(movie?: Partial<Movies>) {
+  const data = Object.assign(
+    {
+      title: 'John Wick 4',
+      cost: '10000000000',
+      yearReleased: '2023',
+      featured: true,
+      comingSoon: true,
+      imageLink: 'image_movie_link',
+      trailerLink: 'trailer_movie_link'
+    },
+    movie,
+  );
+  return new Movies(data);
 }

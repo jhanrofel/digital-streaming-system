@@ -83,7 +83,7 @@ const ReviewForm = ({ rows, formName }: AppProps) => {
           <IconButton>
             <Stack spacing={2} direction="row">
               {formName !== "disapproveReview" && (
-                <Tooltip title="Approved">
+                <Tooltip title="Disapproved">
                   <ThumbDownIcon color="error" onClick={onClickDisapproved} />
                 </Tooltip>
               )}

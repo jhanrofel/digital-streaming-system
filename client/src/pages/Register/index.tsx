@@ -8,6 +8,7 @@ import { usersRegister } from "../../utilities/slice/userSlice";
 import {
   IRegisterFormErrors,
   IRegisterFormValues,
+  IUserForm,
 } from "../../utilities/types";
 import RegistrationForm from "../../components/Register";
 
@@ -50,14 +51,8 @@ const Register = () => {
 
   const onClickSubmitHandler = async (): Promise<void> => {
     if (formValidation()) {
-      interface PostValue {
-        firstName: string;
-        lastName: string;
-        email: string;
-        password: string;
-      }
-
-      const postUserValue: PostValue = {
+      const postUserValue: IUserForm = {
+        role: 'USER',
         firstName: formValues.firstName,
         lastName: formValues.lastName,
         email: formValues.email,

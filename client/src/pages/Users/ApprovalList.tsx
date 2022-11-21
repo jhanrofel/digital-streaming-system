@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { usersApproval, usersApprove } from "../../utilities/slice/userSlice";
-import { IUserFormApprovePost, IUserFormTable } from "../../utilities/types";
+import { IUserFormApprovePost, IUserData } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
@@ -87,7 +87,7 @@ const ApprovalList = () => {
     },
   ];
   const dispatch = useAppDispatch();
-  const rows: IUserFormTable[] = useAppSelector((state) => state.users.data);
+  const rows: IUserData[] = useAppSelector((state) => state.users.list);
 
   useEffect(() => {
     dispatch(usersApproval());

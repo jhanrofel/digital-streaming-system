@@ -19,6 +19,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SearchIcon from "@mui/icons-material/Search";
+import FormButton from "../../components/FormButton";
 
 const rightLink = {
   fontSize: 16,
@@ -113,6 +114,10 @@ function PublicNavbar() {
     navigate("/");
   };
 
+  const onClickSignIn = () => {
+alert('test');
+  };
+
   return (
     <React.Fragment>
       <AppBar position="fixed">
@@ -163,7 +168,7 @@ function PublicNavbar() {
 
               {(isLogged() === 1 && role === "ADMIN") && (
                 <Tooltip title={"Dashboard"}>
-                  <IconButton sx={{ p: 0 }} onClick={() => navigate("/movies")}>
+                  <IconButton sx={{ p: 0 }} onClick={() => navigate("/dashboard")}>
                     <DashboardIcon />
                   </IconButton>
                 </Tooltip>
@@ -192,7 +197,7 @@ function PublicNavbar() {
             location.pathname !== "/register" &&
             location.pathname !== "/login" && (
               <React.Fragment>
-                <Link
+                {/* <Link
                   variant="h6"
                   underline="none"
                   href="/login"
@@ -207,12 +212,14 @@ function PublicNavbar() {
                   sx={rightLink}
                 >
                   {"Register"}
-                </Link>
+                </Link> */}
+                <FormButton label="Sign In" onClick={onClickSignIn}/>
               </React.Fragment>
             )}
         </Toolbar>
       </AppBar>
       <Toolbar />
+      {/* <Login /> */}
     </React.Fragment>
   );
 }

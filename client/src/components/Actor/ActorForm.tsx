@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { IObjectAny, IActorForm } from "../../utilities/types";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -14,7 +13,6 @@ import Modal from "@mui/material/Modal";
 
 type AppProps = {
   openActorForm: boolean;
-  formName: string;
   formValues: IObjectAny;
   formErrors: IObjectAny;
   defaultValue: IActorForm;
@@ -29,21 +27,8 @@ type AppProps = {
 
 export const genderData = ["Male", "Female"];
 
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 600,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
-
 const ActorForm = ({
   openActorForm,
-  formName,
   formErrors,
   formValues,
   defaultValue,
@@ -53,11 +38,10 @@ const ActorForm = ({
   onClickHandlerFormClose,
   onChangeDate,
 }: AppProps) => {
-  const navigate = useNavigate();
   return (
     <React.Fragment>
       <Modal open={openActorForm}>
-        <Box sx={style}>
+        <Box className="modalForm">
           <Box sx={{ flex: 1, width: 1, justifyContent: "flex-end" }}>
             <IconButton onClick={onClickHandlerFormClose}>
               <CloseIcon color="primary" />
@@ -114,12 +98,6 @@ const ActorForm = ({
             />
           </Box>
           <Box sx={{ display: "flex" }}>
-            {formName === "EditForm" && (
-              <FormButton
-                label="Back to List"
-                onClick={() => navigate("../actors")}
-              />
-            )}
             <FormButton label="Save" onClick={onClickHandler} />
           </Box>
         </Box>

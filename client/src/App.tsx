@@ -7,11 +7,11 @@ import MoviesAll from "./pages/Movies/MoviesAll";
 import MovieDetails from "./pages/Movies/MovieDetails";
 import Reviews from "./pages/Reviews";
 import Users from "./pages/Users";
-import UserEdit from "./pages/Users/UserEdit";
 import Welcome from "./pages/Welcome";
 import Search from "./pages/Search";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import Dashboard from "./pages/Dasboard";
 import PageNotFound from "./pages/PageNotFound";
 import PublicLayout from "./pages/Layout/PublicLayout";
 import PrivateLayout from "./pages/Layout/PrivateLayout";
@@ -31,12 +31,12 @@ function App() {
           <Route path="/movies-all" element={<MoviesAll />}></Route>
         </Route>
         <Route path="/" element={<PrivateLayout />}>
+          <Route path="/dashboard" element={<Dashboard />}></Route>
           <Route path="/actors" element={<Actors />}></Route>
           <Route path="/actors-movies" element={<ActorMovies />}></Route>
           <Route path="/movies" element={<Movies />}></Route>
           <Route path="/reviews" element={<Reviews />}></Route>
           <Route path="/users" element={<Users />}></Route>
-          <Route path="/users-edit" element={<UserEdit />}></Route>
         </Route>
       </Routes>
     </BrowserRouter>

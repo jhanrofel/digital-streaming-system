@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { ICard } from "../../utilities/types";
 import {
+  moviesFeatured,
   moviesLatestUploads,
   moviesSearch,
 } from "../../utilities/slice/movieSlice";
@@ -21,7 +22,7 @@ const Search = () => {
     url: movie.imageLink,
   }));
   const moviesLatest = useAppSelector(
-    (stateMovieLatest) => stateMovieLatest.movies.list
+    (stateMovieLatest) => stateMovieLatest.movies.featured
   );
   const movieLatestUploads: any = moviesLatest.map((movieDataLatest) => ({
     id: movieDataLatest.id,
@@ -33,6 +34,7 @@ const Search = () => {
   React.useEffect(() => {
     dispatch(moviesSearch(search));
     dispatch(moviesLatestUploads());
+    dispatch(moviesFeatured());
   }, [dispatch, search]);
 
   return (
@@ -46,7 +48,7 @@ const Search = () => {
               movieData={movieCard}
             />
             <FormImageList
-              header="LATEST UPLOADS"
+              header="FEATURED MOVIES"
               page="movies-details"
               movieData={movieLatestUploads}
             />

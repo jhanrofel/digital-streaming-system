@@ -5,7 +5,11 @@ import { loginFormErrors, loginFormValues } from "../../utilities/formValues";
 import { useAppDispatch } from "../../utilities/hooks";
 import { loggedInCreate } from "../../utilities/loggedIn";
 import { usersData, usersLogin } from "../../utilities/slice/userSlice";
-import { ILoginFormErrors, ILoginFormValues } from "../../utilities/types";
+import {
+  ILoginFormErrors,
+  ILoginFormValues,
+  IUserLogin,
+} from "../../utilities/types";
 import { regex } from "../../utilities/helpers";
 import LoginForm from "../../components/Login";
 
@@ -43,7 +47,7 @@ const Login = () => {
 
   const onClickSubmitHandler = async (): Promise<void> => {
     if (formValidation()) {
-      const postUserValue: ILoginFormErrors = {
+      const postUserValue: IUserLogin = {
         email: formValues.email,
         password: formValues.password,
       };
@@ -87,7 +91,6 @@ const Login = () => {
       } else {
         valid = true;
       }
-      
     }
 
     return valid;
@@ -98,7 +101,7 @@ const Login = () => {
       if (res.type === "users/me/fulfilled") {
         loggedInCreate(res.payload.user);
         if (res.payload.user.role === "ADMIN") {
-          navigate("/movies");
+          navigate("/dashboard");
         } else {
           navigate("/");
         }

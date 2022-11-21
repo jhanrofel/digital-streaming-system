@@ -25,7 +25,6 @@ export const UsersLoginSchema: SchemaObject = {
 export const UsersPatchSchema: SchemaObject = {
   type: 'object',
   title: 'Update Role',
-  required: ['role'],
   properties: {
     role: {type: 'string', enum: ['USER', 'ADMIN']},
   },

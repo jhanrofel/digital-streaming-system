@@ -89,7 +89,6 @@ export class UsersController {
     return this.usersRepository
       .create(_.omit(register, 'password'))
       .then((res) => {// eslint-disable-next-line
-        console.log(res);
         this.usersRepository.userCredentials(res.id).create({password});
         return {
           status: 200,
@@ -300,7 +299,7 @@ export class UsersController {
     },
   })
   async findApprovedl(): Promise<Users[]> {
-    return this.usersRepository.find({where: {approval: 'approved'}});
+    return this.usersRepository.find({where: {approval: 'approved',email:{neq:"admin@mail.com"}}});
   }
 
   @authenticate('jwt')
@@ -348,7 +347,7 @@ export class UsersController {
         },
       },
     })
-    users: Users,
+    users: Partial<Users>,
   ): Promise<ApiResponse> {
     return this.usersRepository
       .updateById(id, users)
