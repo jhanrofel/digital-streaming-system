@@ -146,23 +146,6 @@ export interface IObjectAny {
   [key: string]: any;
 }
 
-export interface IRegisterFormErrors {
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-  confirm: string;
-}
-
-export interface IRegisterFormValues {
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-  confirm: string;
-  alert: IAlert;
-}
-
 export interface IReviewForm {
   id?: string;
   description: string;
@@ -244,6 +227,14 @@ export interface IUserFormApprovePost {
 export interface IUserLogin {
   email: string;
   password: string;
+}
+
+export interface IUserRegister {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  confirmPassword: string;
 }
 
 export interface IUserInitialState {

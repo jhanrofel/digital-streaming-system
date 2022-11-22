@@ -117,8 +117,15 @@ export const useFormValidation = ({ callback, fieldsToValidate }: any) => {
             ...formErrors,
             [name]: `${fieldName} is invalid.`,
           });
-          console.log(value, name);
         }
+      } else if (
+        name === "confirmPassword" &&
+        value !== formValues["password"]
+      ) {
+        setErrors({
+          ...formErrors,
+          [name]: `Confirm password doesn't match.`,
+        });
       }
     }
   };
@@ -164,6 +171,9 @@ export const getFieldName = (name: string): string => {
       break;
     case "lastName":
       fieldName = "Last name";
+      break;
+    case "confirmPassword":
+      fieldName = "Confirm password";
       break;
     default:
       fieldName = name.charAt(0).toUpperCase() + name.slice(1);

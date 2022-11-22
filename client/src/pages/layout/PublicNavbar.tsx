@@ -1,15 +1,12 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { cookiesRemove, cookiesCreate } from "../../utilities/cookies";
+import { cookiesRemove } from "../../utilities/cookies";
 import {
   isLogged,
   loggedInData,
   loggedInRemove,
-  loggedInCreate,
 } from "../../utilities/loggedIn";
 import { userMe } from "../../utilities/api";
-import { IUserLogin, IAlert } from "../../utilities/types";
-import { userLogin, alertDataReset } from "../../utilities/formValues";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -21,20 +18,17 @@ import Typography from "@mui/material/Typography";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SearchIcon from "@mui/icons-material/Search";
 import FormButton from "../../components/FormButton";
-import UserLogin from "../../components/User/UserLogin";
-import SnackAlert from "../../components/SnackAlert";
-import { useFormValidation, useAppDispatch } from "../../utilities/hooks";
-import { usersLogin, usersData } from "../../utilities/slice/userSlice";
 import {
   Search,
   SearchIconWrapper,
   StyledInputBase,
 } from "../../utilities/muiStyle";
+import UserLogin from "../Users/UserLogin";
+import UserRegister from "../Users/UserRegister";
 
 function PublicNavbar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const [search, setSearch] = React.useState<string>("");
   const onChangeHandlerSearch = (event: any): void => {
     let value = (event.target as HTMLInputElement).value;
@@ -50,61 +44,8 @@ function PublicNavbar() {
 
   const [role, setRole] = React.useState<string>("USER");
 
-  const [openUserForm, setOpenUserForm] = React.useState(false);
-
-  const [defaultValue, setDefaultValue] = React.useState<IUserLogin>(userLogin);
-
-  const [alertData, setAlert] = React.useState<IAlert>(alertDataReset);
-  const onClickCloseAlertHandler = (
-    event: Event | React.SyntheticEvent<any, Event>
-  ): void => {
-    setAlert(alertDataReset);
-  };
-
-  const onClickSubmitHandler = async (): Promise<void> => {
-    const postUserLogin: IUserLogin = {
-      email: formValues.email,
-      password: formValues.password,
-    };
-    await dispatch(usersLogin(postUserLogin)).then((res) => {
-      if (res.type === "users/login/fulfilled") {
-        cookiesCreate(res.payload);
-        dispatch(usersData()).then((res) => {
-          if (res.type === "users/me/fulfilled") {
-            loggedInCreate(res.payload.user);
-            if (res.payload.user.role === "ADMIN") {
-              navigate("/dashboard");
-            } else {
-              setOpenUserForm(false);
-              setAlert({
-                open: true,
-                message: "Login success.",
-                severity: "success",
-              });
-            }
-          } else {
-            setAlert({
-              open: true,
-              message: res.payload,
-              severity: "error",
-            });
-          }
-        });
-      } else {
-        setAlert({
-          open: true,
-          message: res.payload,
-          severity: "error",
-        });
-      }
-    });
-  };
-
-  const { onChangeHandler, onClickHandler, formErrors, formValues, resetForm } =
-    useFormValidation({
-      callback: onClickSubmitHandler,
-      fieldsToValidate: ["email", "password"],
-    });
+  const [openUserLoginForm, setOpenUserLoginForm] = React.useState(false);
+  const [openUserRegisterForm, setOpenUserRegisterForm] = React.useState(false);
 
   React.useEffect(() => {
     if (isLogged()) {
@@ -133,13 +74,7 @@ function PublicNavbar() {
   };
 
   const onClickSignIn = () => {
-    setOpenUserForm(true);
-  };
-
-  const onClickHandlerFormClose = () => {
-    setOpenUserForm(false);
-    resetForm();
-    setDefaultValue(userLogin);
+    setOpenUserLoginForm(true);
   };
 
   return (
@@ -214,16 +149,13 @@ function PublicNavbar() {
       </AppBar>
       <Toolbar />
       <UserLogin
-        openUserForm={openUserForm}
-        formErrors={formErrors}
-        defaultValue={defaultValue}
-        onChange={onChangeHandler}
-        onClickHandler={onClickHandler}
-        onClickHandlerFormClose={onClickHandlerFormClose}
+        openUserForm={openUserLoginForm}
+        setOpenUserForm={setOpenUserLoginForm}
+        setOpenUserRegisterForm={setOpenUserRegisterForm}
       />
-      <SnackAlert
-        alertData={alertData}
-        onClickCloseAlert={onClickCloseAlertHandler}
+      <UserRegister
+        openUserForm={openUserRegisterForm}
+        setOpenUserForm={setOpenUserRegisterForm}
       />
     </React.Fragment>
   );

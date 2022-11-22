@@ -6,9 +6,8 @@ import {
   IMovieFormErrors,
   IMovieReviewForm,
   IMovieReviewFormErrors,
-  IRegisterFormErrors,
-  IRegisterFormValues,
   IUserForm,
+  IUserRegister,
 } from "./types";
 
 export const alertDataReset: IAlert = {
@@ -62,25 +61,12 @@ export const movieDetailsFormErrors: IMovieReviewFormErrors = {
   rating: "",
 };
 
-export const registerFormErrors: IRegisterFormErrors = {
+export const userRegisterForm: IUserRegister = {
   email: "",
   firstName: "",
   lastName: "",
   password: "",
-  confirm: "",
-};
-
-export const registerFormValues: IRegisterFormValues = {
-  email: "",
-  firstName: "",
-  lastName: "",
-  password: "",
-  confirm: "",
-  alert: {
-    open: false,
-    message: "",
-    severity: "info",
-  },
+  confirmPassword: "",
 };
 
 export const userForm: IUserForm = {

@@ -9,7 +9,6 @@ import Reviews from "./pages/Reviews";
 import Users from "./pages/Users";
 import Welcome from "./pages/Welcome";
 import Search from "./pages/Search";
-import Register from "./pages/Register";
 import Dashboard from "./pages/Dasboard";
 import PageNotFound from "./pages/PageNotFound";
 import PublicLayout from "./pages/Layout/PublicLayout";
@@ -22,7 +21,6 @@ function App() {
         <Route path="/" element={<PublicLayout />}>
           <Route path="/" element={<Welcome />}></Route>
           <Route path="/search" element={<Search />}></Route>
-          <Route path="/register" element={<Register />}></Route>
           <Route path="/*" element={<PageNotFound />}></Route>
           <Route path="/actors-details" element={<ActorDetails />}></Route>
           <Route path="/movies-details" element={<MovieDetails />}></Route>

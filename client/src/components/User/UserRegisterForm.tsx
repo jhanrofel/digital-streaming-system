@@ -1,16 +1,16 @@
 import React from "react";
-import { IObjectAny,IUserLogin } from "../../utilities/types";
+import { IObjectAny, IUserRegister } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import FormButton from "../../components/FormButton";
-import FormText from "../../components/FormText";
+import FormButton from "../FormButton";
+import FormText from "../FormText";
 import Modal from "@mui/material/Modal";
 
 type AppProps = {
   openUserForm: boolean;
   formErrors: IObjectAny;  
-  defaultValue: IUserLogin;
+  defaultValue: IUserRegister;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onClickHandlerFormClose: (
     event: Event | React.SyntheticEvent<any, Event>
@@ -18,7 +18,7 @@ type AppProps = {
   onClickHandler: any;
 };
 
-const UserLogin = ({
+const UserRegisterForm = ({
   openUserForm,
   formErrors,
   defaultValue,
@@ -47,6 +47,26 @@ const UserLogin = ({
           </Box>
           <Box>
             <FormText
+              value={defaultValue.firstName}
+              name="firstName"
+              label="First Name"
+              type="search"
+              error={formErrors.firstName}
+              onChange={onChange}
+            />
+          </Box>
+          <Box>
+            <FormText
+              value={defaultValue.lastName}
+              name="lastName"
+              label="Last Name"
+              type="search"
+              error={formErrors.lastName}
+              onChange={onChange}
+            />
+          </Box>
+          <Box>
+            <FormText
               value={defaultValue.password}
               name="password"
               label="Password"
@@ -56,7 +76,17 @@ const UserLogin = ({
             />
           </Box>
           <Box>
-            <FormButton label="Login" onClick={onClickHandler} />
+            <FormText
+              value={defaultValue.confirmPassword}
+              name="confirmPassword"
+              label="Confirm Password"
+              type="password"
+              error={formErrors.confirmPassword}
+              onChange={onChange}
+            />
+          </Box>
+          <Box>
+            <FormButton label="Register" onClick={onClickHandler} />
           </Box>
         </Box>
       </Modal>
@@ -64,4 +94,4 @@ const UserLogin = ({
   );
 };
 
-export default UserLogin;
+export default UserRegisterForm;
