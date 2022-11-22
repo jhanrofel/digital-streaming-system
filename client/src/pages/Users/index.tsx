@@ -125,7 +125,7 @@ const UserList = () => {
             usersRegister({
               ...postUserForm,
               approval: "approved",
-              password: "12345",
+              password: process.env.REACT_APP_USER_DEFAULT_PASSWORD,
             })
           );
 

@@ -9,7 +9,7 @@ import Reviews from "./pages/Reviews";
 import Users from "./pages/Users";
 import Welcome from "./pages/Welcome";
 import Search from "./pages/Search";
-import Dashboard from "./pages/Dasboard";
+import Dashboard from "./pages/Dashboard";
 import PageNotFound from "./pages/PageNotFound";
 import PublicLayout from "./pages/Layout/PublicLayout";
 import PrivateLayout from "./pages/Layout/PrivateLayout";

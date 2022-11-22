@@ -39,10 +39,10 @@ function UserLogin({
     await dispatch(usersLogin(postUserLogin)).then((res) => {
       if (res.type === "users/login/fulfilled") {
         cookiesCreate(res.payload);
-        dispatch(usersData()).then((res) => {
-          if (res.type === "users/me/fulfilled") {
-            loggedInCreate(res.payload.user);
-            if (res.payload.user.role === "ADMIN") {
+        dispatch(usersData()).then((resData) => {
+          if (resData.type === "users/me/fulfilled") {
+            loggedInCreate(resData.payload.user);
+            if (resData.payload.user.role === "ADMIN") {
               navigate("/dashboard");
             } else {
               setOpenUserForm(false);
@@ -55,7 +55,7 @@ function UserLogin({
           } else {
             setAlert({
               open: true,
-              message: res.payload,
+              message: resData.payload,
               severity: "error",
             });
           }
