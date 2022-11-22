@@ -1,8 +1,7 @@
 import {
   IActorForm,
   IAlert,
-  ILoginFormErrors,
-  ILoginFormValues,
+  IUserLogin,
   IMovieForm,
   IMovieFormErrors,
   IMovieReviewForm,
@@ -26,19 +25,9 @@ export const actorFormReset: IActorForm = {
   imageLink: "",
 };
 
-export const loginFormErrors: ILoginFormErrors = {
+export const userLogin: IUserLogin = {
   email: "",
   password: "",
-};
-
-export const loginFormValues: ILoginFormValues = {
-  email: "",
-  password: "",
-  alert: {
-    open: false,
-    message: "",
-    severity: "info",
-  },
 };
 
 export const movieFormReset: IMovieForm = {
@@ -73,7 +62,6 @@ export const movieDetailsFormErrors: IMovieReviewFormErrors = {
   rating: "",
 };
 
-
 export const registerFormErrors: IRegisterFormErrors = {
   email: "",
   firstName: "",
@@ -95,7 +83,7 @@ export const registerFormValues: IRegisterFormValues = {
   },
 };
 
-export const userForm : IUserForm = {
+export const userForm: IUserForm = {
   role: "",
   email: "",
   firstName: "",
@@ -103,3 +91,9 @@ export const userForm : IUserForm = {
   approval: "",
   password: "",
 };
+
+export const roleOptions: string[] = ["USER", "ADMIN"];
+
+export const genderOptions: string[] = ["Male", "Female"];
+
+export const booleanOptions: string[] = ["True", "False"];

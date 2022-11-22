@@ -1,5 +1,6 @@
 import React from "react";
 import { IObjectAny, IActorForm } from "../../utilities/types";
+import { genderOptions } from "../../utilities/formValues";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -24,8 +25,6 @@ type AppProps = {
   onChangeDate: (newValue: string) => void;
   onClickHandler: any;
 };
-
-export const genderData = ["Male", "Female"];
 
 const ActorForm = ({
   openActorForm,
@@ -71,7 +70,7 @@ const ActorForm = ({
               value={formValues.gender || defaultValue.gender}
               label="Gender"
               error={formErrors.gender}
-              options={genderData}
+              options={genderOptions}
               onChange={onChangeSelect}
             />
             <FormDate

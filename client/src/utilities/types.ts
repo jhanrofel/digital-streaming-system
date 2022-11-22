@@ -59,17 +59,6 @@ export interface ICategoryInitialState {
   dataOne: ICategory;
 }
 
-export interface ILoginFormErrors {
-  email: string;
-  password: string;
-}
-
-export interface ILoginFormValues {
-  email: string;
-  password: string;
-  alert: IAlert;
-}
-
 export interface IMovieFilter {
   where : {
     comingSoon?: boolean;

@@ -1,36 +1,29 @@
 import React from "react";
-import { IObjectAny, IUserForm } from "../../utilities/types";
-import { roleOptions } from "../../utilities/formValues";
+import { IObjectAny,IUserLogin } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { SelectChangeEvent } from "@mui/material/Select";
 import FormButton from "../../components/FormButton";
 import FormText from "../../components/FormText";
-import FormSelect from "../../components/FormSelect";
 import Modal from "@mui/material/Modal";
 
 type AppProps = {
   openUserForm: boolean;
-  formValues: IObjectAny;
-  formErrors: IObjectAny;
-  defaultValue: IUserForm;
+  formErrors: IObjectAny;  
+  defaultValue: IUserLogin;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
-  onChangeSelect: (event: SelectChangeEvent) => void;
   onClickHandlerFormClose: (
     event: Event | React.SyntheticEvent<any, Event>
   ) => void;
   onClickHandler: any;
 };
 
-const UserForm = ({
+const UserLogin = ({
   openUserForm,
   formErrors,
-  formValues,
   defaultValue,
   onClickHandler,
   onChange,
-  onChangeSelect,
   onClickHandlerFormClose,
 }: AppProps) => {
   return (
@@ -41,16 +34,6 @@ const UserForm = ({
             <IconButton onClick={onClickHandlerFormClose}>
               <CloseIcon color="primary" />
             </IconButton>
-          </Box>
-          <Box>
-            <FormSelect
-              name="role"
-              value={formValues.role || defaultValue.role}
-              label="Role"
-              error={formErrors.role}
-              options={roleOptions}
-              onChange={onChangeSelect}
-            />
           </Box>
           <Box>
             <FormText
@@ -64,26 +47,16 @@ const UserForm = ({
           </Box>
           <Box>
             <FormText
-              value={defaultValue.firstName}
-              name="firstName"
-              label="First Name"
-              type="search"
-              error={formErrors.firstName}
+              value={defaultValue.password}
+              name="password"
+              label="Password"
+              type="password"
+              error={formErrors.password}
               onChange={onChange}
             />
           </Box>
           <Box>
-            <FormText
-              value={defaultValue.lastName}
-              name="lastName"
-              label="Last Name"
-              type="search"
-              error={formErrors.lastName}
-              onChange={onChange}
-            />
-          </Box>
-          <Box>
-            <FormButton label="Save" onClick={onClickHandler} />
+            <FormButton label="Login" onClick={onClickHandler} />
           </Box>
         </Box>
       </Modal>
@@ -91,4 +64,4 @@ const UserForm = ({
   );
 };
 
-export default UserForm;
+export default UserLogin;

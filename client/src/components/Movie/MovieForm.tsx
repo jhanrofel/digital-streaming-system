@@ -4,6 +4,7 @@ import {
   IObjectAny,
   IMovieForm,
 } from "../../utilities/types";
+import { booleanOptions } from "../../utilities/formValues";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import { SelectChangeEvent } from "@mui/material/Select";
@@ -27,8 +28,6 @@ type AppProps = {
   onChangeActors: any;
   onClickHandler: any;
 };
-
-const optionData = ["True", "False"];
 
 const MovieForm = ({
   openMovieForm,
@@ -84,14 +83,14 @@ const MovieForm = ({
               name="comingSoon"
               value={formValues.comingSoon || defaultValue.comingSoon}
               label="Coming Soon"
-              options={optionData}
+              options={booleanOptions}
               onChange={onChangeSelect}
             />
             <FormSelect
               name="featured"
               value={formValues.featured || defaultValue.featured}
               label="Featured"
-              options={optionData}
+              options={booleanOptions}
               onChange={onChangeSelect}
             />
           </Box>

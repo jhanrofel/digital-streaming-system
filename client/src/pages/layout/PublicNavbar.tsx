@@ -1,16 +1,17 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { cookiesRemove } from "../../utilities/cookies";
+import { cookiesRemove, cookiesCreate } from "../../utilities/cookies";
 import {
   isLogged,
   loggedInData,
   loggedInRemove,
+  loggedInCreate,
 } from "../../utilities/loggedIn";
 import { userMe } from "../../utilities/api";
-import { styled, alpha } from "@mui/material/styles";
+import { IUserLogin, IAlert } from "../../utilities/types";
+import { userLogin, alertDataReset } from "../../utilities/formValues";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import InputBase from "@mui/material/InputBase";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -20,60 +21,22 @@ import Typography from "@mui/material/Typography";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SearchIcon from "@mui/icons-material/Search";
 import FormButton from "../../components/FormButton";
-
-const rightLink = {
-  fontSize: 16,
-  color: "common.white",
-  ml: 3,
-};
-
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(1),
-    width: "auto",
-  },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: "20ch",
-      "&:focus": {
-        width: "25ch",
-      },
-    },
-  },
-}));
+import UserLogin from "../../components/User/UserLogin";
+import SnackAlert from "../../components/SnackAlert";
+import { useFormValidation, useAppDispatch } from "../../utilities/hooks";
+import { usersLogin, usersData } from "../../utilities/slice/userSlice";
+import {
+  Search,
+  SearchIconWrapper,
+  StyledInputBase,
+} from "../../utilities/muiStyle";
 
 function PublicNavbar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [search, setSearch] = React.useState<string>("");
-  const onChangeHandler = (event: any): void => {
+  const onChangeHandlerSearch = (event: any): void => {
     let value = (event.target as HTMLInputElement).value;
     setSearch(value);
   };
@@ -87,6 +50,62 @@ function PublicNavbar() {
 
   const [role, setRole] = React.useState<string>("USER");
 
+  const [openUserForm, setOpenUserForm] = React.useState(false);
+
+  const [defaultValue, setDefaultValue] = React.useState<IUserLogin>(userLogin);
+
+  const [alertData, setAlert] = React.useState<IAlert>(alertDataReset);
+  const onClickCloseAlertHandler = (
+    event: Event | React.SyntheticEvent<any, Event>
+  ): void => {
+    setAlert(alertDataReset);
+  };
+
+  const onClickSubmitHandler = async (): Promise<void> => {
+    const postUserLogin: IUserLogin = {
+      email: formValues.email,
+      password: formValues.password,
+    };
+    await dispatch(usersLogin(postUserLogin)).then((res) => {
+      if (res.type === "users/login/fulfilled") {
+        cookiesCreate(res.payload);
+        dispatch(usersData()).then((res) => {
+          if (res.type === "users/me/fulfilled") {
+            loggedInCreate(res.payload.user);
+            if (res.payload.user.role === "ADMIN") {
+              navigate("/dashboard");
+            } else {
+              setOpenUserForm(false);
+              setAlert({
+                open: true,
+                message: "Login success.",
+                severity: "success",
+              });
+            }
+          } else {
+            setAlert({
+              open: true,
+              message: res.payload,
+              severity: "error",
+            });
+          }
+        });
+      } else {
+        setAlert({
+          open: true,
+          message: res.payload,
+          severity: "error",
+        });
+      }
+    });
+  };
+
+  const { onChangeHandler, onClickHandler, formErrors, formValues, resetForm } =
+    useFormValidation({
+      callback: onClickSubmitHandler,
+      fieldsToValidate: ["email", "password"],
+    });
+
   React.useEffect(() => {
     if (isLogged()) {
       const fetchData = async () => {
@@ -94,9 +113,8 @@ function PublicNavbar() {
           setRole(res.user.role);
         });
       };
-  
-      fetchData().catch(console.error);
 
+      fetchData().catch(console.error);
     }
   }, []);
 
@@ -115,7 +133,13 @@ function PublicNavbar() {
   };
 
   const onClickSignIn = () => {
-alert('test');
+    setOpenUserForm(true);
+  };
+
+  const onClickHandlerFormClose = () => {
+    setOpenUserForm(false);
+    resetForm();
+    setDefaultValue(userLogin);
   };
 
   return (
@@ -134,13 +158,12 @@ alert('test');
                   placeholder="Search…"
                   inputProps={{ "aria-label": "search" }}
                   value={search}
-                  onChange={onChangeHandler}
+                  onChange={onChangeHandlerSearch}
                   onKeyUpCapture={onEnterKeyHandler}
                 />
               </Search>
             </Box>
           )}
-
           <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-start" }}>
             <Link
               variant="h6"
@@ -166,9 +189,12 @@ alert('test');
                 Hi! {loggedInData().firstName}
               </Typography>
 
-              {(isLogged() === 1 && role === "ADMIN") && (
+              {isLogged() === 1 && role === "ADMIN" && (
                 <Tooltip title={"Dashboard"}>
-                  <IconButton sx={{ p: 0 }} onClick={() => navigate("/dashboard")}>
+                  <IconButton
+                    sx={{ p: 0 }}
+                    onClick={() => navigate("/dashboard")}
+                  >
                     <DashboardIcon />
                   </IconButton>
                 </Tooltip>
@@ -181,45 +207,24 @@ alert('test');
             </Box>
           )}
 
-          {isLogged() === 0 && location.pathname === "/login" && (
-            <Link variant="h6" underline="none" href="/register" sx={rightLink}>
-              {"Register"}
-            </Link>
+          {isLogged() === 0 && (
+            <FormButton label="Sign In" onClick={onClickSignIn} />
           )}
-
-          {isLogged() === 0 && location.pathname === "/register" && (
-            <Link variant="h6" underline="none" href="/login" sx={rightLink}>
-              {"Login"}
-            </Link>
-          )}
-
-          {isLogged() === 0 &&
-            location.pathname !== "/register" &&
-            location.pathname !== "/login" && (
-              <React.Fragment>
-                {/* <Link
-                  variant="h6"
-                  underline="none"
-                  href="/login"
-                  sx={rightLink}
-                >
-                  {"Login"}
-                </Link>
-                <Link
-                  variant="h6"
-                  underline="none"
-                  href="/register"
-                  sx={rightLink}
-                >
-                  {"Register"}
-                </Link> */}
-                <FormButton label="Sign In" onClick={onClickSignIn}/>
-              </React.Fragment>
-            )}
         </Toolbar>
       </AppBar>
       <Toolbar />
-      {/* <Login /> */}
+      <UserLogin
+        openUserForm={openUserForm}
+        formErrors={formErrors}
+        defaultValue={defaultValue}
+        onChange={onChangeHandler}
+        onClickHandler={onClickHandler}
+        onClickHandlerFormClose={onClickHandlerFormClose}
+      />
+      <SnackAlert
+        alertData={alertData}
+        onClickCloseAlert={onClickCloseAlertHandler}
+      />
     </React.Fragment>
   );
 }
