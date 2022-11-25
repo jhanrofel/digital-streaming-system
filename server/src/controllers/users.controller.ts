@@ -8,6 +8,7 @@ import {
   del,
   requestBody,
   response,
+  SchemaObject,
 } from '@loopback/rest';
 import {Reviews, Users} from '../models';
 import {UsersRepository, UserCredentialsRepository} from '../repositories';
@@ -25,12 +26,37 @@ import {
   TokenServiceBindings,
   UserServiceBindings,
   UserRepository,
+  RefreshTokenServiceBindings,
+  RefreshtokenService,
+  TokenObject,
 } from '@loopback/authentication-jwt';
 import {authenticate, TokenService} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import {genSalt, hash} from 'bcryptjs';
 import _ from 'lodash';
+
+type RefreshGrant = {
+  refreshToken: string;
+};
+
+const RefreshGrantSchema: SchemaObject = {
+  type: 'object',
+  required: ['refreshToken'],
+  properties: {
+    refreshToken: {
+      type: 'string',
+    },
+  },
+};
+
+const RefreshGrantRequestBody = {
+  description: 'Reissuing Acess Token',
+  required: true,
+  content: {
+    'application/json': {schema: RefreshGrantSchema},
+  },
+};
 
 class RegistrationClass {
   firstName: string;
@@ -49,6 +75,7 @@ class ChangePassword {
 interface ApiResponse {
   status: number;
   message?: string;
+  messageObject?: any;
   users?: Users[] | void[];
   user?: Users | void;
   error?: string;
@@ -68,6 +95,8 @@ export class UsersController {
     public userService: MyUserService,
     @inject(SecurityBindings.USER, {optional: true})
     public user: UserProfile,
+    @inject(RefreshTokenServiceBindings.REFRESH_TOKEN_SERVICE)
+    public refreshService: RefreshtokenService,
   ) {}
 
   @post('/users/register')
@@ -88,7 +117,8 @@ export class UsersController {
     const password = await hash(register.password, await genSalt());
     return this.usersRepository
       .create(_.omit(register, 'password'))
-      .then((res) => {// eslint-disable-next-line
+      .then(res => {
+        // eslint-disable-next-line
         this.usersRepository.userCredentials(res.id).create({password});
         return {
           status: 200,
@@ -96,7 +126,7 @@ export class UsersController {
           users: [res],
         };
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
         if (err.code === 11000) {
           return {
@@ -162,7 +192,8 @@ export class UsersController {
               role: 'ADMIN',
               approval: 'approved',
             })
-            .then((res) => {// eslint-disable-next-line
+            .then(res => {
+              // eslint-disable-next-line
               this.usersRepository.userCredentials(res.id).create({password});
               return res;
             });
@@ -182,6 +213,73 @@ export class UsersController {
     }
 
     return apiResponse;
+  }
+
+  @post('/users/new-login')
+  @response(200, {
+    description: 'Users Refresh Login',
+    content: {'application/json': {schema: getModelSchemaRef(Users)}},
+  })
+  async newLogin(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: UsersLoginSchema,
+        },
+      },
+    })
+    credentials: Credentials,
+  ): Promise<ApiResponse> {
+    const apiResponse: ApiResponse = {status: 200};
+    const user = await this.userService
+      .verifyCredentials(credentials)
+      .then(res => res)
+      .catch(async err => {
+        apiResponse.status = 500;
+        apiResponse.error = err.message;
+        return err;
+      });
+
+    if (apiResponse.status === 200) {
+      const userProfile = this.userService.convertToUserProfile(user);
+      const accessToken = await this.jwtService
+        .generateToken(userProfile)
+        .then(res  => res);
+
+      const tokens = await this.refreshService.generateToken(
+        userProfile,
+        accessToken,
+      );
+
+      apiResponse.messageObject = tokens;
+    }
+
+    return apiResponse;
+  }
+
+  @post('/users/refresh-token', {
+    responses: {
+      '200': {
+        description: 'Token',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                accessToken: {
+                  type: 'object',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  async refresh(
+    @requestBody(RefreshGrantRequestBody) refreshGrant: RefreshGrant,
+  ): Promise<TokenObject> {
+    return this.refreshService.refreshToken(refreshGrant.refreshToken);
   }
 
   @post('/users/change-password')
@@ -299,7 +397,9 @@ export class UsersController {
     },
   })
   async findApprovedl(): Promise<Users[]> {
-    return this.usersRepository.find({where: {approval: 'approved',email:{neq:"admin@mail.com"}}});
+    return this.usersRepository.find({
+      where: {approval: 'approved', email: {neq: 'admin@mail.com'}},
+    });
   }
 
   @authenticate('jwt')
