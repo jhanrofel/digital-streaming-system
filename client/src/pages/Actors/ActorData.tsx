@@ -51,7 +51,7 @@ const ActorData = ({ callbackDelete, callbackEdit }: any) => {
         return (
           <Avatar
             variant="square"
-            alt="Actor Image"
+            alt="Actor"
             src={params.row.imageLink}
             sx={{ width: 50, height: 50 }}
           />

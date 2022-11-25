@@ -84,14 +84,14 @@ const ActorForm = ({
             <FormText
               value={defaultValue.imageLink}
               name="imageLink"
-              label="Image Link"
+              label="Actor"
               type="search"
               error={formErrors.imageLink}
               onChange={onChange}
             />
             <Avatar
               variant="square"
-              alt="Image Catalogue"
+              alt="Actor"
               src={formValues.imageLink}
               sx={{ width: 65, height: 65 }}
             />

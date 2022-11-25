@@ -42,7 +42,7 @@ const MovieData = ({ callbackDelete, callbackEdit }: any) => {
         return (
           <Avatar
             variant="square"
-            alt="Movie Image"
+            alt="Movie"
             src={params.row.imageLink}
             sx={{ width: 50, height: 50 }}
           />

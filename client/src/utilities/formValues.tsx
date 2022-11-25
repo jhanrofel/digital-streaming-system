@@ -83,3 +83,5 @@ export const roleOptions: string[] = ["USER", "ADMIN"];
 export const genderOptions: string[] = ["Male", "Female"];
 
 export const booleanOptions: string[] = ["True", "False"];
+
+export const menuOptions: string[] = ["Dashboard","Movies", "Actors", "Users", "Reviews"];

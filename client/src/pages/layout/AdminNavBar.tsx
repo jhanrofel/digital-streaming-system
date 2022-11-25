@@ -16,8 +16,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { clearActor } from "../../utilities/slice/actorSlice";
 import { clearMovies } from "../../utilities/slice/movieSlice";
 import { clearReviews } from "../../utilities/slice/reviewSlice";
+import { menuOptions } from "../../utilities/formValues";
 
-const pages = ["Movies", "Actors", "Users", "Reviews"];
 const AdminNavBar: React.FC = () => {
   const loggedIn = loggedInData();
   const navigate = useNavigate();
@@ -74,7 +74,7 @@ const AdminNavBar: React.FC = () => {
             DSS
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
+            {menuOptions.map((page) => (
               <Button
                 key={page}
                 sx={{ my: 2, color: "white", display: "block" }}

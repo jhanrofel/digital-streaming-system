@@ -69,8 +69,8 @@ const ActorList = () => {
   };
 
   React.useEffect(() => {
-    dispatch(actorsList());
-  }, [dispatch]);
+    dispatch(actorsList());// eslint-disable-next-line
+  }, []);
 
   React.useEffect(() => {
     if (actor) {
