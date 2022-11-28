@@ -1,59 +1,76 @@
 import {
-  JWTService,
-  MyUserService,
-  RefreshtokenService,
-  UserCredentialsRepository,
-  UserRepository,
-} from '@loopback/authentication-jwt';
-import {
   createStubInstance,
   expect,
   sinon,
   StubbedInstanceWithSinonAccessor,
 } from '@loopback/testlab';
-import {UsersController} from '../../controllers';
-import {Users} from '../../models';
-import {UsersRepository} from '../../repositories';
-import {givenUsers} from '../helper';
-import {UserProfile} from '@loopback/security';
+import {MoviesController} from '../../controllers';
+import {Movies} from '../../models';
+import {
+  MoviesRepository,
+  MovieActorRepository,
+  ActorsRepository,
+  ReviewsRepository,
+} from '../../repositories';
+import {
+  givenMovies,
+  givenMovieById,
+  givenMoviePost,
+  mockSelectedMovie,
+} from '../helper';
 
-let controller: UsersController;
+let controller: MoviesController;
 
-describe('User Unit Controller', () => {
-  let usersRepository: StubbedInstanceWithSinonAccessor<UsersRepository>;
-  let userRepo: StubbedInstanceWithSinonAccessor<UserRepository>;
-  let usersCredentialsRepo: StubbedInstanceWithSinonAccessor<UserCredentialsRepository>;
-  let jwtService: StubbedInstanceWithSinonAccessor<JWTService>;
-  let userService: StubbedInstanceWithSinonAccessor<MyUserService>;
-  let userProfile: StubbedInstanceWithSinonAccessor<UserProfile>;
-  let refreshToken: StubbedInstanceWithSinonAccessor<RefreshtokenService>;
+describe('Movie Unit Controller', () => {
+  let actorRepo: StubbedInstanceWithSinonAccessor<ActorsRepository>;
+  let movieRepo: StubbedInstanceWithSinonAccessor<MoviesRepository>;
+  let movieActorRepo: StubbedInstanceWithSinonAccessor<MovieActorRepository>;
+  let reviewRepo: StubbedInstanceWithSinonAccessor<ReviewsRepository>;
 
   beforeEach(resetRepositories);
 
-  it('should return list of users', async () => {
-    const find = usersRepository.stubs.find;
+  it('should return list of movies', async () => {
+    const find = movieRepo.stubs.find;
 
-    find.resolves(givenUsers as Users[]);
-    expect(await controller.find()).to.eql(givenUsers);
+    find.resolves(givenMovies as Movies[]);
+    expect(await controller.find()).to.eql(givenMovies);
 
     sinon.assert.called(find);
   });
 
+  it('should return movie by id', async () => {
+    const findById = movieRepo.stubs.findById;
+    findById.resolves(givenMovieById as Movies);
+    expect(await controller.findById(mockSelectedMovie.id)).to.eql(
+      givenMovieById,
+    );
+
+    sinon.assert.called(findById);
+  });
+
+  it('should return movie posted', async () => {
+    const create = movieRepo.stubs.create;
+    const newMovie = givenMoviePost(mockSelectedMovie);
+    create.resolves(newMovie);
+    const response = await controller.create({
+      ...newMovie,
+      movieActors: ['actor_id_1', 'actor_id_2'],
+    });
+    console.log(response);
+    // expect(response).to.eql({...newMovie,movieActors:["actor_id_1","actor_id_2"]});
+    sinon.assert.called(create);
+  });
+
   function resetRepositories() {
-    usersRepository = createStubInstance(UsersRepository);
-    userRepo = createStubInstance(UserRepository);
-    usersCredentialsRepo = createStubInstance(UserCredentialsRepository);
-    jwtService = createStubInstance(JWTService);
-    userService = createStubInstance(MyUserService);
-    refreshToken = createStubInstance(RefreshtokenService);
-    controller = new UsersController(
-      usersRepository,
-      userRepo,
-      usersCredentialsRepo,
-      jwtService,
-      userService,
-      userProfile,
-      refreshToken,
+    actorRepo = createStubInstance(ActorsRepository);
+    movieRepo = createStubInstance(MoviesRepository);
+    movieActorRepo = createStubInstance(MovieActorRepository);
+    reviewRepo = createStubInstance(ReviewsRepository);
+    controller = new MoviesController(
+      actorRepo,
+      movieRepo,
+      movieActorRepo,
+      reviewRepo,
     );
   }
 });

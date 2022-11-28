@@ -1,32 +1,21 @@
-import {DigitalStreamingSystemApplication} from '../..';
-import {
-  createRestAppClient,
-  givenHttpServerConfig,
-  Client,
-} from '@loopback/testlab';
+import { Users } from "../models";
 
-export async function setupApplication(): Promise<AppWithClient> {
-  const restConfig = givenHttpServerConfig({
-    // Customize the server configuration here.
-    // Empty values (undefined, '') will be ignored by the helper.
-    //
-    // host: process.env.HOST,
-    // port: +process.env.PORT,
-  });
-
-  const app = new DigitalStreamingSystemApplication({
-    rest: restConfig,
-  });
-
-  await app.boot();
-  await app.start();
-
-  const client = createRestAppClient(app);
-
-  return {app, client};
+export interface IUserApiResponse {
+  status: string;
+  message: string;
+  users?: Users[];
 }
 
-export interface AppWithClient {
-  app: DigitalStreamingSystemApplication;
-  client: Client;
+export interface IUserRegister {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
+export interface IUserChangePassword {
+  email: string;
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
 }

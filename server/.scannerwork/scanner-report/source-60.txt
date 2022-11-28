@@ -1,49 +1,31 @@
+import {Client} from '@loopback/testlab';
 import {DigitalStreamingSystemApplication} from '../..';
-import {Client, createRestAppClient, expect} from '@loopback/testlab';
-import {givenEmptyDatabase, givenUsers2} from '../helper';
-import {testdb} from '../datasource/testdb.datasource';
+import {setupApplication} from './test-helper';
 
-describe('User Acceptance Controller', () => {
+describe('HomePage', () => {
   let app: DigitalStreamingSystemApplication;
   let client: Client;
 
-  before(givenEmptyDatabase);
-  before(givenRunningApp);
+  before('setupApplication', async () => {
+    ({app, client} = await setupApplication());
+  });
+
   after(async () => {
     await app.stop();
   });
 
-  it('retrieves selected users', async () => {
-    // arrange
-    const user = await givenUsers2({
-      firstName: 'Rofel',
-      lastName: 'Alingasa',
-      email: 'rofel@mail.com',
-      approval: 'approved',
-      status: 'ACTIVATED',
-    });
-    const expected = Object.assign({id: user.id}, user);
-
-    // act
-    const response = await client.get(`/users/${user.id}`);
-
-    // assert
-    expect(response.body).to.containEql(expected);
+  it('exposes a default home page', async () => {
+    await client
+      .get('/')
+      .expect(200)
+      .expect('Content-Type', /text\/html/);
   });
 
-  async function givenRunningApp() {
-    app = new DigitalStreamingSystemApplication({
-      rest: {
-        port: 0,
-      },
-    });
-    await app.boot();
-
-    // change to use the test datasource after the app has been booted so that
-    // it is not overridden
-    app.dataSource(testdb);
-    await app.start();
-
-    client = createRestAppClient(app);
-  }
+  it('exposes self-hosted explorer', async () => {
+    await client
+      .get('/explorer/')
+      .expect(200)
+      .expect('Content-Type', /text\/html/)
+      .expect(/<title>LoopBack API Explorer/);
+  });
 });

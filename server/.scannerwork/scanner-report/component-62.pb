@@ -1,1 +1,1 @@
-> 2tsXMhr2src/__tests__/controller/movie.controller.units.ts
+> 2tsXHhr+src/__tests__/acceptance/user.acceptance.ts

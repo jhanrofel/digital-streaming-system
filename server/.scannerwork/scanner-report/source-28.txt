@@ -1,4 +1,4 @@
-import {repository} from '@loopback/repository';
+import {Filter, repository} from '@loopback/repository';
 import {
   post,
   param,
@@ -8,16 +8,13 @@ import {
   del,
   requestBody,
   response,
-  SchemaObject,
 } from '@loopback/rest';
-import {Reviews, Users} from '../models';
+import {Users} from '../models';
 import {UsersRepository, UserCredentialsRepository} from '../repositories';
 import {
-  UsersChangePasswordSchema,
   UsersLoginSchema,
   UsersPatchSchema,
   UsersRegisterSchema,
-  UsersRegisterApprovalSchema,
 } from '../schemas';
 import {inject} from '@loopback/core';
 import {
@@ -28,64 +25,14 @@ import {
   UserRepository,
   RefreshTokenServiceBindings,
   RefreshtokenService,
-  TokenObject,
 } from '@loopback/authentication-jwt';
 import {authenticate, TokenService} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import {genSalt, hash} from 'bcryptjs';
 import _ from 'lodash';
-
-type RefreshGrant = {
-  refreshToken: string;
-};
-
-const RefreshGrantSchema: SchemaObject = {
-  type: 'object',
-  required: ['refreshToken'],
-  properties: {
-    refreshToken: {
-      type: 'string',
-    },
-  },
-};
-
-const RefreshGrantRequestBody = {
-  description: 'Reissuing Acess Token',
-  required: true,
-  content: {
-    'application/json': {schema: RefreshGrantSchema},
-  },
-};
-
-interface RegistrationClass {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
-
-interface ChangePassword {
-  email: string;
-  oldPassword: string;
-  newPassword: string;
-  confirmPassword: string;
-}
-
-interface ApiResponse {
-  status: number;
-  message?: string;
-  users?: Users[] | void[];
-  user?: Users | void;
-  error?: string;
-}
-
-interface ApiTokenResponse {
-  status: number;
-  messageObject: {accessToken:string; refreshToken?:string};
-  error?: string;
-}
-
+import {IUserApiResponse, IUserRegister} from '../utilities/types';
+import {catchError} from '../utilities/helpers';
 
 export class UsersController {
   constructor(
@@ -118,51 +65,20 @@ export class UsersController {
         },
       },
     })
-    register: RegistrationClass,
-  ): Promise<ApiResponse> {
+    register: IUserRegister,
+  ): Promise<IUserApiResponse> {
     const password = await hash(register.password, await genSalt());
     return this.usersRepository
       .create(_.omit(register, 'password'))
-      .then(res => {
-        // eslint-disable-next-line
-        this.usersRepository.userCredentials(res.id).create({password});
+      .then(async user => {
+        await this.usersRepository.userCredentials(user.id).create({password});
         return {
-          status: 200,
+          status: 'success',
           message: 'Registration success. Please wait for approval.',
-          users: [res],
+          users: [user],
         };
       })
-      .catch(err => {
-        console.log(err);
-        if (err.code === 11000) {
-          return {
-            status: 500,
-            error: `${err.keyValue.email} email already in used.`,
-          };
-        } else {
-          return {status: 500, error: err.message};
-        }
-      });
-  }
-
-  @authenticate('jwt')
-  @authorize({allowedRoles: ['ADMIN']})
-  @post('/users/register-approval')
-  @response(200, {
-    description: 'Users Registration Approval',
-    content: {'application/json': {schema: getModelSchemaRef(Users)}},
-  })
-  async registerApproved(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: UsersRegisterApprovalSchema,
-        },
-      },
-    })
-    approval: Users,
-  ): Promise<void> {
-    await this.usersRepository.updateById(approval.id, approval);
+      .catch(error => catchError(error));
   }
 
   @post('/users/login')
@@ -179,150 +95,18 @@ export class UsersController {
       },
     })
     credentials: Credentials,
-  ): Promise<ApiResponse> {
-    const apiResponse: ApiResponse = {status: 200};
-    const user = await this.userService
+  ): Promise<IUserApiResponse> {
+    return this.userService
       .verifyCredentials(credentials)
-      .then(res => res)
-      .catch(async err => {
-        if (
-          credentials.email === 'admin@mail.com' &&
-          credentials.password === 'root1234'
-        ) {
-          const password = await hash(credentials.password, await genSalt());
-          const newUser = await this.usersRepository
-            .create({
-              firstName: 'Admin',
-              lastName: 'Root',
-              email: 'admin@mail.com',
-              role: 'ADMIN',
-              approval: 'approved',
-            })
-            .then(res => {
-              // eslint-disable-next-line
-              this.usersRepository.userCredentials(res.id).create({password});
-              return res;
-            });
-          return newUser;
-        } else {
-          apiResponse.status = 500;
-          apiResponse.error = err.message;
-          return err;
-        }
-      });
-
-    if (apiResponse.status === 200) {
-      const userProfile = this.userService.convertToUserProfile(user);
-      await this.jwtService
-        .generateToken(userProfile)
-        .then(res => (apiResponse.message = res));
-    }
-
-    return apiResponse;
-  }
-
-  @post('/users/new-login')
-  @response(200, {
-    description: 'Users Refresh Login',
-    content: {'application/json': {schema: getModelSchemaRef(Users)}},
-  })
-  async newLogin(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: UsersLoginSchema,
-        },
-      },
-    })
-    credentials: Credentials,
-  ): Promise<ApiTokenResponse> {
-    const apiResponse: ApiTokenResponse = {status: 200,messageObject:{accessToken:"",refreshToken:""}};
-    const user = await this.userService
-      .verifyCredentials(credentials)
-      .then(res => res)
-      .catch(async err => {
-        apiResponse.status = 500;
-        apiResponse.error = err.message;
-        return err;
-      });
-
-    if (apiResponse.status === 200) {
-      const userProfile = this.userService.convertToUserProfile(user);
-      const accessToken = await this.jwtService
-        .generateToken(userProfile)
-        .then(res  => res);
-
-      const tokens = await this.refreshService.generateToken(
-        userProfile,
-        accessToken,
-      );
-
-      apiResponse.messageObject = {accessToken:tokens.accessToken,refreshToken:tokens.refreshToken};
-    }
-
-    return apiResponse;
-  }
-
-  @post('/users/refresh-token', {
-    responses: {
-      '200': {
-        description: 'Token',
-        content: {
-          'application/json': {
-            schema: {
-              type: 'object',
-              properties: {
-                accessToken: {
-                  type: 'object',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  })
-  async refresh(
-    @requestBody(RefreshGrantRequestBody) refreshGrant: RefreshGrant,
-  ): Promise<TokenObject> {
-    return this.refreshService.refreshToken(refreshGrant.refreshToken);
-  }
-
-  @post('/users/change-password')
-  @response(200, {
-    description: 'Users Change Password',
-    content: {'application/json': {schema: getModelSchemaRef(Users)}},
-  })
-  async changePassword(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: UsersChangePasswordSchema,
-        },
-      },
-    })
-    newCredentials: ChangePassword,
-  ): Promise<ApiResponse> {
-    const credentials = {
-      email: newCredentials.email,
-      password: newCredentials.oldPassword,
-    };
-    const user = await this.userService.verifyCredentials(credentials);
-
-    if (newCredentials.newPassword === newCredentials.confirmPassword) {
-      const password = await hash(newCredentials.newPassword, await genSalt());
-      await this.userCredentialsRepository.updateAll(
-        {password: password},
-        {userId: user.id},
-      );
-
-      return {status: 200, message: 'Password changed.'};
-    } else {
-      return {
-        status: 500,
-        error: 'Invalid inputs.',
-      };
-    }
+      .then(foundUser => this.userService.convertToUserProfile(foundUser))
+      .then(userProfile => this.jwtService.generateToken(userProfile))
+      .then(token => {
+        return {
+          status: 'success',
+          message: token,
+        };
+      })
+      .catch(error => catchError(error));
   }
 
   @authenticate('jwt')
@@ -343,17 +127,19 @@ export class UsersController {
   async whoAmI(
     @inject(SecurityBindings.USER)
     currentUserProfile: UserProfile,
-  ): Promise<ApiResponse> {
+  ): Promise<IUserApiResponse> {
     return this.usersRepository
       .findById(currentUserProfile[securityId])
-      .then(res => {
-        return {status: 200, message: 'Valid user.', user: res};
-      })
-      .catch(err => {
-        return {status: 500, error: err.message};
-      });
+      .then(user => ({
+        status: 'success',
+        message: 'Current user details.',
+        users: [user],
+      }))
+      .catch(error => catchError(error));
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @get('/users')
   @response(200, {
     description: 'Array of Users model instances',
@@ -361,55 +147,27 @@ export class UsersController {
       'application/json': {
         schema: {
           type: 'array',
-          items: getModelSchemaRef(Users, {includeRelations: true}),
+          items: getModelSchemaRef(Users),
         },
       },
     },
   })
-  async find(): Promise<Users[]> {
-    return this.usersRepository.find();
+  async find(
+    @param.filter(Users)
+    filter?: Filter<Users>,
+  ): Promise<IUserApiResponse> {
+    return this.usersRepository
+      .find(filter)
+      .then(users => ({
+        status: 'success',
+        message: 'Users list',
+        users: users,
+      }))
+      .catch(error => catchError(error));
   }
 
   @authenticate('jwt')
   @authorize({allowedRoles: ['ADMIN']})
-  @get('/users/approval')
-  @response(200, {
-    description: 'Array of Users model instances',
-    content: {
-      'application/json': {
-        schema: {
-          type: 'array',
-          items: getModelSchemaRef(Users, {includeRelations: true}),
-        },
-      },
-    },
-  })
-  async findApproval(): Promise<Users[]> {
-    return this.usersRepository.find({where: {approval: 'pending'}});
-  }
-
-  @authenticate('jwt')
-  @authorize({allowedRoles: ['ADMIN']})
-  @get('/users/approved')
-  @response(200, {
-    description: 'Array of Approved Users model instances',
-    content: {
-      'application/json': {
-        schema: {
-          type: 'array',
-          items: getModelSchemaRef(Users, {includeRelations: true}),
-        },
-      },
-    },
-  })
-  async findApprovedl(): Promise<Users[]> {
-    return this.usersRepository.find({
-      where: {approval: 'approved', email: {neq: 'admin@mail.com'}},
-    });
-  }
-
-  // @authenticate('jwt')
-  // @authorize({allowedRoles: ['ADMIN']})
   @get('/users/{id}')
   @response(200, {
     description: 'Users model instance',
@@ -419,23 +177,17 @@ export class UsersController {
       },
     },
   })
-  async findById(@param.path.string('id') id: string): Promise<Users> {
-    return this.usersRepository.findById(id);
-  }
-
-  @get('/users/{id}/reviews')
-  @response(200, {
-    description: 'Users model instance',
-    content: {
-      'application/json': {
-        schema: getModelSchemaRef(Users, {includeRelations: true}),
-      },
-    },
-  })
-  async userReviews(@param.path.string('id') id: string): Promise<Reviews[]> {
-    return this.usersRepository.userReviews(id).find({
-      include: [{relation: 'reviewMovie', scope: {include: ['movieLink']}}],
-    });
+  async findById(
+    @param.path.string('id') id: string,
+  ): Promise<IUserApiResponse> {
+    return this.usersRepository
+      .findById(id)
+      .then(user => ({
+        status: 'success',
+        message: 'User found',
+        users: [user],
+      }))
+      .catch(error => catchError(error));
   }
 
   @authenticate('jwt')
@@ -454,26 +206,11 @@ export class UsersController {
       },
     })
     users: Partial<Users>,
-  ): Promise<ApiResponse> {
+  ): Promise<IUserApiResponse> {
     return this.usersRepository
       .updateById(id, users)
-      .then(res => {
-        return {
-          status: 200,
-          message: 'User updated.',
-          users: [res],
-        };
-      })
-      .catch(err => {
-        if (err.code === 11000) {
-          return {
-            status: 500,
-            error: `${err.keyValue.email} email already in used.`,
-          };
-        } else {
-          return {status: 500, error: err.message};
-        }
-      });
+      .then(() => ({status: 'success', message: 'Users updated'}))
+      .catch(error => catchError(error));
   }
 
   @authenticate('jwt')
@@ -482,9 +219,14 @@ export class UsersController {
   @response(204, {
     description: 'Users DELETE success',
   })
-  async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.usersRepository.deleteById(id);
+  async deleteById(
+    @param.path.string('id') id: string,
+  ): Promise<IUserApiResponse> {
     await this.usersRepository.userReviews(id).delete();
     await this.userCredentialsRepository.deleteAll({userId: id});
+    return this.usersRepository
+      .deleteById(id)
+      .then(() => ({status: 'success', message: 'User deleted'}))
+      .catch(error => catchError(error));
   }
 }

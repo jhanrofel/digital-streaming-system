@@ -4,43 +4,43 @@ import {
   sinon,
   StubbedInstanceWithSinonAccessor,
 } from '@loopback/testlab';
-import {ReviewsController} from '../../controllers';
-import {Reviews} from '../../models';
-import {ReviewsRepository} from '../../repositories';
+import {ActorsController} from '../../controllers';
+import {Actors} from '../../models';
+import {ActorsRepository, MovieActorRepository} from '../../repositories';
 import {
-  givenReviews,
-  givenReviewById,
-  mockSelectedReview,
+  givenActors,
+  givenActorById,
+  mockSelectedActor,
 } from '../helper';
-import {UserProfile} from '@loopback/security';
 
-let controller: ReviewsController;
+let controller: ActorsController;
 
-describe('Review Unit Controller', () => {
-  let reviewRepo: StubbedInstanceWithSinonAccessor<ReviewsRepository>;
-  let user: StubbedInstanceWithSinonAccessor<UserProfile>;
+describe('Actor Unit Controller', () => {
+  let actorRepo: StubbedInstanceWithSinonAccessor<ActorsRepository>;
+  let movieActorRepo: StubbedInstanceWithSinonAccessor<MovieActorRepository>;
 
   beforeEach(resetRepositories);
 
-  it('should return list of reviews', async () => {
-    const find = reviewRepo.stubs.find;
+  it('should return list of actors', async () => {
+    const find = actorRepo.stubs.find;
 
-    find.resolves(givenReviews as Reviews[]);
-    expect(await controller.find()).to.eql(givenReviews);
+    find.resolves(givenActors as Actors[]);
+    expect(await controller.find()).to.eql(givenActors);
 
     sinon.assert.called(find);
   });
 
-  it('should return review by id', async () => {
-    const findById = reviewRepo.stubs.findById;
-    findById.resolves(givenReviewById as Reviews);
-    expect(await controller.findById(mockSelectedReview.id)).to.eql(givenReviewById);
+  it('should return actor by id', async () => {
+    const findById = actorRepo.stubs.findById;
+    findById.resolves(givenActorById as Actors);
+    expect(await controller.findById(mockSelectedActor.id)).to.eql(givenActorById);
 
     sinon.assert.called(findById);
   });
 
   function resetRepositories() {
-    reviewRepo = createStubInstance(ReviewsRepository);
-    controller = new ReviewsController(reviewRepo, user);
+    actorRepo = createStubInstance(ActorsRepository);
+    movieActorRepo = createStubInstance(MovieActorRepository);
+    controller = new ActorsController(actorRepo, movieActorRepo);
   }
 });
