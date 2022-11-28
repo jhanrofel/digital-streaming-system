@@ -1,8 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import {
-  alertDataReset,
-} from "../../utilities/formValues";
+import { alertDataReset } from "../../utilities/formValues";
 import {
   useAppDispatch,
   useAppSelector,
@@ -15,12 +13,11 @@ import {
   moviesRating,
 } from "../../utilities/slice/movieSlice";
 import { reviewsPost, myMovieReview } from "../../utilities/slice/reviewSlice";
-import {
-  IReviewFormPost,
-  IAlert,
-} from "../../utilities/types";
+import { IReviewFormPost, IAlert } from "../../utilities/types";
 import MovieDetailsForm from "../../components/Movie/MovieDetailsForm";
 import SnackAlert from "../../components/SnackAlert";
+import UserLogin from "../Users/UserLogin";
+import UserRegister from "../Users/UserRegister";
 
 const MovieDetails = () => {
   const dispatch = useAppDispatch();
@@ -33,7 +30,7 @@ const MovieDetails = () => {
   );
   const reviews = useAppSelector((stateReviews) => stateReviews.movies.reviews);
   const myReview = useAppSelector(
-    (stateMyReview) => stateMyReview.reviews.dataOne
+    (stateMyReview) => stateMyReview.reviews.byId
   );
 
   React.useEffect(() => {
@@ -91,6 +88,9 @@ const MovieDetails = () => {
     setAlert(alertDataReset);
   };
 
+  const [openUserLoginForm, setOpenUserLoginForm] = React.useState(false);
+  const [openUserRegisterForm, setOpenUserRegisterForm] = React.useState(false);
+
   return (
     <React.Fragment>
       <MovieDetailsForm
@@ -103,10 +103,20 @@ const MovieDetails = () => {
         onChange={onChangeHandler}
         onChangeRating={onChangeRating}
         onClick={onClickHandler}
+        setOpenUserLoginForm={setOpenUserLoginForm}
       />
       <SnackAlert
         alertData={alertData}
         onClickCloseAlert={onClickCloseAlertHandler}
+      />
+      <UserLogin
+        openUserForm={openUserLoginForm}
+        setOpenUserForm={setOpenUserLoginForm}
+        setOpenUserRegisterForm={setOpenUserRegisterForm}
+      />
+      <UserRegister
+        openUserForm={openUserRegisterForm}
+        setOpenUserForm={setOpenUserRegisterForm}
       />
     </React.Fragment>
   );

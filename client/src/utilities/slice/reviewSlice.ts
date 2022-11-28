@@ -6,66 +6,66 @@ import {
   IReviewInitialState,
 } from "../types";
 import axios from "axios";
+import { catchError } from "../helpers";
 axios.defaults.baseURL = "http://localhost:3001";
 
-export const reviewsList = createAsyncThunk("reviews/list", async () => {
+/**
+ * Reviews list of pending for approval
+ */
+export const reviewsPending = createAsyncThunk("reviews/pending", async () => {
   return axios({
     url: `/reviews`,
     method: "get",
+    params: {
+      where: { approval: "pending" },
+    },
+    headers: {
+      Authorization: authenticationToken(),
+    },
   })
-    .then((res) => res.data)
-    .catch((err) => err);
+    .then((res) => res.data.reviews)
+    .catch((error) => catchError(error));
 });
 
-export const reviewsApprovalList = createAsyncThunk(
-  "reviews/approval-list",
+/**
+ * Reviews approved list
+ */
+export const reviewsApproved = createAsyncThunk(
+  "reviews/approved",
   async () => {
     return axios({
-      url: `/reviews/approval`,
+      url: `/reviews`,
       method: "get",
+      params: {
+        where: { approval: "approved" },
+      },
     })
-      .then((res) => res.data)
-      .catch((err) => err);
+      .then((res) => res.data.reviews)
+      .catch((error) => catchError(error));
   }
 );
 
-export const reviewsApprovedList = createAsyncThunk(
-  "reviews/approved-list",
+/**
+ * Reviews disapproved list
+ */
+export const reviewsDisapproved = createAsyncThunk(
+  "reviews/disapproved",
   async () => {
     return axios({
-      url: `/reviews/approved`,
+      url: `/reviews`,
       method: "get",
+      params: {
+        where: { approval: "disapproved" },
+      },
     })
-      .then((res) => res.data)
-      .catch((err) => err);
+      .then((res) => res.data.reviews)
+      .catch((error) => catchError(error));
   }
 );
 
-export const reviewsDisapprovedList = createAsyncThunk(
-  "reviews/disapproved-list",
-  async () => {
-    return axios({
-      url: `/reviews/disapproved`,
-      method: "get",
-    })
-      .then((res) => res.data)
-      .catch((err) => err);
-  }
-);
-
-export const myMovieReview = createAsyncThunk(
-  "reviews/me-movie",
-  async (movieId: string) => {
-    return axios({
-      url: `/my-reviews/${movieId}/movies`,
-      method: "get",
-      headers: { Authorization: authenticationToken() },
-    })
-      .then((res) => res.data[0])
-      .catch((err) => err);
-  }
-);
-
+/**
+ * Reviews post
+ */
 export const reviewsPost = createAsyncThunk(
   "reviews/post",
   async (formValues: IReviewFormPost, { rejectWithValue }) => {
@@ -76,84 +76,84 @@ export const reviewsPost = createAsyncThunk(
       headers: { Authorization: authenticationToken() },
     })
       .then((res) => {
-        if (res.data.status === 200) {
+        if (res.data.status === "success") {
           return res.data.reviews[0];
         } else {
           console.log(res.data);
-          return rejectWithValue(res.data.error);
+          return rejectWithValue(res.data.message);
         }
       })
       .catch((err) => err);
   }
 );
 
+/**
+ * Reviews update details
+ */
 export const reviewsApproval = createAsyncThunk(
   "reviews",
   async (formValues: IReviewFormApprovePost) => {
     return axios({
-      url: `/reviews/${formValues.id}/approval`,
+      url: `/reviews/${formValues.id}`,
       method: "patch",
       data: formValues,
       headers: { Authorization: authenticationToken() },
     })
       .then(() => formValues.id)
-      .catch((err) => err);
+      .catch((error) => catchError(error));
   }
 );
 
-export const reviewsDelete = createAsyncThunk(
-  "reviews/delete",
-  async (categoryId: string, { rejectWithValue }) => {
+/**
+ * Reviews of current user for a movie
+ */
+export const myMovieReview = createAsyncThunk(
+  "reviews/me-movie",
+  async (movieId: string) => {
     return axios({
-      url: `/reviews/${categoryId}`,
-      method: "delete",
+      url: `/my-reviews/${movieId}/movies`,
+      method: "get",
       headers: { Authorization: authenticationToken() },
     })
-      .then(() => categoryId)
+      .then((res) => res.data.reviews[0])
       .catch((err) => err);
   }
 );
 
 const initialState = {
-  data: [],
-  dataOne: {},
+  list: [],
+  byId: null,
 } as IReviewInitialState;
 
-export const reviewsSlice = createSlice({
+export const reviewSlice = createSlice({
   name: "reviews",
   initialState,
   reducers: {
     clearReviews: (state) => {
-      state.data = [];
-    },
-    selectReviews: (state, action) => {
-      state.dataOne = { ...state.dataOne, id: action.payload };
+      state.list = [];
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(reviewsList.fulfilled, (state, action) => {
-      state.data = action.payload;
+    builder.addCase(reviewsPending.fulfilled, (state, action) => {
+      state.list = action.payload;
     });
-    builder.addCase(reviewsApprovalList.fulfilled, (state, action) => {
-      state.data = action.payload;
+    builder.addCase(reviewsApproved.fulfilled, (state, action) => {
+      state.list = action.payload;
     });
-    builder.addCase(reviewsApprovedList.fulfilled, (state, action) => {
-      state.data = action.payload;
-    });
-    builder.addCase(reviewsDisapprovedList.fulfilled, (state, action) => {
-      state.data = action.payload;
+    builder.addCase(reviewsDisapproved.fulfilled, (state, action) => {
+      state.list = action.payload;
     });
     builder.addCase(reviewsPost.fulfilled, (state, action) => {
-      state.dataOne = action.payload;
+      state.byId = action.payload;
     });
     builder.addCase(reviewsApproval.fulfilled, (state, action) => {
-      state.data = state.data.filter((review) => review.id !== action.payload);
+      state.list = state.list.filter((review) => review.id !== action.payload);
     });
     builder.addCase(myMovieReview.fulfilled, (state, action) => {
-      state.dataOne = action.payload;
+      state.byId = action.payload;
     });
   },
 });
 
-export const { clearReviews, selectReviews } = reviewsSlice.actions;
-export default reviewsSlice.reducer;
+export const { clearReviews } = reviewSlice.actions;
+export default reviewSlice.reducer;

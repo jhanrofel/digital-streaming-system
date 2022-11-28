@@ -51,7 +51,7 @@ function PublicNavbar() {
     if (isLogged()) {
       const fetchData = async () => {
         await userMe().then((res) => {
-          setRole(res.user.role);
+          setRole(res.users[0].role);
         });
       };
 

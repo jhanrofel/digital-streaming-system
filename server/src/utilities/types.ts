@@ -1,4 +1,4 @@
-import {Users} from '../models';
+import {Reviews, Users} from '../models';
 
 export interface IUserApiResponse {
   status: string;
@@ -24,4 +24,10 @@ export interface IUserChangePassword {
   oldPassword: string;
   newPassword: string;
   confirmPassword: string;
+}
+
+export interface IReviewApiResponse {
+  status: string;
+  message: string;
+  reviews?: Reviews[];
 }

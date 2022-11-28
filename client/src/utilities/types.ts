@@ -172,8 +172,9 @@ export interface IReviewFormTable {
 }
 
 export interface IReviewInitialState {
-  data: IReviewFormTable[] | [];
-  dataOne: IReviewFormTable;
+  list: IReviewFormTable[] | [];
+  byId: IReviewFormTable | null;
+  selected: string | null;
 }
 
 export interface IReviewRating {

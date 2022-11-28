@@ -1,4 +1,4 @@
-import {repository} from '@loopback/repository';
+import {repository, Where} from '@loopback/repository';
 import {
   post,
   param,
@@ -15,13 +15,8 @@ import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 import {inject} from '@loopback/core';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
-
-interface ApiResponse {
-  status: number;
-  message?: string;
-  reviews?: Reviews[] | void[];
-  error?: string;
-}
+import {IReviewApiResponse} from '../utilities/types';
+import {catchError} from '../utilities/helpers';
 
 export class ReviewsController {
   constructor(
@@ -32,6 +27,12 @@ export class ReviewsController {
     public user: UserProfile,
   ) {}
 
+  /**
+   * Review post
+   * @param reviews
+   * @param currentUserProfile
+   * @returns Promise<IReviewApiResponse>
+   */
   @authenticate('jwt')
   @authorize({allowedRoles: ['USER']})
   @post('/reviews')
@@ -48,23 +49,41 @@ export class ReviewsController {
     reviews: Omit<Reviews, 'id'>,
     @inject(SecurityBindings.USER)
     currentUserProfile: UserProfile,
-  ): Promise<ApiResponse> {
+  ): Promise<IReviewApiResponse> {
     const userId = currentUserProfile[securityId];
-    const review = await this.reviewsRepository.count({
-      user: userId,
-      movie: reviews.movie,
-    });
-    if (review.count) {
-      return {status: 500, error: 'You already have review on this movie.'};
-    } else {
-      const newReview = await this.reviewsRepository.create({...reviews, user: userId});
-      return {status: 200, message: 'Your review is awaiting for approval.', reviews:[newReview]};
-    }
+    return this.reviewsRepository
+      .count({
+        user: userId,
+        movie: reviews.movie,
+      })
+      .then(review => {
+        return review.count > 0
+          ? {
+              status: 'error',
+              message: 'You already have review on this movie.',
+            }
+          : this.reviewsRepository
+              .create({
+                ...reviews,
+                user: userId,
+              })
+              .then(review => ({
+                status: 'success',
+                message: 'Your review is awaiting for approval.',
+                reviews: [review],
+              }));
+      })
+      .catch(error => catchError(error));
   }
 
+  /**
+   * Reviews update details
+   * @param id
+   * @param reviews
+   */
   @authenticate('jwt')
   @authorize({allowedRoles: ['ADMIN']})
-  @patch('/reviews/{id}/approval')
+  @patch('/reviews/{id}')
   @response(204, {
     description: 'Reviews Approved',
   })
@@ -74,10 +93,17 @@ export class ReviewsController {
       content: {'application/json': {schema: ReviewsApprovalSchema}},
     })
     reviews: Reviews,
-  ): Promise<void> {
-    await this.reviewsRepository.updateById(id, reviews);
+  ): Promise<IReviewApiResponse> {
+    return this.reviewsRepository
+      .updateById(id, reviews)
+      .then(() => ({status: 'success', message: 'Review updated'}))
+      .catch(error => catchError(error));
   }
 
+  /**
+   * Get list of reviews
+   * @returns
+   */
   @get('/reviews')
   @response(200, {
     description: 'Array of Reviews model instances',
@@ -90,90 +116,29 @@ export class ReviewsController {
       },
     },
   })
-  async find(): Promise<Reviews[]> {
-    return this.reviewsRepository.find({
-      include: ['reviewUser', 'reviewMovie'],
-    });
+  async find(
+    @param.where(Reviews)
+    where?: Where<Reviews>,
+  ): Promise<IReviewApiResponse> {
+    return this.reviewsRepository
+      .find({
+        where,
+        include: [{relation: 'reviewUser'}, {relation: 'reviewMovie'}],
+      })
+      .then(reviews => ({
+        status: 'success',
+        message: 'Reviews found',
+        reviews,
+      }))
+      .catch(error => catchError(error));
   }
 
-  @authenticate('jwt')
-  @authorize({allowedRoles: ['ADMIN']})
-  @get('/reviews/approval')
-  @response(200, {
-    description: 'Array of Reviews model instances',
-    content: {
-      'application/json': {
-        schema: {
-          type: 'array',
-          items: getModelSchemaRef(Reviews, {includeRelations: true}),
-        },
-      },
-    },
-  })
-  async findApproval(): Promise<Reviews[]> {
-    return this.reviewsRepository.find({
-      where: {approval: 'pending'},
-      include: ['reviewUser', 'reviewMovie'],
-    });
-  }
-
-  @authenticate('jwt')
-  @authorize({allowedRoles: ['ADMIN']})
-  @get('/reviews/approved')
-  @response(200, {
-    description: 'Array of Reviews model instances',
-    content: {
-      'application/json': {
-        schema: {
-          type: 'array',
-          items: getModelSchemaRef(Reviews, {includeRelations: true}),
-        },
-      },
-    },
-  })
-  async findApproved(): Promise<Reviews[]> {
-    return this.reviewsRepository.find({
-      where: {approval: 'approved'},
-      include: ['reviewUser', 'reviewMovie'],
-    });
-  }
-
-  @authenticate('jwt')
-  @authorize({allowedRoles: ['ADMIN']})
-  @get('/reviews/disapproved')
-  @response(200, {
-    description: 'Array of Reviews model instances',
-    content: {
-      'application/json': {
-        schema: {
-          type: 'array',
-          items: getModelSchemaRef(Reviews, {includeRelations: true}),
-        },
-      },
-    },
-  })
-  async findDisapproved(): Promise<Reviews[]> {
-    return this.reviewsRepository.find({
-      where: {approval: 'disapproved'},
-      include: ['reviewUser', 'reviewMovie'],
-    });
-  }
-
-  @get('/reviews/{id}')
-  @response(200, {
-    description: 'Reviews model instance',
-    content: {
-      'application/json': {
-        schema: getModelSchemaRef(Reviews, {includeRelations: true}),
-      },
-    },
-  })
-  async findById(@param.path.string('id') id: string): Promise<Reviews> {
-    return this.reviewsRepository.findById(id, {
-      include: ['reviewUser', 'reviewMovie'],
-    });
-  }
-
+  /**
+   * Get current user review on movie
+   * @param id movieId
+   * @param currentUserProfile currentUser
+   * @returns Review on movie by current user
+   */
   @authenticate('jwt')
   @get('/my-reviews/{id}/movies')
   @response(200, {
@@ -191,8 +156,11 @@ export class ReviewsController {
     @param.path.string('id') id: string,
     @inject(SecurityBindings.USER)
     currentUserProfile: UserProfile,
-  ): Promise<Reviews[] | void> {
+  ): Promise<IReviewApiResponse> {
     const userId = currentUserProfile[securityId];
-    return this.reviewsRepository.find({where: {user: userId, movie: id}});
+    return this.reviewsRepository
+      .find({where: {user: userId, movie: id}})
+      .then(reviews => ({status: 'success', message: 'Review found', reviews}))
+      .catch(error => catchError(error));
   }
 }
