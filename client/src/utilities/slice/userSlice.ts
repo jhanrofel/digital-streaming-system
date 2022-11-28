@@ -43,7 +43,7 @@ export const usersLogin = createAsyncThunk(
     })
       .then((res) => {
         return res.data.status === "success"
-          ? res.data.message
+          ? res.data.tokens
           : rejectWithValue(res.data.message);
       })
       .catch((error) => catchError(error));
@@ -92,7 +92,7 @@ export const usersPendingRegistration = createAsyncThunk(
       method: "get",
       params: {
         filter: {
-          where: { approval: "pending", email: { neq: "admin@mail.com" } },
+          where: { approval: "pending" },
         },
       },
       headers: {
@@ -109,20 +109,9 @@ export const usersPendingRegistration = createAsyncThunk(
  */
 export const usersRegistrationApproval = createAsyncThunk(
   "users/registration-approval",
-  async (formValues: IUserFormPatch, { rejectWithValue }) => {
-    return axios({
-      url: `/users/${formValues.id}`,
-      method: "patch",
-      data: formValues,
-      headers: {
-        Authorization: authenticationToken(),
-      },
-    })
-      .then((res) =>
-        res.data.status === "success"
-          ? formValues
-          : rejectWithValue(res.data.message)
-      )
+  async (formValues: IUserFormPatch) => {
+    return patchUser(formValues)
+      .then(() => formValues)
       .catch((error) => catchError(error));
   }
 );
@@ -153,14 +142,7 @@ export const usersApproved = createAsyncThunk("users/approved", async () => {
 export const usersUpdate = createAsyncThunk(
   "users/update",
   async (formValues: IUserFormPatch, { rejectWithValue }) => {
-    return axios({
-      url: `/users/${formValues.id}`,
-      method: "patch",
-      data: formValues,
-      headers: {
-        Authorization: authenticationToken(),
-      },
-    })
+    return patchUser(formValues)
       .then((res) =>
         res.data.status === "success"
           ? formValues
@@ -170,6 +152,9 @@ export const usersUpdate = createAsyncThunk(
   }
 );
 
+/**
+ * Users delete
+ */
 export const usersDelete = createAsyncThunk(
   "users/delete",
   async (userId: string) => {
@@ -186,6 +171,21 @@ export const usersDelete = createAsyncThunk(
       });
   }
 );
+
+/**
+ * Users patch
+ * @param formValues
+ * @returns Promise API response
+ */
+const patchUser = async (formValues: IUserFormPatch) =>
+  axios({
+    url: `/users/${formValues.id}`,
+    method: "patch",
+    data: formValues,
+    headers: {
+      Authorization: authenticationToken(),
+    },
+  });
 
 const initialState = {
   logged: false,

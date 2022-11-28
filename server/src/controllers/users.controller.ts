@@ -15,6 +15,7 @@ import {
   UsersLoginSchema,
   UsersPatchSchema,
   UsersRegisterSchema,
+  RefreshGrantSchema,
 } from '../schemas';
 import {inject} from '@loopback/core';
 import {
@@ -31,7 +32,11 @@ import {authorize} from '@loopback/authorization';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import {genSalt, hash} from 'bcryptjs';
 import _ from 'lodash';
-import {IUserApiResponse, IUserRegister} from '../utilities/types';
+import {
+  IUserApiResponse,
+  IUserApiTokenResponse,
+  IUserRegister,
+} from '../utilities/types';
 import {catchError} from '../utilities/helpers';
 
 export class UsersController {
@@ -76,34 +81,6 @@ export class UsersController {
           status: 'success',
           message: 'Registration success. Please wait for approval.',
           users: [user],
-        };
-      })
-      .catch(error => catchError(error));
-  }
-
-  @post('/users/login')
-  @response(200, {
-    description: 'Users Login',
-    content: {'application/json': {schema: getModelSchemaRef(Users)}},
-  })
-  async login(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: UsersLoginSchema,
-        },
-      },
-    })
-    credentials: Credentials,
-  ): Promise<IUserApiResponse> {
-    return this.userService
-      .verifyCredentials(credentials)
-      .then(foundUser => this.userService.convertToUserProfile(foundUser))
-      .then(userProfile => this.jwtService.generateToken(userProfile))
-      .then(token => {
-        return {
-          status: 'success',
-          message: token,
         };
       })
       .catch(error => catchError(error));
@@ -228,5 +205,71 @@ export class UsersController {
       .deleteById(id)
       .then(() => ({status: 'success', message: 'User deleted'}))
       .catch(error => catchError(error));
+  }
+
+  /**
+   * Users login
+   * @response object tokens {accessToken, refreshToken}
+   */
+  @post('/users/login')
+  @response(200, {
+    description: 'Users Refresh Login',
+    content: {'application/json': {schema: getModelSchemaRef(Users)}},
+  })
+  async login(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: UsersLoginSchema,
+        },
+      },
+    })
+    credentials: Credentials,
+  ): Promise<IUserApiTokenResponse> {
+    return this.userService
+      .verifyCredentials(credentials)
+      .then(foundUser => this.userService.convertToUserProfile(foundUser))
+      .then(async userProfile => {
+        const accessToken = await this.jwtService.generateToken(userProfile);
+        const tokens = await this.refreshService.generateToken(
+          userProfile,
+          accessToken,
+        );
+        return {status: 'success', message: 'Valid user', tokens: tokens};
+      })
+      .catch(error => catchError(error));
+  }
+
+  @post('/users/refresh-token')
+  @response(200, {
+    description: 'Token',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            accessToken: {
+              type: 'object',
+            },
+          },
+        },
+      },
+    },
+  })
+  async refresh(
+    @requestBody({
+      description: 'Reissuing Acess Token',
+      required: true,
+      content: {
+        'application/json': {schema: RefreshGrantSchema},
+      },
+    })
+    token: {
+      refreshToken: string;
+    },
+  ): Promise<IUserApiResponse> {
+    return this.refreshService
+      .refreshToken(token.refreshToken)
+      .then(newToken => ({status: 'success', message: newToken.accessToken}));
   }
 }

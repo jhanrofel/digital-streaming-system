@@ -38,7 +38,9 @@ function UserLogin({
     };
     await dispatch(usersLogin(postUserLogin)).then((res) => {
       if (res.type === "users/login/fulfilled") {
-        cookiesCreate(res.payload);
+        cookiesCreate("dss-at", res.payload.accessToken);
+        cookiesCreate("dss-rt", res.payload.refreshToken);
+
         dispatch(usersData()).then((resData) => {
           if (resData.type === "users/me/fulfilled") {
             loggedInCreate(resData.payload);

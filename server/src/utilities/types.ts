@@ -1,9 +1,15 @@
-import { Users } from "../models";
+import {Users} from '../models';
 
 export interface IUserApiResponse {
   status: string;
   message: string;
   users?: Users[];
+}
+
+export interface IUserApiTokenResponse {
+  status: string;
+  message: string;
+  tokens?: {accessToken: string; refreshToken?: string};
 }
 
 export interface IUserRegister {

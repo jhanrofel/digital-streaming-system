@@ -65,3 +65,13 @@ export const UsersConditionSchema: SchemaObject = {
     where: {type: 'object', default: {}},
   },
 };
+
+export const RefreshGrantSchema: SchemaObject = {
+  type: 'object',
+  required: ['refreshToken'],
+  properties: {
+    refreshToken: {
+      type: 'string',
+    },
+  },
+};
