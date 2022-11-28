@@ -60,11 +60,10 @@ export interface ICategoryInitialState {
 }
 
 export interface IMovieFilter {
-  where : {
+  where: {
     comingSoon?: boolean;
     featured?: boolean;
-  }
-  
+  };
 }
 
 export interface IMovieForm {
@@ -190,7 +189,7 @@ export interface ITableTabInfo {
 }
 
 export interface IUserData {
-  id:string;
+  id: string;
   role: string;
   email: string;
   firstName: string;
@@ -203,19 +202,18 @@ export interface IUserForm {
   role: string;
   email: string;
   firstName: string;
-  lastName: string;  
+  lastName: string;
   approval?: string;
   password?: string;
 }
 
 export interface IUserFormPatch {
   id: string;
-  role: string;
-  email: string;
-  firstName: string;
-  lastName: string;
+  role?: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
   approval?: string;
-  password?: string;
 }
 
 export interface IUserFormApprovePost {
@@ -243,4 +241,3 @@ export interface IUserInitialState {
   byId: IUserData | null;
   selected: string | null;
 }
-

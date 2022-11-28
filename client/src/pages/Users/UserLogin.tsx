@@ -41,8 +41,8 @@ function UserLogin({
         cookiesCreate(res.payload);
         dispatch(usersData()).then((resData) => {
           if (resData.type === "users/me/fulfilled") {
-            loggedInCreate(resData.payload.user);
-            if (resData.payload.user.role === "ADMIN") {
+            loggedInCreate(resData.payload);
+            if (resData.payload.role === "ADMIN") {
               navigate("/dashboard");
             } else {
               setOpenUserForm(false);

@@ -90,7 +90,7 @@ export class DigitalStreamingSystemApplication extends BootMixin(
       .toProvider(MyAuthorizationProvider)
       .tag(AuthorizationTags.AUTHORIZER);
 
-    this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to('30');
+    this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to('1000000');
     this.bind(RefreshTokenServiceBindings.REFRESH_EXPIRES_IN).to('1000000');
   }
 }

@@ -24,9 +24,14 @@ export const UsersLoginSchema: SchemaObject = {
 
 export const UsersPatchSchema: SchemaObject = {
   type: 'object',
-  title: 'Update Role',
+  title: 'Update users',
   properties: {
+    firstName: {type: 'string'},
+    lastName: {type: 'string'},
+    email: {type: 'string', format: 'email'},
     role: {type: 'string', enum: ['USER', 'ADMIN']},
+    approval: {type: 'string', enum: ['approved', 'disapproved']},
+    status: {type: 'string', enum: ['active', 'inactive']},
   },
 };
 
@@ -45,10 +50,18 @@ export const UsersRegisterSchema: SchemaObject = {
 export const UsersRegisterApprovalSchema: SchemaObject = {
   type: 'object',
   title: 'Registration Approval',
-  required: ['id', 'approval', 'rofel'],
+  required: ['id', 'approval', 'role'],
   properties: {
     id: {type: 'string'},
     approval: {type: 'string', enum: ['approved', 'disapproved']},
     role: {type: 'string', enum: ['USER', 'ADMIN']},
+  },
+};
+
+export const UsersConditionSchema: SchemaObject = {
+  type: 'object',
+  title: 'Users condition',
+  properties: {
+    where: {type: 'object', default: {}},
   },
 };

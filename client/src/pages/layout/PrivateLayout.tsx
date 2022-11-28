@@ -9,11 +9,11 @@ const PrivateLayout: React.FC = () => {
 
   React.useEffect(() => {
     userMe().then((res) => {
-      setRole(res.user.role)
+      setRole(res.users[0].role);
     });
-  },[]);
+  }, []);
 
-  return isLogged() && role === "ADMIN"  ? (
+  return isLogged() && role === "ADMIN" ? (
     <>
       <AdminNavBar /> <Outlet />
     </>

@@ -53,10 +53,10 @@ const UserData = ({ callbackDelete, callbackEdit, callbackActivate }: any) => {
           callbackEdit();
         };
         const onClickActivate = async (): Promise<void> => {
-          callbackActivate({ id: params.row.id, status: "ACTIVATED" });
+          callbackActivate({ id: params.row.id, status: "active" });
         };
         const onClickDeactivate = async (): Promise<void> => {
-          callbackActivate({ id: params.row.id, status: "DEACTIVATED" });
+          callbackActivate({ id: params.row.id, status: "inactive" });
         };
 
         return (
@@ -65,7 +65,7 @@ const UserData = ({ callbackDelete, callbackEdit, callbackActivate }: any) => {
               <Tooltip title="Edit movie details">
                 <EditIcon color="primary" onClick={onClickEdit} />
               </Tooltip>
-              {params.row.status === "ACTIVATED" ? (
+              {params.row.status === "active" ? (
                 <Tooltip
                   title="Deactivate user."
                   key={`deactivate_${params.row.id}`}

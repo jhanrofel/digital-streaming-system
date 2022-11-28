@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
-import { usersApproval, usersApprove } from "../../utilities/slice/userSlice";
+import {
+  usersPendingRegistration,
+  usersRegistrationApproval,
+} from "../../utilities/slice/userSlice";
 import { IUserFormApprovePost, IUserData } from "../../utilities/types";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -44,7 +47,7 @@ const ApprovalList = () => {
             approval: "approved",
             role: "ADMIN",
           };
-          await dispatch(usersApprove(formValues));
+          await dispatch(usersRegistrationApproval(formValues));
         };
 
         const onClickApproved = async (): Promise<void> => {
@@ -53,7 +56,7 @@ const ApprovalList = () => {
             approval: "approved",
             role: "USER",
           };
-          await dispatch(usersApprove(formValues));
+          await dispatch(usersRegistrationApproval(formValues));
         };
 
         const onClickDisapproved = async (): Promise<void> => {
@@ -62,7 +65,7 @@ const ApprovalList = () => {
             approval: "disapproved",
             role: "USER",
           };
-          await dispatch(usersApprove(formValues));
+          await dispatch(usersRegistrationApproval(formValues));
         };
 
         return (
@@ -90,8 +93,8 @@ const ApprovalList = () => {
   const rows: IUserData[] = useAppSelector((state) => state.users.list);
 
   useEffect(() => {
-    dispatch(usersApproval());
-  }, [dispatch]);
+    dispatch(usersPendingRegistration()); // eslint-disable-next-line
+  }, []);
 
   return (
     <React.Fragment>

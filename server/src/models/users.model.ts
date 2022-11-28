@@ -45,7 +45,7 @@ export class Users extends Entity {
 
   @property({
     type: 'string',
-    default: 'ACTIVATED',
+    default: 'active',
   })
   status: string;
 

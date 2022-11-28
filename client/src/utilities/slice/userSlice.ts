@@ -1,15 +1,18 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { authenticationToken, unauthorize } from "../authentication";
+import { authenticationToken } from "../authentication";
+import { catchError } from "../helpers";
 import {
   IUserForm,
   IUserFormPatch,
-  IUserFormApprovePost,
   IUserInitialState,
   IUserLogin,
 } from "../types";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3001";
 
+/**
+ * Users registration
+ */
 export const usersRegister = createAsyncThunk(
   "users/register",
   async (formValues: IUserForm, { rejectWithValue }) => {
@@ -19,16 +22,17 @@ export const usersRegister = createAsyncThunk(
       data: formValues,
     })
       .then((res) => {
-        if (res.data.status === 200) {
-          return res.data.users[0];
-        } else {
-          return rejectWithValue(res.data.error);
-        }
+        return res.data.status === "success"
+          ? res.data.users[0]
+          : rejectWithValue(res.data.message);
       })
-      .catch((err) => err);
+      .catch((error) => catchError(error));
   }
 );
 
+/**
+ * Users login
+ */
 export const usersLogin = createAsyncThunk(
   "users/login",
   async (formValues: IUserLogin, { rejectWithValue }) => {
@@ -38,18 +42,17 @@ export const usersLogin = createAsyncThunk(
       data: formValues,
     })
       .then((res) => {
-        if (res.data.status === 200) {
-          return res.data.message;
-        } else {
-          return rejectWithValue(res.data.error);
-        }
+        return res.data.status === "success"
+          ? res.data.message
+          : rejectWithValue(res.data.message);
       })
-      .catch((err) => {
-        return err;
-      });
+      .catch((error) => catchError(error));
   }
 );
 
+/**
+ * User details by id
+ */
 export const usersById = createAsyncThunk(
   "users/one",
   async (userId: string) => {
@@ -57,50 +60,96 @@ export const usersById = createAsyncThunk(
       url: `/users/${userId}`,
       method: "get",
       headers: { Authorization: authenticationToken() },
-    }).then((res) => {
-      return res.data;
-    });
+    })
+      .then((res) => res.data.users[0])
+      .catch((error) => catchError(error));
   }
 );
 
+/**
+ * Users current login data
+ */
 export const usersData = createAsyncThunk("users/me", async () => {
   return axios({
     url: `/users/me`,
     method: "get",
     headers: { Authorization: authenticationToken() },
-  }).then((res) => res.data);
-});
-
-export const usersApproval = createAsyncThunk("users/approval", async () => {
-  return axios({
-    url: `/users/approval`,
-    method: "get",
-    headers: {
-      Authorization: authenticationToken(),
-    },
   })
-    .then((res) => res.data)
-    .catch((error) => {
-      if (error.response.data.error.name === "UnauthorizedError") unauthorize();
-      return error;
-    });
+    .then((res) => {
+      return res.data.users[0];
+    })
+    .catch((error) => catchError(error));
 });
 
+/**
+ * Get the list of users pending registration
+ */
+export const usersPendingRegistration = createAsyncThunk(
+  "users/pending-registration",
+  async () => {
+    return axios({
+      url: `/users`,
+      method: "get",
+      params: {
+        filter: {
+          where: { approval: "pending", email: { neq: "admin@mail.com" } },
+        },
+      },
+      headers: {
+        Authorization: authenticationToken(),
+      },
+    })
+      .then((res) => res.data.users)
+      .catch((error) => catchError(error));
+  }
+);
+
+/**
+ * Users registration approval
+ */
+export const usersRegistrationApproval = createAsyncThunk(
+  "users/registration-approval",
+  async (formValues: IUserFormPatch, { rejectWithValue }) => {
+    return axios({
+      url: `/users/${formValues.id}`,
+      method: "patch",
+      data: formValues,
+      headers: {
+        Authorization: authenticationToken(),
+      },
+    })
+      .then((res) =>
+        res.data.status === "success"
+          ? formValues
+          : rejectWithValue(res.data.message)
+      )
+      .catch((error) => catchError(error));
+  }
+);
+
+/**
+ * Get list of approved users
+ */
 export const usersApproved = createAsyncThunk("users/approved", async () => {
   return axios({
-    url: `/users/approved`,
+    url: `/users`,
     method: "get",
+    params: {
+      filter: {
+        where: { approval: "approved", email: { neq: "admin@mail.com" } },
+      },
+    },
     headers: {
       Authorization: authenticationToken(),
     },
   })
-    .then((res) => res.data)
-    .catch((error) => {
-      if (error.response.data.error.name === "UnauthorizedError") unauthorize();
-      return error;
-    });
+    .then((res) => res.data.users)
+    .catch((error) => catchError(error));
 });
 
+/**
+ * Users update details
+ */
 export const usersUpdate = createAsyncThunk(
   "users/update",
   async (formValues: IUserFormPatch, { rejectWithValue }) => {
@@ -112,16 +161,12 @@ export const usersUpdate = createAsyncThunk(
         Authorization: authenticationToken(),
       },
     })
-      .then((res) => {
-        if (res.data.status === 200) {
-          return formValues;
-        } else {
-          return rejectWithValue(res.data.error);
-        }
-      })
-      .catch((err) => {
-        return err;
-      });
+      .then((res) =>
+        res.data.status === "success"
+          ? formValues
+          : rejectWithValue(res.data.message)
+      )
+      .catch((error) => catchError(error));
   }
 );
 
@@ -136,24 +181,6 @@ export const usersDelete = createAsyncThunk(
       },
     })
       .then(() => userId)
-      .catch((err) => {
-        return err;
-      });
-  }
-);
-
-export const usersApprove = createAsyncThunk(
-  "users/approve",
-  async (formValues: IUserFormApprovePost) => {
-    return axios({
-      url: `/users/register-approval`,
-      method: "post",
-      data: formValues,
-      headers: {
-        Authorization: authenticationToken(),
-      },
-    })
-      .then(() => formValues)
       .catch((err) => {
         return err;
       });
@@ -190,10 +217,10 @@ export const userSlice = createSlice({
     builder.addCase(usersLogin.fulfilled, (state) => {
       state.logged = true;
     });
-    builder.addCase(usersApproval.fulfilled, (state, action) => {
+    builder.addCase(usersPendingRegistration.fulfilled, (state, action) => {
       state.list = action.payload;
     });
-    builder.addCase(usersApprove.fulfilled, (state, action) => {
+    builder.addCase(usersRegistrationApproval.fulfilled, (state, action) => {
       state.list = state.list.filter((user) => user.id !== action.payload.id);
     });
     builder.addCase(usersApproved.fulfilled, (state, action) => {
@@ -209,7 +236,7 @@ export const userSlice = createSlice({
       state.list = state.list.map((user) =>
         user.id === action.payload.id ? { ...user, ...action.payload } : user
       );
-      state.byId = null
+      state.byId = null;
     });
   },
 });
