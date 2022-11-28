@@ -1,42 +1,46 @@
-import {juggler} from '@loopback/repository';
-import {Actors} from '../models';
+import {
+  createStubInstance,
+  expect,
+  sinon,
+  StubbedInstanceWithSinonAccessor,
+} from '@loopback/testlab';
+import {ActorsController} from '../../controllers';
+import {Actors} from '../../models';
+import {ActorsRepository, MovieActorRepository} from '../../repositories';
+import {
+  givenActors,
+  givenActorById,
+  mockSelectedActor,
+} from '../helper';
 
-export function giveActorPost() {  
-  const data = Object.assign({
-    id: '63694bfe8a9ea1faf597feb7',
-    firstName: 'Robert',
-    lastName: 'Downey Jr.',
-    gender: 'Male',
-    birthday: '01-01-1980',
-    imageLink: "image_url",
+let controller: ActorsController;
+
+describe('Actor Unit Controller', () => {
+  let actorRepo: StubbedInstanceWithSinonAccessor<ActorsRepository>;
+  let movieActorRepo: StubbedInstanceWithSinonAccessor<MovieActorRepository>;
+
+  beforeEach(resetRepositories);
+
+  it('should return list of actors', async () => {
+    const find = actorRepo.stubs.find;
+
+    find.resolves(givenActors as Actors[]);
+    expect(await controller.find()).to.eql(givenActors);
+
+    sinon.assert.called(find);
   });
-  return new Actors(data);
-}
 
-export function givenActor(actor?: Partial<Actors>) {
-  const data = Object.assign(
-    {
-      id: '63694bfe8a9ea1faf597feb7',
-      firstName: 'Robert',
-      lastName: 'Downey Jr.',
-      gender: 'Male',
-      birthday: '01-01-1980',
-      imageLink: '63694bfe8a9ea1faf597feb6',
-    },
-    {
-      id: '63694c308a9ea1faf597feb9',
-      firstName: 'Gwyneth',
-      lastName: 'Paltrow',
-      gender: 'Female',
-      birthday: '02-02-1983',
-      imageLink: '63694c308a9ea1faf597feb8',
-    },
-    actor,
-  );
-  return new Actors(data);
-}
+  it('should return actor by id', async () => {
+    const findById = actorRepo.stubs.findById;
+    findById.resolves(givenActorById as Actors);
+    expect(await controller.findById(mockSelectedActor.id)).to.eql(givenActorById);
 
-export const testdb: juggler.DataSource = new juggler.DataSource({
-  name: 'db',
-  connector: 'memory',
+    sinon.assert.called(findById);
+  });
+
+  function resetRepositories() {
+    actorRepo = createStubInstance(ActorsRepository);
+    movieActorRepo = createStubInstance(MovieActorRepository);
+    controller = new ActorsController(actorRepo, movieActorRepo);
+  }
 });

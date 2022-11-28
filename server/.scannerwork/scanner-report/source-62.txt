@@ -1,36 +1,76 @@
-
 import {
-  ActorsRepository,
-  // LinksRepository,
+  createStubInstance,
+  expect,
+  sinon,
+  StubbedInstanceWithSinonAccessor,
+} from '@loopback/testlab';
+import {MoviesController} from '../../controllers';
+import {Movies} from '../../models';
+import {
   MoviesRepository,
   MovieActorRepository,
+  ActorsRepository,
+  ReviewsRepository,
 } from '../../repositories';
-import {testdb} from '../fixtures/datasources/testdb.datasource';
+import {
+  givenMovies,
+  givenMovieById,
+  givenMoviePost,
+  mockSelectedMovie,
+} from '../helper';
 
-export async function givenEmptyDatabase() {
-  // let linkRepository: LinksRepository;
-  let movieActorRepository: MovieActorRepository;
-  let moviesRepository: MoviesRepository;
+let controller: MoviesController;
 
-  const actorsRepository = new ActorsRepository(
-    testdb,
-    // async () => linkRepository,
-    async () => movieActorRepository,
-    async () => moviesRepository,
-  );
+describe('Movie Unit Controller', () => {
+  let actorRepo: StubbedInstanceWithSinonAccessor<ActorsRepository>;
+  let movieRepo: StubbedInstanceWithSinonAccessor<MoviesRepository>;
+  let movieActorRepo: StubbedInstanceWithSinonAccessor<MovieActorRepository>;
+  let reviewRepo: StubbedInstanceWithSinonAccessor<ReviewsRepository>;
 
-//   export function givenProductData(data?: Partial<Product>) {
-//     return Object.assign(
-//       {
-//         name: 'a-product-name',
-//         slug: 'a-product-slug',
-//         price: 1,
-//         description: 'a-product-description',
-//         available: true,
-//       },
-//       data,
-//     );
-//   }
+  beforeEach(resetRepositories);
 
-  await actorsRepository.deleteAll();
-}
+  it('should return list of movies', async () => {
+    const find = movieRepo.stubs.find;
+
+    find.resolves(givenMovies as Movies[]);
+    expect(await controller.find()).to.eql(givenMovies);
+
+    sinon.assert.called(find);
+  });
+
+  it('should return movie by id', async () => {
+    const findById = movieRepo.stubs.findById;
+    findById.resolves(givenMovieById as Movies);
+    expect(await controller.findById(mockSelectedMovie.id)).to.eql(
+      givenMovieById,
+    );
+
+    sinon.assert.called(findById);
+  });
+
+  it('should return movie posted', async () => {
+    const create = movieRepo.stubs.create;
+    const newMovie = givenMoviePost(mockSelectedMovie);
+    create.resolves(newMovie);
+    const response = await controller.create({
+      ...newMovie,
+      movieActors: ['actor_id_1', 'actor_id_2'],
+    });
+    console.log(response);
+    // expect(response).to.eql({...newMovie,movieActors:["actor_id_1","actor_id_2"]});
+    sinon.assert.called(create);
+  });
+
+  function resetRepositories() {
+    actorRepo = createStubInstance(ActorsRepository);
+    movieRepo = createStubInstance(MoviesRepository);
+    movieActorRepo = createStubInstance(MovieActorRepository);
+    reviewRepo = createStubInstance(ReviewsRepository);
+    controller = new MoviesController(
+      actorRepo,
+      movieRepo,
+      movieActorRepo,
+      reviewRepo,
+    );
+  }
+});

@@ -29,11 +29,10 @@ class MovieClass {
   title: string;
   cost: number;
   yearReleased: number;
-  categories?: string[] | undefined;
-  comingSoon: boolean;
-  featured: boolean;
-  movieLink: string;
-  trailerLink: string;
+  comingSoon?: boolean;
+  featured?: boolean;
+  imageLink: string;
+  trailerLink?: string;
   movieActors: string[];
 }
 

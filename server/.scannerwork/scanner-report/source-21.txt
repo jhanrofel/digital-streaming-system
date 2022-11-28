@@ -13,6 +13,8 @@ import {AuthenticationComponent} from '@loopback/authentication';
 import {
   JWTAuthenticationComponent,
   UserServiceBindings,
+  TokenServiceBindings,
+  RefreshTokenServiceBindings,
 } from '@loopback/authentication-jwt';
 import {MongoDbDataSource} from './datasources/mongo-db.datasource';
 import {CustomUserService} from './services/user.service';
@@ -62,6 +64,11 @@ export class DigitalStreamingSystemApplication extends BootMixin(
     this.component(JWTAuthenticationComponent);
     // Bind datasource
     this.dataSource(MongoDbDataSource, UserServiceBindings.DATASOURCE_NAME);
+    //Bind datasource for refreshtoken table
+    this.dataSource(
+      MongoDbDataSource,
+      RefreshTokenServiceBindings.DATASOURCE_NAME,
+    );
 
     // Bind user service
     this.bind(UserServiceBindings.USER_SERVICE).toClass(CustomUserService);
@@ -82,5 +89,8 @@ export class DigitalStreamingSystemApplication extends BootMixin(
     this.bind('authorizationProviders.my-authorizer-provider')
       .toProvider(MyAuthorizationProvider)
       .tag(AuthorizationTags.AUTHORIZER);
+
+    this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to('30');
+    this.bind(RefreshTokenServiceBindings.REFRESH_EXPIRES_IN).to('1000000');
   }
 }

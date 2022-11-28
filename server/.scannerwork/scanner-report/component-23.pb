@@ -1,1 +1,1 @@
- 2tsX¥hr$src/controllers/actors.controller.ts
+ 2tsX±hr$src/controllers/actors.controller.ts

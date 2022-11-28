@@ -33,7 +33,7 @@ export class ReviewsController {
   ) {}
 
   @authenticate('jwt')
-  @authorize({allowedRoles: ['ADMIN', 'USER']})
+  @authorize({allowedRoles: ['USER']})
   @post('/reviews')
   @response(200, {
     description: 'Reviews model instance',
@@ -96,6 +96,8 @@ export class ReviewsController {
     });
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @get('/reviews/approval')
   @response(200, {
     description: 'Array of Reviews model instances',
@@ -115,6 +117,8 @@ export class ReviewsController {
     });
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @get('/reviews/approved')
   @response(200, {
     description: 'Array of Reviews model instances',
@@ -134,6 +138,8 @@ export class ReviewsController {
     });
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @get('/reviews/disapproved')
   @response(200, {
     description: 'Array of Reviews model instances',

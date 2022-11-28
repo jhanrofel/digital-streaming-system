@@ -10,20 +10,23 @@ import {
   response,
 } from '@loopback/rest';
 import {Actors, Movies} from '../models';
-import {ActorsRepository, MovieActorRepository} from '../repositories';
+import {
+  ActorsRepository,
+  MovieActorRepository,
+} from '../repositories';
 import {ActorsPostSchema} from '../schemas';
 import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 import _ from 'lodash';
 
 class ActorClass {
+  id?: string;
   firstName: string;
   lastName: string;
   gender: string;
   birthday: string;
   imageLink: string;
 }
-
 
 interface ApiResponse {
   status: number;
@@ -83,8 +86,10 @@ export class ActorsController {
   })
   async find(): Promise<Actors[]> {
     return this.actorsRepository.find({
-      include: [{relation: 'actorMovies'}],
-      order: ['firstName', 'lastName'],
+      include: [
+        {relation: 'actorMovies'},
+      ],
+      order: ["firstName","lastName"]
     });
   }
 
@@ -99,7 +104,9 @@ export class ActorsController {
   })
   async findById(@param.path.string('id') id: string): Promise<Actors> {
     return this.actorsRepository.findById(id, {
-      include: [{relation: 'actorMovies'}],
+      include: [
+        {relation: 'actorMovies'},
+      ],
     });
   }
 
@@ -133,7 +140,10 @@ export class ActorsController {
     })
     actors: ActorClass,
   ): Promise<Actors> {
-    await this.actorsRepository.updateById(id, _.omit(actors));
+    await this.actorsRepository.updateById(
+      id,
+      _.omit(actors),
+    );
 
     return this.actorsRepository.findById(id);
   }
@@ -146,7 +156,9 @@ export class ActorsController {
   })
   async deleteById(@param.path.string('id') id: string): Promise<ApiResponse> {
     const actor = await this.actorsRepository.findById(id, {
-      include: [{relation: 'actorMovies'}],
+      include: [
+        {relation: 'actorMovies'},
+      ],
     });
 
     const movieCount = await this.movieActorRepository.count({actorId: id});

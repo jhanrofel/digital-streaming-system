@@ -1,1 +1,1 @@
-< 2tsXhr7src/__tests__/fixtures/datasources/testdb.datasource.ts
+< 2tsX2hr+src/__tests__/acceptance/user.acceptance.ts
