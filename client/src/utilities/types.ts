@@ -228,6 +228,13 @@ export interface IUserLogin {
   password: string;
 }
 
+export interface IUserLoggedData {
+  id: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+}
+
 export interface IUserRegister {
   email: string;
   firstName: string;
@@ -237,7 +244,7 @@ export interface IUserRegister {
 }
 
 export interface IUserInitialState {
-  logged: boolean;
+  logged: IUserLoggedData | null;
   list: IUserData[] | [];
   byId: IUserData | null;
   selected: string | null;

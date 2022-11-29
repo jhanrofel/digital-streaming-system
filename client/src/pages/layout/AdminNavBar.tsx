@@ -1,9 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../utilities/hooks";
-import { cookiesRemove } from "../../utilities/cookies";
-import { loggedInData, loggedInRemove } from "../../utilities/loggedIn";
-import { clearUser } from "../../utilities/slice/userSlice";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -13,16 +9,20 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { cookiesRemove } from "../../utilities/cookies";
+import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
+import { loggedInRemove } from "../../utilities/loggedIn";
+import { menuHiUser } from "../../utilities/muiStyle";
+import { clearUser, usersMe } from "../../utilities/slice/userSlice";
 import { clearActor } from "../../utilities/slice/actorSlice";
 import { clearMovies } from "../../utilities/slice/movieSlice";
 import { clearReviews } from "../../utilities/slice/reviewSlice";
 import { menuOptions } from "../../utilities/formValues";
 
 const AdminNavBar: React.FC = () => {
-  const loggedIn = loggedInData();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const onClickLogoutHandler = (event: React.MouseEvent<HTMLElement>) => {
+  const onClickLogoutHandler = () => {
     dispatch(clearActor());
     dispatch(clearMovies());
     dispatch(clearReviews());
@@ -52,6 +52,11 @@ const AdminNavBar: React.FC = () => {
     }
   };
 
+  const currentUser = useAppSelector((state) => state.users.logged);
+  React.useEffect(() => {
+    dispatch(usersMe()); // eslint-disable-next-line
+  }, []);
+
   return (
     <AppBar position="fixed">
       <Container maxWidth="xl">
@@ -60,7 +65,6 @@ const AdminNavBar: React.FC = () => {
             variant="h6"
             noWrap
             component="a"
-            href="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -70,6 +74,7 @@ const AdminNavBar: React.FC = () => {
               color: "inherit",
               textDecoration: "none",
             }}
+            onClick={() => navigate("/")}
           >
             DSS
           </Typography>
@@ -85,22 +90,14 @@ const AdminNavBar: React.FC = () => {
             ))}
           </Box>
           <Box sx={{ display: "flex", flexGrow: 0 }}>
-            <Typography
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
-              Hi! {loggedIn.firstName}
+            <Typography sx={menuHiUser}>
+              Hi! {currentUser?.firstName}
             </Typography>
-              <Tooltip title="Logout">
-                <IconButton sx={{ p: 0 }} onClick={onClickLogoutHandler}>
-                  <LogoutIcon />
-                </IconButton>
-              </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton sx={{ p: 0 }} onClick={onClickLogoutHandler}>
+                <LogoutIcon />
+              </IconButton>
+            </Tooltip>
           </Box>
         </Toolbar>
       </Container>

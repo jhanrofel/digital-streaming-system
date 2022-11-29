@@ -6,7 +6,7 @@ import { IUserLogin, IAlert } from "../../utilities/types";
 import { userLogin, alertDataReset } from "../../utilities/formValues";
 import SnackAlert from "../../components/SnackAlert";
 import { useFormValidation, useAppDispatch } from "../../utilities/hooks";
-import { usersLogin, usersData } from "../../utilities/slice/userSlice";
+import { usersLogin, usersMe } from "../../utilities/slice/userSlice";
 import UserLoginForm from "../../components/User/UserLoginForm";
 
 type AppProps = {
@@ -41,7 +41,7 @@ function UserLogin({
         cookiesCreate("dss-at", res.payload.accessToken);
         cookiesCreate("dss-rt", res.payload.refreshToken);
 
-        dispatch(usersData()).then((resData) => {
+        dispatch(usersMe()).then((resData) => {
           if (resData.type === "users/me/fulfilled") {
             loggedInCreate(resData.payload);
             if (resData.payload.role === "ADMIN") {

@@ -69,7 +69,7 @@ export const usersById = createAsyncThunk(
 /**
  * Users current login data
  */
-export const usersData = createAsyncThunk("users/me", async () => {
+export const usersMe = createAsyncThunk("users/me", async () => {
   return axios({
     url: `/users/me`,
     method: "get",
@@ -188,7 +188,7 @@ const patchUser = async (formValues: IUserFormPatch) =>
   });
 
 const initialState = {
-  logged: false,
+  logged: null,
   list: [],
   byId: null,
   selected: null,
@@ -199,6 +199,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     clearUser: (state) => {
+      state.logged = null;
       state.list = [];
       state.byId = null;
       state.selected = null;
@@ -214,8 +215,14 @@ export const userSlice = createSlice({
     builder.addCase(usersRegister.fulfilled, (state, action) => {
       state.list = [...state.list, action.payload];
     });
-    builder.addCase(usersLogin.fulfilled, (state) => {
-      state.logged = true;
+    builder.addCase(usersMe.fulfilled, (state, action) => {
+      state.logged = {
+        ...state.logged,
+        id: action.payload.id,
+        firstName: action.payload.firstName,
+        lastName: action.payload.lastName,
+        role: action.payload.role,
+      };
     });
     builder.addCase(usersPendingRegistration.fulfilled, (state, action) => {
       state.list = action.payload;

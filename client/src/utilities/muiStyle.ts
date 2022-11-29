@@ -42,3 +42,11 @@ export const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+
+export const menuHiUser = {
+  mr: 2,
+  display: { xs: "none", md: "flex" },
+  fontFamily: "monospace",
+  color: "inherit",
+  textDecoration: "none",
+};
