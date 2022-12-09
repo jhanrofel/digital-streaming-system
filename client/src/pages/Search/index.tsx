@@ -3,11 +3,7 @@ import { useLocation } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks";
 import { ICard } from "../../utilities/types";
-import {
-  moviesFeatured,
-  moviesLatestUploads,
-  moviesSearch,
-} from "../../utilities/slice/movieSlice";
+import { moviesFeatured, moviesSearch } from "../../utilities/slice/movieSlice";
 import FormImageList from "../../components/FormImageList";
 
 const Search = () => {
@@ -33,7 +29,6 @@ const Search = () => {
 
   React.useEffect(() => {
     dispatch(moviesSearch(search));
-    dispatch(moviesLatestUploads());
     dispatch(moviesFeatured());
   }, [dispatch, search]);
 

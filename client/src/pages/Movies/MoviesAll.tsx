@@ -10,18 +10,14 @@ import FormImageList from "../../components/FormImageList";
 
 const MoviesAll = () => {
   const dispatch = useAppDispatch();
-  const moviesLatest = useAppSelector(
-    (state) => state.movies.list
-  );
+  const moviesLatest = useAppSelector((state) => state.movies.list);
   const movieDataLatestUploads: any = moviesLatest.map((movies) => ({
     id: movies.id,
     title: movies.title,
     subtitle: movies.yearReleased,
     url: movies.imageLink,
   }));
-  const moviesDataFeatured = useAppSelector(
-    (state) => state.movies.featured
-  );
+  const moviesDataFeatured = useAppSelector((state) => state.movies.featured);
   const movieDataFeatured: any = moviesDataFeatured.map((movieFeatured) => ({
     id: movieFeatured.id,
     title: movieFeatured.title,
@@ -31,12 +27,14 @@ const MoviesAll = () => {
   const moviesDataComingSoon = useAppSelector(
     (state) => state.movies.comingSoon
   );
-  const movieDataComingSoon: any = moviesDataComingSoon.map((movieComingSoon) => ({
-    id: movieComingSoon.id,
-    title: movieComingSoon.title,
-    subtitle: movieComingSoon.yearReleased,
-    url: movieComingSoon.imageLink,
-  }));
+  const movieDataComingSoon: any = moviesDataComingSoon.map(
+    (movieComingSoon) => ({
+      id: movieComingSoon.id,
+      title: movieComingSoon.title,
+      subtitle: movieComingSoon.yearReleased,
+      url: movieComingSoon.imageLink,
+    })
+  );
 
   React.useEffect(() => {
     dispatch(moviesLatestUploads());

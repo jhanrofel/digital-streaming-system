@@ -6,7 +6,6 @@ import {
   useAppSelector,
   useFormValidation,
 } from "../../utilities/hooks";
-import { isLogged } from "../../utilities/loggedIn";
 import {
   moviesById,
   moviesReviewsApproved,
@@ -24,6 +23,7 @@ const MovieDetails = () => {
   const { state } = useLocation();
   const movieId = state;
   const movie = useAppSelector((stateMovie) => stateMovie.movies.byId);
+  const currentUser = useAppSelector((state) => state.users.logged);
 
   const movieRating = useAppSelector(
     (stateMovieRating) => stateMovieRating.movies.rating
@@ -37,10 +37,10 @@ const MovieDetails = () => {
     dispatch(moviesById(movieId));
     dispatch(moviesReviewsApproved(movieId));
     dispatch(moviesRating(movieId));
-    if (isLogged()) {
+    if (currentUser) {
       dispatch(myMovieReview(movieId));
     }
-  }, [dispatch, movieId]);
+  }, [dispatch, movieId, currentUser]);
 
   const onClickSubmitHandler = async (): Promise<void> => {
     const postReviewValue: IReviewFormPost = {
@@ -48,8 +48,6 @@ const MovieDetails = () => {
       rating: formValues.rating,
       movie: movieId,
     };
-
-    console.log(formValues);
 
     await dispatch(reviewsPost(postReviewValue)).then((res) => {
       if (res.type === "reviews/post/fulfilled") {

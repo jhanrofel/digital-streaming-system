@@ -6,18 +6,19 @@ import {
 } from '@loopback/testlab';
 import {ReviewsController} from '../../controllers';
 import {Reviews} from '../../models';
-import {ReviewsRepository} from '../../repositories';
 import {
-  givenReviews,
-  givenReviewById,
-  mockSelectedReview,
-} from '../helper';
+  MovieActorRepository,
+  MoviesRepository,
+  ReviewsRepository,
+} from '../../repositories';
+import {givenReviews, givenReviewById, mockSelectedReview} from '../helper';
 import {UserProfile} from '@loopback/security';
 
 let controller: ReviewsController;
 
 describe('Review Unit Controller', () => {
   let reviewRepo: StubbedInstanceWithSinonAccessor<ReviewsRepository>;
+  let moviewRepo: StubbedInstanceWithSinonAccessor<MoviesRepository>;
   let user: StubbedInstanceWithSinonAccessor<UserProfile>;
 
   beforeEach(resetRepositories);
@@ -31,16 +32,9 @@ describe('Review Unit Controller', () => {
     sinon.assert.called(find);
   });
 
-  it('should return review by id', async () => {
-    const findById = reviewRepo.stubs.findById;
-    findById.resolves(givenReviewById as Reviews);
-    expect(await controller.findById(mockSelectedReview.id)).to.eql(givenReviewById);
-
-    sinon.assert.called(findById);
-  });
-
   function resetRepositories() {
     reviewRepo = createStubInstance(ReviewsRepository);
-    controller = new ReviewsController(reviewRepo, user);
+    moviewRepo = createStubInstance(MoviesRepository);
+    controller = new ReviewsController(reviewRepo, moviewRepo, user);
   }
 });

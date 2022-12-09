@@ -1,4 +1,4 @@
-import {Filter, repository} from '@loopback/repository';
+import {Filter, repository, Where} from '@loopback/repository';
 import {
   post,
   param,
@@ -9,7 +9,7 @@ import {
   requestBody,
   response,
 } from '@loopback/rest';
-import {Movies, Reviews} from '../models';
+import {Movies} from '../models';
 import {
   ActorsRepository,
   MoviesRepository,
@@ -24,24 +24,8 @@ import {
 import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 import _ from 'lodash';
-
-class MovieClass {
-  title: string;
-  cost: number;
-  yearReleased: number;
-  comingSoon?: boolean;
-  featured?: boolean;
-  imageLink: string;
-  trailerLink?: string;
-  movieActors: string[];
-}
-
-interface ApiResponse {
-  status: number;
-  message?: string | undefined;
-  movies?: Movies[] | void[];
-  error?: string | undefined;
-}
+import {IMovieApiResponse, IMovieForm} from '../utilities/types';
+import {catchError} from '../utilities/helpers';
 
 interface IRating {
   _id: undefined;
@@ -62,6 +46,11 @@ export class MoviesController {
     public reviewsRepository: ReviewsRepository,
   ) {}
 
+  /**
+   * Movies posting
+   * @param movies data
+   * @returns object {status, message, movies}
+   */
   @authenticate('jwt')
   @authorize({allowedRoles: ['ADMIN']})
   @post('/movies')
@@ -77,8 +66,8 @@ export class MoviesController {
         },
       },
     })
-    movies: MovieClass,
-  ): Promise<Movies> {
+    movies: IMovieForm,
+  ): Promise<IMovieApiResponse> {
     const actors = movies.movieActors;
     const movie = await this.moviesRepository.create(
       _.omit(movies, ['movieActors']),
@@ -91,9 +80,18 @@ export class MoviesController {
       });
     }
 
-    return this.moviesRepository.findById(movie.id);
+    return {
+      status: 'success',
+      message: 'Movie created',
+      movies: [movie],
+    };
   }
 
+  /**
+   * Get movies list
+   * @param where condition
+   * @returns object {status, message, movies}
+   */
   @get('/movies')
   @response(200, {
     description: 'Array of Movies model instances',
@@ -107,10 +105,24 @@ export class MoviesController {
     },
   })
   async find(
-    @param.filter(Movies) filter?: Filter<Movies>,): Promise<Movies[]> {
-    return this.moviesRepository.find(filter,{include: ['movieActors']});
+    @param.filter(Movies)
+    filter?: Filter<Movies>,
+  ): Promise<IMovieApiResponse> {
+    return this.moviesRepository
+      .find(filter)
+      .then(movies => ({
+        status: 'success',
+        message: 'Movie list',
+        movies,
+      }))
+      .catch(error => catchError(error));
   }
 
+  /**
+   * Movie search list
+   * @param filter search conditions
+   * @returns object {status, message, movies}
+   */
   @post('/movies/search')
   @response(200, {
     description: 'Array of Movies model instances',
@@ -126,10 +138,10 @@ export class MoviesController {
     filter: {
       search: string;
     },
-  ): Promise<Movies[]> {
+  ): Promise<IMovieApiResponse> {
     const pattern = new RegExp('.*' + filter.search + '.*', 'i');
     const movieListId: Array<string | undefined> = [];
-    const movies = await this.actorsRepository
+    return this.actorsRepository
       .find({
         where: {
           or: [{firstName: {regexp: pattern}}, {lastName: {regexp: pattern}}],
@@ -153,46 +165,20 @@ export class MoviesController {
           },
           include: ['movieActors'],
         });
-      });
-
-    return movies;
+      })
+      .then(movies => ({
+        status: 'success',
+        message: 'Movie list',
+        movies: movies,
+      }))
+      .catch(error => catchError(error));
   }
 
-  @get('/movies/latest-uploads')
-  @response(200, {
-    description: 'Array of Movies model instances',
-  })
-  async latestUploads(): Promise<Movies[]> {
-    return this.moviesRepository.find({
-      order: ['createdAt DESC'],
-      limit: 10,
-    });
-  }
-
-  @get('/movies/featured')
-  @response(200, {
-    description: 'Array of Movies model instances',
-  })
-  async movieFeatured(): Promise<Movies[]> {
-    return this.moviesRepository.find({
-      where: {featured: true},
-      order: ['createdAt DESC'],
-      limit: 10,
-    });
-  }
-
-  @get('/movies/coming-soon')
-  @response(200, {
-    description: 'Array of Movies model instances',
-  })
-  async movieComingSoon(): Promise<Movies[]> {
-    return this.moviesRepository.find({
-      where: {comingSoon: true},
-      order: ['createdAt DESC'],
-      limit: 10,
-    });
-  }
-
+  /**
+   * Get movie
+   * @param id movieId
+   * @returns object {status, message, movies}
+   */
   @get('/movies/{id}')
   @response(200, {
     description: 'Movies model instance',
@@ -202,29 +188,26 @@ export class MoviesController {
       },
     },
   })
-  async findById(@param.path.string('id') id: string): Promise<Movies> {
-    return this.moviesRepository.findById(id, {
-      include: [{relation: 'movieActors'}],
-    });
+  async findById(
+    @param.path.string('id') id: string,
+  ): Promise<IMovieApiResponse> {
+    return this.moviesRepository
+      .findById(id, {
+        include: [{relation: 'movieActors'}],
+      })
+      .then(movie => ({
+        status: 'success',
+        message: 'Movie found',
+        movies: [movie],
+      }))
+      .catch(error => catchError(error));
   }
 
-  @get('/movies/{id}/reviews-approved')
-  @response(200, {
-    description: 'Movies model instance',
-    content: {
-      'application/json': {
-        schema: getModelSchemaRef(Movies, {includeRelations: true}),
-      },
-    },
-  })
-  async movieReviews(@param.path.string('id') id: string): Promise<Reviews[]> {
-    return this.moviesRepository.movieReviews(id).find({
-      include: ['reviewUser'],
-      where: {approval: 'approved'},
-      order: ['createdAt DESC'],
-    });
-  }
-
+  /**
+   * Review ratings
+   * @param id movieId
+   * @returns object {sum, total, average}
+   */
   @get('/movies/{id}/rating')
   @response(200, {
     description: 'Movies model instance',
@@ -260,6 +243,12 @@ export class MoviesController {
       .get();
   }
 
+  /**
+   * Movie update
+   * @param id movieId
+   * @param movies data
+   * @returns object {status, message, Movies}
+   */
   @authenticate('jwt')
   @authorize({allowedRoles: ['ADMIN']})
   @patch('/movies/{id}')
@@ -280,8 +269,8 @@ export class MoviesController {
         },
       },
     })
-    movies: MovieClass,
-  ): Promise<Movies> {
+    movies: IMovieForm,
+  ): Promise<IMovieApiResponse> {
     const actors = movies.movieActors;
     await this.moviesRepository.updateById(id, _.omit(movies, ['movieActors']));
 
@@ -293,9 +282,16 @@ export class MoviesController {
       });
     }
 
-    return this.moviesRepository.findById(id, {
-      include: ['movieActors'],
-    });
+    return this.moviesRepository
+      .findById(id, {
+        include: ['movieActors'],
+      })
+      .then(movie => ({
+        status: 'success',
+        message: 'Movie updated',
+        movies: [movie],
+      }))
+      .catch(error => catchError(error));
   }
 
   @authenticate('jwt')
@@ -304,7 +300,9 @@ export class MoviesController {
   @response(204, {
     description: 'Movies DELETE success',
   })
-  async deleteById(@param.path.string('id') id: string): Promise<ApiResponse> {
+  async deleteById(
+    @param.path.string('id') id: string,
+  ): Promise<IMovieApiResponse> {
     const movie = await this.moviesRepository.findById(id, {
       include: ['movieActors'],
     });
@@ -315,11 +313,11 @@ export class MoviesController {
       await this.movieActorRepository.deleteAll({movieId: id});
       await this.moviesRepository.deleteById(id);
 
-      return {status: 200, message: 'Movie deleted.', movies: [movie]};
+      return {status: 'success', message: 'Movie deleted.', movies: [movie]};
     } else {
       return {
-        status: 500,
-        error: 'Required 1 year old movie to delete.',
+        status: 'error',
+        message: 'Required 1 year old movie to delete.',
         movies: [movie],
       };
     }

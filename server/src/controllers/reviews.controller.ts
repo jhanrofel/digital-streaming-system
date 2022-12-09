@@ -9,7 +9,7 @@ import {
   response,
 } from '@loopback/rest';
 import {Reviews} from '../models';
-import {ReviewsRepository} from '../repositories';
+import {MoviesRepository, ReviewsRepository} from '../repositories';
 import {ReviewsApprovalSchema, ReviewsPostSchema} from '../schemas';
 import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
@@ -22,6 +22,9 @@ export class ReviewsController {
   constructor(
     @repository(ReviewsRepository)
     public reviewsRepository: ReviewsRepository,
+
+    @repository(MoviesRepository)
+    public moviesRepository: MoviesRepository,
 
     @inject(SecurityBindings.USER, {optional: true})
     public user: UserProfile,
@@ -160,6 +163,37 @@ export class ReviewsController {
     const userId = currentUserProfile[securityId];
     return this.reviewsRepository
       .find({where: {user: userId, movie: id}})
+      .then(reviews => ({status: 'success', message: 'Review found', reviews}))
+      .catch(error => catchError(error));
+  }
+
+  /**
+   * Get list of approved reviews in movie
+   * @param id movieId
+   * @returns object {status, message, Reviews}
+   */
+  @get('/movies/{id}/reviews-approved')
+  @response(200, {
+    description: 'Movies model instance',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(Reviews, {includeRelations: true}),
+        },
+      },
+    },
+  })
+  async movieReviews(
+    @param.path.string('id') id: string,
+  ): Promise<IReviewApiResponse> {
+    return this.moviesRepository
+      .movieReviews(id)
+      .find({
+        include: ['reviewUser'],
+        where: {approval: 'approved'},
+        order: ['createdAt DESC'],
+      })
       .then(reviews => ({status: 'success', message: 'Review found', reviews}))
       .catch(error => catchError(error));
   }

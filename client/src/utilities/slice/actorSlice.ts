@@ -109,7 +109,7 @@ export const actorSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(actorsPost.fulfilled, (state, action) => {
       state.list = [...state.list, action.payload];
-    });    
+    });
     builder.addCase(actorsList.pending, (state) => {
       state.loading = true;
     });

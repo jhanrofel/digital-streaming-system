@@ -10,7 +10,7 @@ export const moviesList = createAsyncThunk("movies/list", async () => {
     method: "get",
     headers: { Authorization: authenticationToken() },
   })
-    .then((res) => res.data)
+    .then((res) => res.data.movies)
     .catch((err) => err);
 });
 
@@ -22,7 +22,7 @@ export const moviesById = createAsyncThunk(
       method: "get",
       headers: { Authorization: authenticationToken() },
     })
-      .then((res) => res.data)
+      .then((res) => res.data.movies[0])
       .catch((err) => err);
   }
 );
@@ -35,7 +35,7 @@ export const moviesSearch = createAsyncThunk(
       method: "post",
       data: { search: search },
     })
-      .then((res) => res.data)
+      .then((res) => res.data.movies)
       .catch((err) => err);
   }
 );
@@ -44,20 +44,35 @@ export const moviesLatestUploads = createAsyncThunk(
   "movies/latest-uploads",
   async () => {
     return axios({
-      url: `/movies/latest-uploads`,
+      url: `/movies`,
       method: "get",
+      params: {
+        filter: {
+          limit: 10,
+          order: "createdAt desc",
+          include: [{ relation: "movieActors" }],
+        },
+      },
     })
-      .then((res) => res.data)
+      .then((res) => res.data.movies)
       .catch((err) => err);
   }
 );
 
 export const moviesFeatured = createAsyncThunk("movies/featured", async () => {
   return axios({
-    url: `/movies/featured`,
+    url: `/movies`,
     method: "get",
+    params: {
+      filter: {
+        limit: 10,
+        order: "createdAt desc",
+        where: { featured: true },
+        include: [{ relation: "movieActors" }],
+      },
+    },
   })
-    .then((res) => res.data)
+    .then((res) => res.data.movies)
     .catch((err) => err);
 });
 
@@ -65,10 +80,18 @@ export const moviesComingSoon = createAsyncThunk(
   "movies/coming-soon",
   async () => {
     return axios({
-      url: `/movies/coming-soon`,
+      url: `/movies`,
       method: "get",
+      params: {
+        filter: {
+          limit: 10,
+          order: "createdAt desc",
+          where: { comingSoon: true },
+          include: [{ relation: "movieActors" }],
+        },
+      },
     })
-      .then((res) => res.data)
+      .then((res) => res.data.movies)
       .catch((err) => err);
   }
 );
@@ -106,7 +129,7 @@ export const moviesPost = createAsyncThunk(
       data: formValues,
       headers: { Authorization: authenticationToken() },
     })
-      .then((res) => res.data)
+      .then((res) => res.data.movies[0])
       .catch((err) => err);
   }
 );
@@ -120,7 +143,7 @@ export const moviesUpdate = createAsyncThunk(
       data: formValues,
       headers: { Authorization: authenticationToken() },
     })
-      .then((res) => res.data)
+      .then((res) => res.data.movies[0])
       .catch((err) => err);
   }
 );
@@ -134,7 +157,7 @@ export const moviesDelete = createAsyncThunk(
       headers: { Authorization: authenticationToken() },
     })
       .then((res) => {
-        if (res.data.status === 200) {
+        if (res.data.status === "success") {
           return res.data.movies[0];
         } else {
           return rejectWithValue(res.data.error);

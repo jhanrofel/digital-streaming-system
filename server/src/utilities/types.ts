@@ -1,4 +1,4 @@
-import {Reviews, Users} from '../models';
+import {Movies, Reviews, Users} from '../models';
 
 export interface IUserApiResponse {
   status: string;
@@ -30,4 +30,21 @@ export interface IReviewApiResponse {
   status: string;
   message: string;
   reviews?: Reviews[];
+}
+
+export interface IMovieApiResponse {
+  status: string;
+  message: string;
+  movies?: Movies[];
+}
+
+export interface IMovieForm {
+  title: string;
+  cost: number;
+  yearReleased: number;
+  comingSoon?: boolean;
+  featured?: boolean;
+  imageLink: string;
+  trailerLink?: string;
+  movieActors: string[];
 }
